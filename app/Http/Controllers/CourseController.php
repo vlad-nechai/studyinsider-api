@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\Professor;
+use App\Chair;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -15,7 +17,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+        $chair = Professor::find(1);
+        return $chair;
     }
 
     /**

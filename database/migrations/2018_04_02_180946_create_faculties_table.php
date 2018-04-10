@@ -18,10 +18,12 @@ class CreateFacultiesTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->string('location');
-            $table->unsignedInteger('uni_id')->unique();
+            $table->unsignedInteger('uni_id');
             $table->timestamps();
 
             $table->foreign('uni_id')->references('id')->on('universities');
+
+            $table->primary(['id', 'uni_id']);
         });
 
         //TODO: set uni_id not Nullable
