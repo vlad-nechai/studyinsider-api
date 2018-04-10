@@ -14,7 +14,7 @@ class CreateFacultiesTable extends Migration
     public function up()
     {
         Schema::create('faculties', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->increments('id');
             $table->string('name');
             $table->string('type');
             $table->string('location');
@@ -22,11 +22,7 @@ class CreateFacultiesTable extends Migration
             $table->timestamps();
 
             $table->foreign('uni_id')->references('id')->on('universities');
-
-            $table->primary(['id', 'uni_id']);
         });
-
-        //TODO: set uni_id not Nullable
     }
 
     /**
