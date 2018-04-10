@@ -12,4 +12,18 @@ class Chair extends Model
      * @var string
      */
     protected $table = 'chairs';
+
+    /*
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courses() {
+        return $this->hasMany('App\Course');
+    }
+
+    /*
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function professors() {
+        return $this->hasMany('App\Professor');
+    }
 }

@@ -12,4 +12,11 @@ class Professor extends Model
      * @var string
      */
     protected $table = 'professors';
+
+    /*
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function chair() {
+        return $this->belongsTo('App\Chair');
+    }
 }
