@@ -16,16 +16,16 @@ class ProfessorsRateTable extends Migration
         Schema::create('professors_rate', function (Blueprint $table) {
             $table->unsignedInteger('prof_id');
             $table->unsignedInteger('user_id');
-            $table->integer('approachability');
-            $table->boolean('invite');
-            $table->integer('competence');
-            $table->integer('quality');
-            $table->integer('difficulty');
-            $table->integer('content');
-            $table->boolean('recommend');
-            $table->boolean('take_again');
-            $table->text('comment');
-            $table->double('grade_received');
+            $table->integer('approachability')->nullable();
+            $table->boolean('invite')->nullable();
+            $table->integer('competence')->nullable();
+            $table->integer('quality')->nullable();
+            $table->integer('difficulty')->nullable();
+            $table->integer('content')->nullable();
+            $table->boolean('recommend')->nullable();
+            $table->boolean('take_again')->nullable();
+            $table->text('comment')->nullable();
+            $table->double('grade_received')->nullable();
             $table->timestamps();
 
             $table->foreign('prof_id')->references('id')->on('professors');
