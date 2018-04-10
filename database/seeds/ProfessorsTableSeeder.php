@@ -15,6 +15,7 @@ class ProfessorsTableSeeder extends Seeder
             'id' => 1,
             'name' => 'Obi One',
             'level' => '4',
+            'type' => 'prof',
             'chair_id' => 1
         ]);
 
@@ -22,6 +23,7 @@ class ProfessorsTableSeeder extends Seeder
             'id' => 2,
             'name' => 'Frodo Beggins',
             'level' => '1',
+            'type' => 'assistant prof',
             'chair_id' => 1
         ]);
 
@@ -29,6 +31,7 @@ class ProfessorsTableSeeder extends Seeder
             'id' => 3,
             'name' => 'Jackie Chan',
             'level' => '3',
+            'type' => 'prof',
             'chair_id' => 2
         ]);
     }
