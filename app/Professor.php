@@ -13,7 +13,7 @@ class Professor extends Model
      */
     protected $table = 'professors';
 
-    /*
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function chair() {

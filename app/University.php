@@ -12,4 +12,11 @@ class University extends Model
      * @var string
      */
     protected $table = 'universities';
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function faculties() {
+        return $this->hasMany('App\Faculty');
+    }
 }

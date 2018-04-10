@@ -12,4 +12,18 @@ class Faculty extends Model
      * @var string
      */
     protected $table = 'faculties';
+
+    /**
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    */
+    public function university() {
+        return $this->belongsTo('App\University');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function faculties() {
+        return $this->hasMany('App\Chair');
+    }
 }
