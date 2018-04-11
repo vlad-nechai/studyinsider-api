@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Course;
+use App\Professor;
 
-class CourseController extends Controller
+class ProfessorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::all();
-        return $courses;
+        $professors = Professor::all();
+        return $professors;
     }
 
     /**

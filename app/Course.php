@@ -13,6 +13,8 @@ class Course extends Model
      */
     protected $table = 'courses';
 
+    //TODO: fix timestamps
+
     /*
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

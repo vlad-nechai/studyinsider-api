@@ -16,3 +16,6 @@ Route::get('/', function () {
 });
 
 Route::get('/courses', 'CourseController@index');
+Route::get('/universities', 'UniversityController@index');
+Route::get('/professors', 'ProfessorController@index');
+Route::get('/chairs', 'ChairController@index');

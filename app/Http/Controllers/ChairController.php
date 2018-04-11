@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Course;
+use App\Chair;
 
-class CourseController extends Controller
+class ChairController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::all();
-        return $courses;
+        $chairs = Chair::all();
+        return $chairs;
     }
 
     /**
