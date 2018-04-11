@@ -8,6 +8,8 @@ use App\Chair;
 
 class ChairController extends Controller
 {
+
+    //TODO: fix chair-faculty relation
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +17,8 @@ class ChairController extends Controller
      */
     public function index()
     {
-        $chairs = Chair::all();
+        $chairs = Chair::with(['courses', 'professors', 'faculty'])->get();
+
         return $chairs;
     }
 

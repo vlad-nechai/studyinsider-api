@@ -8,6 +8,8 @@ use App\University;
 
 class UniversityController extends Controller
 {
+
+    //TODO: change uni_id into university_id
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +17,8 @@ class UniversityController extends Controller
      */
     public function index()
     {
-        $universities = University::all();
+        $universities = University::with('majors')->get();
+
         return $universities;
     }
 
