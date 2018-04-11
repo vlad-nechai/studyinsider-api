@@ -23,7 +23,7 @@ class Faculty extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function faculties() {
+    public function chairs() {
         return $this->hasMany('App\Chair');
     }
 }
