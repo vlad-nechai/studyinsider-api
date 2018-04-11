@@ -19,4 +19,12 @@ class University extends Model
     public function faculties() {
         return $this->hasMany('App\Faculty');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function majors() {
+        return $this->belongsToMany('App\Major',
+            'major_university_table', 'uni_id', 'major_id');
+    }
 }
