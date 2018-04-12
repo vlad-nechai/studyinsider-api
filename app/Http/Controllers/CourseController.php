@@ -15,7 +15,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::with(['chair'])->get();
+        $courses = Course::with(['chair', 'professors'])->get();
 
         return $courses;
     }

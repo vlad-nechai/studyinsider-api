@@ -18,6 +18,6 @@ class Major extends Model
      */
     public function universities() {
         return $this->belongsToMany('App\University',
-            'major_university_table', 'major_id', 'uni_id');
+            'major_university', 'major_id', 'university_id');
     }
 }

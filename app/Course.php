@@ -21,4 +21,12 @@ class Course extends Model
     public function chair() {
         return $this->belongsTo('App\Chair');
     }
+
+    /*
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function professors() {
+        return $this->belongsToMany('App\Professor',
+            'course_professor', 'course_id', 'prof_id');
+    }
 }

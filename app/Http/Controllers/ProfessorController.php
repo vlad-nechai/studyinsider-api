@@ -15,7 +15,7 @@ class ProfessorController extends Controller
      */
     public function index()
     {
-        $professors = Professor::with('chair')->get();
+        $professors = Professor::with(['chair', 'courses'])->get();
 
         return $professors;
     }
