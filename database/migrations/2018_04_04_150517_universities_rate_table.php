@@ -15,7 +15,7 @@ class UniversitiesRateTable extends Migration
     {
         Schema::create('universities_rate', function (Blueprint $table) {
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('uni_id');
+            $table->unsignedInteger('university_id');
             $table->integer('reputation')->nullable();
             $table->integer('wifi')->nullable();
             $table->integer('facilities')->nullable();
@@ -38,9 +38,9 @@ class UniversitiesRateTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('uni_id')->references('id')->on('universities');
+            $table->foreign('university_id')->references('id')->on('universities');
 
-            $table->primary(['uni_id', 'user_id']);
+            $table->primary(['university_id', 'user_id']);
         });
     }
 

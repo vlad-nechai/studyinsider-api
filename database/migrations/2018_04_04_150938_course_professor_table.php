@@ -13,7 +13,7 @@ class CourseProfessorTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_professor_table', function (Blueprint $table) {
+        Schema::create('course_professor', function (Blueprint $table) {
             $table->unsignedInteger('prof_id');
             $table->unsignedInteger('course_id');
 
@@ -32,6 +32,6 @@ class CourseProfessorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('course_professor_table');
+        Schema::dropIfExists('course_professor');
     }
 }

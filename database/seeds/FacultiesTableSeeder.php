@@ -16,7 +16,7 @@ class FacultiesTableSeeder extends Seeder
             'name' => 'Techfak',
             'type' => 'faculty',
             'location' => 'Erlangen',
-            'uni_id' => 1
+            'university_id' => 1
         ]);
 
         DB::table('faculties')->insert([
@@ -24,7 +24,7 @@ class FacultiesTableSeeder extends Seeder
             'name' => 'WISO',
             'type' => 'Institute',
             'location' => 'Nuremberg',
-            'uni_id' => 1
+            'university_id' => 1
         ]);
     }
 }

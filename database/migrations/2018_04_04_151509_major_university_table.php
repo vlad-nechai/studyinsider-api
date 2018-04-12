@@ -13,14 +13,14 @@ class MajorUniversityTable extends Migration
      */
     public function up()
     {
-        Schema::create('major_university_table', function (Blueprint $table) {
-            $table->unsignedInteger('uni_id');
+        Schema::create('major_university', function (Blueprint $table) {
+            $table->unsignedInteger('university_id');
             $table->unsignedInteger('major_id');
 
-            $table->foreign('uni_id')->references('id')->on('universities');
+            $table->foreign('university_id')->references('id')->on('universities');
             $table->foreign('major_id')->references('id')->on('majors');
 
-            $table->primary(['uni_id', 'major_id']);
+            $table->primary(['university_id', 'major_id']);
 
         });
     }
@@ -32,6 +32,6 @@ class MajorUniversityTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('major_university_table');
+        Schema::dropIfExists('major_university');
     }
 }
