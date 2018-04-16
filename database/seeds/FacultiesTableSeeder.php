@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class FacultiesTableSeeder extends Seeder
 {
@@ -16,7 +17,9 @@ class FacultiesTableSeeder extends Seeder
             'name' => 'Techfak',
             'type' => 'faculty',
             'location' => 'Erlangen',
-            'university_id' => 1
+            'university_id' => 1,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
         DB::table('faculties')->insert([
@@ -24,7 +27,9 @@ class FacultiesTableSeeder extends Seeder
             'name' => 'WISO',
             'type' => 'Institute',
             'location' => 'Nuremberg',
-            'university_id' => 1
+            'university_id' => 1,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 }

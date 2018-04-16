@@ -13,16 +13,14 @@ class Course extends Model
      */
     protected $table = 'courses';
 
-    //TODO: fix timestamps
-
-    /*
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function chair() {
         return $this->belongsTo('App\Chair');
     }
 
-    /*
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function professors() {

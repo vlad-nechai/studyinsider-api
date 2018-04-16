@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class MajorsTableSeeder extends Seeder
 {
@@ -14,13 +15,17 @@ class MajorsTableSeeder extends Seeder
         DB::table('majors')->insert([
             'id' => 1,
             'name' => 'IIS',
-            'type' => 'master'
+            'type' => 'master',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
         DB::table('majors')->insert([
             'id' => 2,
             'name' => 'MIBS',
-            'type' => 'master'
+            'type' => 'master',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 }
