@@ -8,6 +8,8 @@ use App\Course;
 
 class CourseController extends Controller
 {
+    //TODO: rates calculating in models
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +17,10 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::with(['chair', 'professors'])->get();
+        $courses = Course::with(['chair', 'professors', 'reviews', 'avgRating'])->withCount('reviews')->get();
+        foreach ($courses as $course) {
+            $course->rate = 4;
+        }
 
         return $courses;
     }

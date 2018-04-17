@@ -27,4 +27,23 @@ class Course extends Model
         return $this->belongsToMany('App\Professor',
             'course_professor', 'course_id', 'prof_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function reviews() {
+        return $this
+            ->belongsToMany('App\Course','courses_rate');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function avgRating()
+    {
+        return $this->reviews()
+            ->selectRaw('avg(courses_rate.interesting) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
 }
