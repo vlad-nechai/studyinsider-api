@@ -10,19 +10,11 @@ class CourseController extends Controller
 {
     //TODO: rates calculating in models
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
     public function index()
     {
         $courses = Course::with(['chair', 'professors', 'reviews', 'avgRating'])->withCount('reviews')->get();
-        foreach ($courses as $course) {
-            $course->rate = 4;
-        }
 
-        return $courses;
+        return view('courses.index');
     }
 
     /**
