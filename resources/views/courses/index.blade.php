@@ -1,26 +1,31 @@
 @extends ('layouts.master')
+@section ('head')
+    @parent
+    <link rel="stylesheet" href="css/grid.css">
+@stop
 
 @include ('layouts.breadcrumb')
 
 @section('content')
     <div class="container">
-        <div class="row">
-            <div class="col-4">.col-4</div>
-            <div class="col-4">.col-4</div>
-            <div class="col-4">.col-4</div>
+        <div class="row grid-head">
+            <div class="col">Course Name</div>
+            <div class="col">Rating</div>
+            <div class="col">University</div>
+            <div class="col">Chair</div>
+            <div class="col">Faculty</div>
         </div>
 
-        <div class="row">
-            <div class="col-sm-4">.col-sm-4</div>
-            <div class="col-sm-4">.col-sm-4</div>
-            <div class="col-sm-4">.col-sm-4</div>
-        </div>
+        @foreach ($courses as $course)
+            <div class="row">
+                <div class="col">{{ $course->name }}</div>
+                <div class="col">{{ $course->avg_rating }}</div>
+                <div class="col">{{ $course->chair->faculty }}</div>
+                <div class="col">{{ $course->chair->name }}</div>
+                <div class="col">{{ $course->location }}</div>
+            </div>
+        @endforeach
 
-        <div class="row">
-            <div class="col-md-4">.col-md-4</div>
-            <div class="col-md-4">.col-md-4</div>
-            <div class="col-md-4">.col-md-4</div>
-        </div>
     </div>
 
 @endsection

@@ -14,7 +14,7 @@ class CourseController extends Controller
     {
         $courses = Course::with(['chair', 'professors', 'reviews', 'avgRating'])->withCount('reviews')->get();
 
-        return view('courses.index');
+        return view('courses.index', compact('courses'));
     }
 
     /**
