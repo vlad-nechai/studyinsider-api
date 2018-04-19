@@ -16,8 +16,11 @@ class CreateChairsTable extends Migration
         Schema::create('chairs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('faculty_id');
             $table->string('location');
             $table->timestamps();
+
+            $table->foreign('faculty_id')->references('id')->on('faculty');
         });
     }
 

@@ -16,6 +16,7 @@ class ChairsTableSeeder extends Seeder
         DB::table('chairs')->insert([
             'id' => 1,
             'name' => 'INF',
+            'faculty_id' => 1,
             'location' => 'K-119',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -24,6 +25,7 @@ class ChairsTableSeeder extends Seeder
         DB::table('chairs')->insert([
             'id' => 2,
             'name' => 'SOSY',
+            'faculty_id' => 2,
             'location' => 'K2',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
