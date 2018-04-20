@@ -19,6 +19,8 @@ class CreateChairsTable extends Migration
             $table->unsignedInteger('faculty_id');
             $table->string('location');
             $table->timestamps();
+
+            $table->foreign('faculty_id')->references('id')->on('faculties');
         });
     }
 
