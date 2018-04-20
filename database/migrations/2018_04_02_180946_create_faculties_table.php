@@ -23,6 +23,10 @@ class CreateFacultiesTable extends Migration
 
             $table->foreign('university_id')->references('id')->on('universities');
         });
+
+        Schema::table('chairs', function (Blueprint $table) {
+            $table->foreign('faculty_id')->references('id')->on('faculties');
+        });
     }
 
     /**

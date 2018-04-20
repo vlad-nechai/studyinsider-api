@@ -20,3 +20,4 @@ Route::get('/universities', 'UniversityController@index');
 Route::get('/professors', 'ProfessorController@index');
 Route::get('/chairs', 'ChairController@index');
 Route::get('/majors', 'MajorController@index');
+Route::get('/faculties', 'FacultiesController@index');
