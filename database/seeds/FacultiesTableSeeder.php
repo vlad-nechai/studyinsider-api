@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Carbon\Carbon;
+use App\Faculty;
 
 class FacultiesTableSeeder extends Seeder
 {
@@ -12,24 +12,32 @@ class FacultiesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('faculties')->insert([
-            'id' => 1,
-            'name' => 'Techfak',
-            'type' => 'faculty',
-            'location' => 'Erlangen',
-            'university_id' => 1,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ]);
+        $faculty = new Faculty;
+        $faculty->name = 'Gryffindor';
+        $faculty->location = 'North Tower';
+        $faculty->type = 'House';
+        $faculty->university_id = 1;
+        $faculty->save();
 
-        DB::table('faculties')->insert([
-            'id' => 2,
-            'name' => 'WISO',
-            'type' => 'Institute',
-            'location' => 'Nuremberg',
-            'university_id' => 1,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ]);
+        $faculty = new Faculty;
+        $faculty->name = 'Hufflepuff';
+        $faculty->location = 'Orangery';
+        $faculty->type = 'House';
+        $faculty->university_id = 1;
+        $faculty->save();
+
+        $faculty = new Faculty;
+        $faculty->name = 'Ravenclaw';
+        $faculty->location = 'West Tower';
+        $faculty->type = 'House';
+        $faculty->university_id = 1;
+        $faculty->save();
+
+        $faculty = new Faculty;
+        $faculty->name = 'Slytherin';
+        $faculty->location = 'Dungeons';
+        $faculty->type = 'House';
+        $faculty->university_id = 1;
+        $faculty->save();
     }
 }
