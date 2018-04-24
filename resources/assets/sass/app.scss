@@ -1,9 +1,19 @@
-
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 // Variables
-@import "variables";
+//@import "variables";
 
 // Bootstrap
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+//@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+//@import "~mdbootstrap";
+
+body {
+  background: #2ab27b;
+}
+
+
+.evalooni-breadcrumb {
+  margin-top: 1em;
+}

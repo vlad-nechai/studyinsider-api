@@ -1,5 +1,13 @@
 @extends ('layouts.master')
 
+@section ('head')
+    @parent
+    <link rel="stylesheet" href="css/carousel.css">
+@stop
+
+@section ('breadcrumb')
+@stop
+
 @section('content')
 
     <div id="myCarousel" class="carousel slide" data-ride="carousel">

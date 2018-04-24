@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/courses', 'CourseController@index');
+Route::get('/course/{id}', 'CourseController@show');
 Route::get('/universities', 'UniversityController@index');
 Route::get('/professors', 'ProfessorController@index');
 Route::get('/chairs', 'ChairController@index');
