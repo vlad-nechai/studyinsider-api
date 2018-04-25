@@ -15,8 +15,18 @@ Route::get('/', function () {
     return view('landing');
 });
 
-Route::get('/courses', 'CourseController@index');
-Route::get('/course/{id}', 'CourseController@show');
+/**
+ * Courses routes
+ */
+Route::get('/courses', [
+    'as' => 'courses_index',
+    'uses' => 'CourseController@index'
+]);
+Route::get('/course/{course}', 'CourseController@show');
+Route::get('/courses/create', 'CourseController@create');
+Route::get('/course/{course}/edit', 'CourseController@edit');
+Route::post('/courses', 'CourseController@store');
+
 Route::get('/universities', 'UniversityController@index');
 Route::get('/professors', 'ProfessorController@index');
 Route::get('/chairs', 'ChairController@index');
