@@ -22,7 +22,7 @@
             @foreach ($courses as $key=>$course)
                 <tr>
                     <th scope="row">{{ ++$key }}</th>
-                    <td><a href="/course/{{$course->id}}">{{ $course->name }}</a></td>
+                    <td><a href="/courses/{{$course->id}}">{{ $course->name }}</a></td>
                     <td>
                         <span><i class="material-icons text-warning">star_rate</i></span>
                     </td>

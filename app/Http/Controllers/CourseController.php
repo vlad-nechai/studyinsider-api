@@ -53,7 +53,7 @@ class CourseController extends Controller
         $course->location = $request->location;
         $course->save();
 
-        return redirect()->route('courses_index');
+        return redirect()->route('courses.index');
     }
 
     /**
@@ -75,7 +75,8 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        return $course;
+        $chairs = Chair::all();
+        return view('courses.edit', compact(['course', 'chairs']));
     }
 
     /**
@@ -87,7 +88,14 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $course = Course::find($id);
+        $course->name = $request->name;
+        $course->chair_id = $request->chair;
+        $course->type = $request->type;
+        $course->location = $request->location;
+        $course->save();
+
+        return redirect()->route('courses.index');
     }
 
     /**
@@ -98,6 +106,9 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $course = Course::find($id);
+        $course->delete();
+
+        return redirect()->route('courses.index');
     }
 }
