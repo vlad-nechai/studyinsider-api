@@ -1,0 +1,30 @@
+@extends ('layouts.master')
+
+@section('content')
+    <div class="container bg-secondary">
+        <form method="POST" action="/universities">
+            {{csrf_field()}}
+            <div class="form-group">
+                <label for="courseName">University name</label>
+                <input type="text" name="name" class="form-control" id="universityName" aria-describedby="universityNameHelp" placeholder="Enter university name" required>
+                <small id="universityNameHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="universityLocation">University location</label>
+                <input type="text" name="location" class="form-control" id="universityLocation" aria-describedby="universityLocationHelp" placeholder="Enter university location" required>
+                <small id="universityLocationHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="universityType">University type</label>
+                <input type="text" name="type" class="form-control" id="universityType" aria-describedby="universityTypeHelp" placeholder="Enter university type" required>
+                <small id="universityTypeHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+
+            @include('layouts.errors')
+        </form>
+    </div>
+@endsection

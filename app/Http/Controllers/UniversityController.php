@@ -9,7 +9,6 @@ use App\University;
 class UniversityController extends Controller
 {
 
-    //TODO: change uni_id into university_id
     /**
      * Display a listing of the resource.
      *
@@ -17,9 +16,9 @@ class UniversityController extends Controller
      */
     public function index()
     {
-        $universities = University::with('majors')->get();
+        $universities = University::with(['faculties', 'majors'])->get();
 
-        return $universities;
+        return view('universities.index', compact('universities'));
     }
 
     /**
@@ -29,7 +28,7 @@ class UniversityController extends Controller
      */
     public function create()
     {
-        //
+        return view('universities.create');
     }
 
     /**
@@ -40,29 +39,41 @@ class UniversityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'type' => 'required',
+            'location' => 'required',
+        ]);
+
+        $university = new University();
+        $university->name = $request->name;
+        $university->type = $request->type;
+        $university->location = $request->location;
+        $university->save();
+
+        return redirect()->route('universities.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  University  $university
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(University $university)
     {
-        //
+        return view('universities.show', compact('university'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  University  $university
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(University  $university)
     {
-        //
+        return view('universities.edit', compact('university'));
     }
 
     /**
@@ -74,7 +85,13 @@ class UniversityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $university = University::find($id);
+        $university->name = $request->name;
+        $university->type = $request->type;
+        $university->location = $request->location;
+        $university->save();
+
+        return redirect()->route('universities.index');
     }
 
     /**
@@ -85,6 +102,9 @@ class UniversityController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $univesity = University::find($id);
+        $univesity->delete();
+
+        return redirect()->route('universities.index');
     }
 }

@@ -26,8 +26,11 @@ Route::resources([
     'professors' => 'ProfessorController'
 ]);
 
-Route::get('/universities', 'UniversityController@index');
-//Route::get('/professors', 'ProfessorController@index');
+Route::resources([
+    'universities' => 'UniversityController'
+]);
+
+//Route::get('/universities', 'UniversityController@index');
 Route::get('/chairs', 'ChairController@index');
 Route::get('/majors', 'MajorController@index');
 Route::get('/faculties', 'FacultiesController@index');
