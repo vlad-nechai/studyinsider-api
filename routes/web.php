@@ -22,9 +22,15 @@ Route::resources([
     'courses' => 'CourseController'
 ]);
 
+Route::resources([
+    'professors' => 'ProfessorController'
+]);
+
 Route::get('/universities', 'UniversityController@index');
-Route::get('/professors', 'ProfessorController@index');
+//Route::get('/professors', 'ProfessorController@index');
 Route::get('/chairs', 'ChairController@index');
 Route::get('/majors', 'MajorController@index');
 Route::get('/faculties', 'FacultiesController@index');
+
+Route::get('/fau', 'Univis\FauController@index');
 

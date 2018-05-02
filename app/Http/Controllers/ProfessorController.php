@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Professor;
+use App\Chair;
 
 class ProfessorController extends Controller
 {
@@ -17,7 +18,7 @@ class ProfessorController extends Controller
     {
         $professors = Professor::with(['chair', 'courses'])->get();
 
-        return $professors;
+        return view('professors.index', compact('professors'));
     }
 
     /**
@@ -27,7 +28,8 @@ class ProfessorController extends Controller
      */
     public function create()
     {
-        //
+        $chairs = Chair::all();
+        return view('professors.create', compact('chairs'));
     }
 
     /**
@@ -38,29 +40,44 @@ class ProfessorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'chair' => 'required',
+            'type' => 'required',
+            'level' => 'required',
+        ]);
+
+        $professor = new Professor();
+        $professor->name = $request->name;
+        $professor->chair_id = $request->chair;
+        $professor->type = $request->type;
+        $professor->level = $request->level;
+        $professor->save();
+
+        return redirect()->route('professors.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Professor  $professor
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Professor $professor)
     {
-        //
+        return view('professors.show', compact('professor'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Professor  $professor
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Professor $professor)
     {
-        //
+        $chairs = Chair::all();
+        return view('professors.edit', compact(['professor', 'chairs']));
     }
 
     /**
@@ -72,7 +89,14 @@ class ProfessorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $professor = Professor::find($id);
+        $professor->name = $request->name;
+        $professor->chair_id = $request->chair;
+        $professor->type = $request->type;
+        $professor->level = $request->level;
+        $professor->save();
+
+        return redirect()->route('professors.index');
     }
 
     /**
@@ -83,6 +107,9 @@ class ProfessorController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $professor = Professor::find($id);
+        $professor->delete();
+
+        return redirect()->route('professors.index');
     }
 }
