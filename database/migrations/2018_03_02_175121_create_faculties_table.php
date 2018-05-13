@@ -17,6 +17,9 @@ class CreateFacultiesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('type');
+            $table->string('univis_id')->nullable()->unique();
+            $table->string('univis_orgnr')->nullable()->unique();
+            $table->string('univis_hash')->nullable()->unique();
             $table->string('location');
             $table->unsignedInteger('university_id');
             $table->timestamps();
