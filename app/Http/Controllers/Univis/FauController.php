@@ -68,7 +68,8 @@ class FauController extends Controller
 
                 $list = $xml->xpath("//Org[not(contains(substring-after(@key, 'Org.'), '.'))]");
                 foreach ($list as $org) {
-                    echo $org->name . " " .$org->attributes()['key']. " " . "<br>";
+                    dump($org);
+//                    echo $org->name . " " .$org->attributes()['key']. " " . "<br>";
                 }
 
 //                foreach ($xml->Org as $org) {
