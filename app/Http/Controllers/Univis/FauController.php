@@ -51,23 +51,49 @@ class FauController extends Controller
 //
 //        }
         $client = new Client(['headers' => ['Content-Type' => 'application/xml']]);
-        try {
-            $res = $client->get($this->endPoint, [
-                'query' => [
-                    'search' => 'departments',
-//                    'id' => '49652439',
-                    'path' => 'tech',
-                    'show' => 'xml'
-                ],
-            ]);
-        } catch (GuzzleException $e) {
-        }
 
-        $xml = simplexml_load_string($res->getBody()->getContents());
-        dd($xml);
+        foreach(range('M','T') as $v) {
+            try {
+                $res = $client->get($this->endPoint, [
+                    'query' => [
+                        'search' => 'departments',
+//                        'id' => '49626763',
+//                      'path' => 'recht',
+                        'name' => "^$v",
+                        'show' => 'xml'
+                    ],
+                ]);
+
+                $xml = simplexml_load_string($res->getBody()->getContents());
+
+                $list = $xml->xpath("//Org[not(contains(substring-after(@key, 'Org.'), '.'))]");
+                foreach ($list as $org) {
+                    echo $org->name . " " .$org->attributes()['key']. " " . "<br>";
+                }
+
+//                foreach ($xml->Org as $org) {
+//                    foreach($org->attributes() as $a => $b) {
+//                        echo $a,'="',$b,"\"\n";
+//                    }
+//                    echo '<br>';
+//                }
+
+
+            } catch (GuzzleException $e) {
+            }
+
+        }
     }
 
-    public function faculties() {
+    public function importFaculties() {
+
+    }
+
+    public function importDepartments() {
+
+    }
+
+    public function importChairs() {
 
     }
 
