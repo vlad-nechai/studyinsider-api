@@ -17,5 +17,11 @@ class UniversitiesTableSeeder extends Seeder
         $university->location = "Hogwarts";
         $university->type = "university";
         $university->save();
+
+        $university = new University;
+        $university->name = "Friedrich-Alexander-Universität Erlangen-Nürnberg";
+        $university->location = "Schloßplatz 4, 91054 Erlangen";
+        $university->type = "university";
+        $university->save();
     }
 }
