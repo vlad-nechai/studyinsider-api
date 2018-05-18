@@ -12,32 +12,32 @@ class FacultiesTableSeeder extends Seeder
      */
     public function run()
     {
-        $faculty = new Faculty;
-        $faculty->name = 'Gryffindor';
-        $faculty->location = 'North Tower';
-        $faculty->type = 'House';
-        $faculty->university_id = 1;
-        $faculty->save();
-
-        $faculty = new Faculty;
-        $faculty->name = 'Hufflepuff';
-        $faculty->location = 'Orangery';
-        $faculty->type = 'House';
-        $faculty->university_id = 1;
-        $faculty->save();
-
-        $faculty = new Faculty;
-        $faculty->name = 'Ravenclaw';
-        $faculty->location = 'West Tower';
-        $faculty->type = 'House';
-        $faculty->university_id = 1;
-        $faculty->save();
-
-        $faculty = new Faculty;
-        $faculty->name = 'Slytherin';
-        $faculty->location = 'Dungeons';
-        $faculty->type = 'House';
-        $faculty->university_id = 1;
-        $faculty->save();
+//        $faculty = new Faculty;
+//        $faculty->name = 'Gryffindor';
+//        $faculty->location = 'North Tower';
+//        $faculty->type = 'House';
+//        $faculty->university_id = 1;
+//        $faculty->save();
+//
+//        $faculty = new Faculty;
+//        $faculty->name = 'Hufflepuff';
+//        $faculty->location = 'Orangery';
+//        $faculty->type = 'House';
+//        $faculty->university_id = 1;
+//        $faculty->save();
+//
+//        $faculty = new Faculty;
+//        $faculty->name = 'Ravenclaw';
+//        $faculty->location = 'West Tower';
+//        $faculty->type = 'House';
+//        $faculty->university_id = 1;
+//        $faculty->save();
+//
+//        $faculty = new Faculty;
+//        $faculty->name = 'Slytherin';
+//        $faculty->location = 'Dungeons';
+//        $faculty->type = 'House';
+//        $faculty->university_id = 1;
+//        $faculty->save();
     }
 }

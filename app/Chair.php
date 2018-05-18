@@ -30,7 +30,7 @@ class Chair extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function faculty() {
-        return $this->belongsTo('App\Faculty');
+    public function department() {
+        return $this->belongsTo('App\Department');
     }
 }

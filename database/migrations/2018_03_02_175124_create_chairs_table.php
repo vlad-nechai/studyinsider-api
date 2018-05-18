@@ -16,11 +16,11 @@ class CreateChairsTable extends Migration
         Schema::create('chairs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedInteger('faculty_id');
+            $table->unsignedInteger('department_id');
             $table->string('location');
             $table->timestamps();
 
-            $table->foreign('faculty_id')->references('id')->on('faculties');
+            $table->foreign('department_id')->references('id')->on('departments');
         });
     }
 

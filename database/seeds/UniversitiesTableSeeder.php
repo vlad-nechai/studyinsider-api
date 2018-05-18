@@ -12,11 +12,11 @@ class UniversitiesTableSeeder extends Seeder
      */
     public function run()
     {
-        $university = new University;
-        $university->name = "Hogwarts School of Witchcraft and Wizardry";
-        $university->location = "Hogwarts";
-        $university->type = "university";
-        $university->save();
+//        $university = new University;
+//        $university->name = "Hogwarts School of Witchcraft and Wizardry";
+//        $university->location = "Hogwarts";
+//        $university->type = "university";
+//        $university->save();
 
         $university = new University;
         $university->name = "Friedrich-Alexander-Universität Erlangen-Nürnberg";
