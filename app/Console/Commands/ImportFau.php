@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Chair;
+use App\Course;
 use App\Department;
 use App\Faculty;
 use Illuminate\Console\Command;
@@ -67,6 +68,9 @@ class ImportFau extends Command
             case "chairs":
                 $this->importChairs();
                 break;
+            case "courses":
+                $this->importCourses();
+                break;
             default:
                 echo "Something went wrong! Please try again";
         }
@@ -105,11 +109,11 @@ class ImportFau extends Command
                         echo $org->attributes()['key'] . " has been imported \n";
 
                     } catch (\Exception $e) {
-                        echo ($e->getMessage());
+                        echo ($e->getMessage()."\n");
                     }
                 }
             } catch (Exception $e) {
-                echo ($e->getMessage());
+                echo ($e->getMessage()."\n");
             }
         }
 
@@ -214,5 +218,57 @@ class ImportFau extends Command
         }
 
         echo "Chairs import finished";
+    }
+
+    /**
+     * @return void
+     */
+    private function importCourses()
+    {
+        $chairs = Chair::all();
+        foreach ($chairs as $chair) {
+            try {
+                $res = $this->client->get($this->endPoint, [
+                    'query' => [
+                        'search' => 'lectures',
+                        'department' => $chair->univis_id,
+                        'show' => 'xml'
+                    ],
+                ]);
+
+                $xml = simplexml_load_string($res->getBody()->getContents());
+                $list = $xml->xpath("//Lecture ");
+
+                foreach ($list as $org) {
+                    try {
+                        $course = new Course;
+                        $course->name = $org->name;
+                        $course->course_type = $org->type;
+                        $course->chair_id = $chair->id;
+                        $course->univis_id = $org->id;
+//                    $course->univis_ref = $org->classification->UnivISRef->attributes()['key'];
+                        $course->univis_key = $org->attributes()['key'];
+                        $course->sws = $org->sws;
+                        $course->ects = $org->ects_cred;
+//                    $course->semester = $org->sws;
+//                    $course->program_type = $org->sws;
+                        $course->language = $org->leclanguage;
+//                    $course->mandatory = $org->sws;
+                        $course->summary = $org->summary;
+
+                        $course->save();
+
+                        echo $org->attributes()['key'] . "\n";
+
+                    } catch (\Exception $e) {
+                        echo($e->getMessage() . "\n");
+                    }
+                }
+            } catch (\Exception $e) {
+                echo($e->getMessage() . "\n");
+            }
+        }
+
+        echo "Courses import finished";
     }
 }

@@ -15,15 +15,20 @@ class CreateCoursesTable extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->comment = "Course name in univis";;
             $table->unsignedInteger('chair_id');
-            $table->string('type');
+            $table->string('course_type')->comment = "Lecture, seminar or tutorial";;
             $table->string('univis_id')->nullable()->unique();
-            $table->string('univis_orgnr')->nullable()->unique();
+            $table->string('univis_ref')->nullable()->unique();
             $table->string('univis_hash')->nullable()->unique();
             $table->string('univis_key')->nullable()->unique();
             $table->string('ects')->nullable();
-            $table->string('location');
+            $table->integer('sws')->nullable()->comment = "Semester Wochen Stunden";
+            $table->string('semester')->nullable()->comment = "Winter or summer semester";
+            $table->string('program_type')->nullable()->comment = "Master, bachelor or PhD";
+            $table->string('language')->nullable()->comment = "D, DE: german; E, EN:english";
+            $table->unsignedTinyInteger('mandatory')->nullable()->comment = "1: yes(mandatory); 0:no(elective)";
+            $table->text('summary')->nullable()->comment = "Course description";
             $table->timestamps();
 
             $table->foreign('chair_id')->references('id')->on('chairs');
