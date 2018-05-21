@@ -19,6 +19,9 @@ class CreateCoursesTable extends Migration
             $table->unsignedInteger('chair_id');
             $table->string('type');
             $table->string('univis_id')->nullable()->unique();
+            $table->string('univis_orgnr')->nullable()->unique();
+            $table->string('univis_hash')->nullable()->unique();
+            $table->string('univis_key')->nullable()->unique();
             $table->string('ects')->nullable();
             $table->string('location');
             $table->timestamps();

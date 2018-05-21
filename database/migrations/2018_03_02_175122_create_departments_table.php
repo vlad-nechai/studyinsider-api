@@ -20,7 +20,8 @@ class CreateDepartmentsTable extends Migration
             $table->string('univis_id')->nullable()->unique();
             $table->string('univis_orgnr')->nullable()->unique();
             $table->string('univis_hash')->nullable()->unique();
-            $table->string('location');
+            $table->string('univis_key')->nullable()->unique();
+            $table->string('location')->nullable();
             $table->unsignedInteger('faculty_id');
             $table->timestamps();
 

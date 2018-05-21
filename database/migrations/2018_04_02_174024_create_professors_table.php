@@ -18,6 +18,10 @@ class CreateProfessorsTable extends Migration
             $table->string('name');
             $table->string('level');
             $table->string('type');
+            $table->string('univis_id')->nullable()->unique();
+            $table->string('univis_orgnr')->nullable()->unique();
+            $table->string('univis_hash')->nullable()->unique();
+            $table->string('univis_key')->nullable()->unique();
             $table->unsignedInteger('chair_id');
             $table->timestamps();
 
