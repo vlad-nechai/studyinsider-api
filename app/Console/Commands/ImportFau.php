@@ -6,6 +6,7 @@ use App\Chair;
 use App\Course;
 use App\Department;
 use App\Faculty;
+use App\Professor;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception;
@@ -70,6 +71,9 @@ class ImportFau extends Command
                 break;
             case "courses":
                 $this->importCourses();
+                break;
+            case "professors":
+                $this->importProfessors();
                 break;
             default:
                 echo "Something went wrong! Please try again";
@@ -239,26 +243,26 @@ class ImportFau extends Command
                 $xml = simplexml_load_string($res->getBody()->getContents());
                 $list = $xml->xpath("//Lecture ");
 
-                foreach ($list as $org) {
+                foreach ($list as $lecture) {
                     try {
                         $course = new Course;
-                        $course->name = $org->name;
-                        $course->course_type = $org->type;
+                        $course->name = $lecture->name;
+                        $course->course_type = $lecture->type;
                         $course->chair_id = $chair->id;
-                        $course->univis_id = $org->id;
-//                    $course->univis_ref = $org->classification->UnivISRef->attributes()['key'];
-                        $course->univis_key = $org->attributes()['key'];
-                        $course->sws = $org->sws;
-                        $course->ects = $org->ects_cred;
-//                    $course->semester = $org->sws;
-//                    $course->program_type = $org->sws;
-                        $course->language = $org->leclanguage;
-//                    $course->mandatory = $org->sws;
-                        $course->summary = $org->summary;
+                        $course->univis_id = $lecture->id;
+//                    $course->univis_ref = $lecture->classification->UnivISRef->attributes()['key'];
+                        $course->univis_key = $lecture->attributes()['key'];
+                        $course->sws = $lecture->sws;
+                        $course->ects = $lecture->ects_cred;
+//                    $course->semester = $lecture->sws;
+//                    $course->program_type = $lecture->sws;
+                        $course->language = $lecture->leclanguage;
+//                    $course->mandatory = $lecture->sws;
+                        $course->summary = $lecture->summary;
 
                         $course->save();
 
-                        echo $org->attributes()['key'] . "\n";
+                        echo $lecture->attributes()['key'] . "\n";
 
                     } catch (\Exception $e) {
                         echo($e->getMessage() . "\n");
@@ -270,5 +274,50 @@ class ImportFau extends Command
         }
 
         echo "Courses import finished";
+    }
+
+    /**
+     * @return void
+     */
+    private function importProfessors()
+    {
+        $chairs = Chair::all();
+        foreach ($chairs as $chair) {
+            try {
+                $res = $this->client->get($this->endPoint, [
+                    'query' => [
+                        'search' => 'persons',
+                        'department' => $chair->univis_id,
+                        'show' => 'xml'
+                    ],
+                ]);
+
+                $xml = simplexml_load_string($res->getBody()->getContents());
+                $list = $xml->xpath("//Person");
+                foreach ($list as $person) {
+                    try {
+                        $professor = new Professor;
+                        $professor->name = $person->firstname . " " . $person->lastname;
+                        $professor->level = $person->atitle;
+                        $professor->type = $person->title;
+                        $professor->univis_id = $person->id;
+                        $professor->univis_key = $person->attributes()['key'];
+                        $professor->chair_id = $chair->id;
+
+                        $professor->save();
+
+                        echo $person->attributes()['key'] . "\n";
+
+                    } catch (\Exception $e) {
+                        echo($e->getMessage() . "\n");
+                    }
+}
+
+            } catch (\Exception $e) {
+                echo($e->getMessage() . "\n");
+            }
+        }
+
+        echo "import Professors finished";
     }
 }
