@@ -16,10 +16,9 @@ class CreateProfessorsTable extends Migration
         Schema::create('professors', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('level');
-            $table->string('type');
+            $table->string('title')->nullable();
+            $table->tinyInteger('gender')->comment = "0: female; 1:male";
             $table->string('univis_id')->nullable()->unique();
-            $table->string('univis_orgnr')->nullable()->unique();
             $table->string('univis_hash')->nullable()->unique();
             $table->string('univis_key')->nullable()->unique();
             $table->unsignedInteger('chair_id');
