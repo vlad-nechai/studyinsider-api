@@ -34,7 +34,6 @@ class UniversitiesRateTable extends Migration
             $table->integer('company_affiliations')->nullable();
             $table->integer('student_body')->nullable();
             $table->integer('affiliations')->nullable();
-            $table->text('comments')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
