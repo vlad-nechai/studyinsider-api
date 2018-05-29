@@ -75,6 +75,9 @@ class ImportFau extends Command
             case "professors":
                 $this->importProfessors();
                 break;
+            case "map-courses-to-professors":
+                $this->mapCoursesToProfessors();
+                break;
             default:
                 echo "Something went wrong! Please try again";
         }
@@ -102,7 +105,7 @@ class ImportFau extends Command
                     try {
                         $faculty = new Faculty;
                         $faculty->name = $org->name;
-                        $faculty->type = "Faculty";
+                        $faculty->type = "faculty";
                         $faculty->university_id = 1;
                         $faculty->univis_id = $org->id;
                         $faculty->univis_orgnr = $org->attributes()['orgnr'];
@@ -149,7 +152,7 @@ class ImportFau extends Command
                         try {
                             $department = new Department;
                             $department->name = $org->name;
-                            $department->type = "Department";
+                            $department->type = "department";
                             $department->faculty_id = $faculty->id;
                             $department->univis_id = $org->id;
                             $department->univis_orgnr = $org->attributes()['orgnr'];
@@ -161,11 +164,11 @@ class ImportFau extends Command
                             echo $org->attributes()['key'] . " has been imported \n";
 
                         } catch (\Exception $e) {
-                            echo($e->getMessage());
+                            echo($e->getMessage(). "\n");
                         }
                     }
                 } catch (Exception $e) {
-                    echo($e->getMessage());
+                    echo($e->getMessage()."\n");
                 }
             }
         }
@@ -213,11 +216,11 @@ class ImportFau extends Command
                         }
 
                     } catch (\Exception $e) {
-                        echo ($e->getMessage());
+                        echo ($e->getMessage() . "\n");
                     }
                 }
             } catch (Exception $e) {
-                echo ($e->getMessage(). "\n");
+                echo ($e->getMessage() . "\n");
             }
         }
 
@@ -247,17 +250,15 @@ class ImportFau extends Command
                     try {
                         $course = new Course;
                         $course->name = $lecture->name;
-                        $course->course_type = $lecture->type;
+                        $course->short_name = $lecture->short;
                         $course->chair_id = $chair->id;
+                        $course->course_type = $lecture->type;
                         $course->univis_id = $lecture->id;
-//                    $course->univis_ref = $lecture->classification->UnivISRef->attributes()['key'];
                         $course->univis_key = $lecture->attributes()['key'];
-                        $course->sws = $lecture->sws;
                         $course->ects = $lecture->ects_cred;
-//                    $course->semester = $lecture->sws;
-//                    $course->program_type = $lecture->sws;
+                        $course->sws = $lecture->sws;
+                        $course->max_turnout = $lecture->maxturnout;
                         $course->language = $lecture->leclanguage;
-//                    $course->mandatory = $lecture->sws;
                         $course->summary = $lecture->summary;
 
                         $course->save();
@@ -298,8 +299,8 @@ class ImportFau extends Command
                     try {
                         $professor = new Professor;
                         $professor->name = $person->firstname . " " . $person->lastname;
-                        $professor->level = $person->atitle;
-                        $professor->type = $person->title;
+                        $professor->title = $person->title;
+                        $professor->gender = ($person->gender == "f") ? 0 : 1;
                         $professor->univis_id = $person->id;
                         $professor->univis_key = $person->attributes()['key'];
                         $professor->chair_id = $chair->id;
@@ -319,5 +320,44 @@ class ImportFau extends Command
         }
 
         echo "import Professors finished";
+    }
+
+    /**
+     * @return void
+     */
+    private function mapCoursesToProfessors()
+    {
+        $courses = Course::all();
+        foreach ($courses as $course) {
+            try {
+                $res = $this->client->get($this->endPoint, [
+                    'query' => [
+                        'search' => 'lectures',
+                        'id' => $course->univis_id,
+                        'show' => 'xml'
+                    ],
+                ]);
+
+                $xml = simplexml_load_string($res->getBody()->getContents());
+                $list = $xml->xpath("//Lecture/dozs/doz");
+                foreach ($list as $lecture) {
+                    try {
+                        $univisKey = $lecture->UnivISRef->attributes()['key'];
+                        $professor = Professor::where("univis_key", $univisKey)->first();
+
+                        $course->professors()->attach($professor->id);
+
+                        echo "$course->univis_key was mapped to $professor->univis_key \n";
+                    } catch (\Exception $e) {
+                        echo($e->getMessage() . "\n");
+                    }
+                }
+
+            } catch (\Exception $e) {
+                echo($e->getMessage() . "\n");
+            }
+        }
+
+        echo "Mapping courses to professors task is finished.";
     }
 }
