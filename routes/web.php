@@ -34,9 +34,14 @@ Route::resources([
     'chairs' => 'ChairController'
 ]);
 
-//Route::get('/chairs', 'ChairController@index');
-Route::get('/majors', 'MajorController@index');
-Route::get('/faculties', 'FacultiesController@index');
+Route::resources([
+    'faculties' => 'FacultiesController'
+]);
+
+
+//parser routes
+Route::post('/parser/linkedin', 'Parser\LinkedinController@index');
+Route::post('/parser/link', 'Parser\LinkedinController@link');
+Route::post('/parser/link/get', 'Parser\LinkedinController@getFirstLink');
 
 Route::get('/fau', 'Univis\FauController@index');
-
