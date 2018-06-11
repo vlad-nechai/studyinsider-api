@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Course;
-use App\Chair;
+use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
@@ -21,41 +21,26 @@ class CourseController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $chairs = Chair::all();
-        return view('courses.create', compact('chairs'));
-    }
-
-    //TODO: mass assignment
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'chair' => 'required',
-            'type' => 'required',
-            'location' => 'required',
+            'chair_id' => 'required',
+            'course_type' => 'required',
         ]);
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
 
-        $course = new Course;
-        $course->name = $request->name;
-        $course->chair_id = $request->chair;
-        $course->type = $request->type;
-        $course->location = $request->location;
-        $course->save();
+        $input = $request->all();
+        $course = Course::create($input);
 
-        return redirect()->route('courses.index');
+        return $course;
     }
 
     /**
@@ -70,47 +55,32 @@ class CourseController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  Course  $course
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Course $course)
-    {
-        $chairs = Chair::all();
-        return view('courses.edit', compact(['course', 'chairs']));
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $course = Course::find($id);
-        $course->name = $request->name;
-        $course->chair_id = $request->chair;
-        $course->type = $request->type;
-        $course->location = $request->location;
-        $course->save();
+        $course->update($input);
 
-        return redirect()->route('courses.index');
+        return $course;
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
         $course = Course::find($id);
         $course->delete();
 
-        return redirect()->route('courses.index');
+        return response()->json(['success'=>''], 401);
     }
 }

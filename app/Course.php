@@ -14,6 +14,23 @@ class Course extends Model
     protected $table = 'courses';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'short_name',
+        'chair_id',
+        'course_type',
+        'ects',
+        'sws',
+        'max_turnout',
+        'language',
+        'summary'
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
