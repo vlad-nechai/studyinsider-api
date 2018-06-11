@@ -12,13 +12,13 @@ class UniversityController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function index()
     {
-        $universities = University::with(['faculties', 'majors'])->get();
+        $universities = University::with(['faculties'])->paginate(10);
 
-        return view('universities.index', compact('universities'));
+        return $universities;
     }
 
     /**

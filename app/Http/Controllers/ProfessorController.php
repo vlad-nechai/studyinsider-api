@@ -12,13 +12,13 @@ class ProfessorController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function index()
     {
-        $professors = Professor::with(['chair', 'courses'])->get();
+        $professors = Professor::with(['chair', 'courses'])->has('courses')->paginate(10);
 
-        return view('professors.index', compact('professors'));
+        return $professors;
     }
 
     /**
@@ -61,11 +61,11 @@ class ProfessorController extends Controller
      * Display the specified resource.
      *
      * @param  Professor  $professor
-     * @return \Illuminate\Http\Response
+     * @return Professor $professor
      */
     public function show(Professor $professor)
     {
-        return view('professors.show', compact('professor'));
+        return $professor->load(['chair', 'courses']);
     }
 
     /**

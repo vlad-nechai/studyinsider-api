@@ -17,7 +17,7 @@ class ChairController extends Controller
      */
     public function index()
     {
-        $chairs = Chair::with(['courses', 'professors', 'faculty'])->get();
+        $chairs = Chair::with(['courses', 'professors', 'department'])->paginate(10);
 
         return $chairs;
     }

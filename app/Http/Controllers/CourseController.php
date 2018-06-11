@@ -13,9 +13,11 @@ class CourseController extends Controller
 
     public function index()
     {
-        $courses = Course::with(['chair', 'professors', 'reviews', 'avgRating'])->withCount('reviews')->get();
+        $courses = Course::with(['chair', 'professors', 'reviews', 'avgRating'])
+            ->withCount('reviews')
+            ->paginate(10);
 
-        return view('courses.index', compact('courses'));
+        return $courses;
     }
 
     /**
@@ -60,11 +62,11 @@ class CourseController extends Controller
      * Display the specified resource.
      *
      * @param  Course  $course
-     * @return \Illuminate\Http\Response
+     * @return Course  $course
      */
     public function show(Course $course)
     {
-        return view('courses.show', compact('course'));
+        return $course->load(['professors', 'chair', 'avgRating']);
     }
 
     /**
