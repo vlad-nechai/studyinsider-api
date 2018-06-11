@@ -14,6 +14,13 @@ class Course extends Model
     protected $table = 'courses';
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'chair_id'];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function chair() {
@@ -42,7 +49,7 @@ class Course extends Model
     public function avgRating()
     {
         return $this->reviews()
-            ->selectRaw('avg(courses_rate.interesting) as average, courses_rate.course_id')
+            ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
 

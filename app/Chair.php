@@ -14,6 +14,13 @@ class Chair extends Model
     protected $table = 'chairs';
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'department_id'];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function courses() {

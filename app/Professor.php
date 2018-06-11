@@ -14,6 +14,13 @@ class Professor extends Model
     protected $table = 'professors';
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'chair_id'];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function chair() {

@@ -14,6 +14,13 @@ class Faculty extends Model
     protected $table = 'faculties';
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['univis_id', 'univis_orgnr', 'univis_key', 'univis_hash', 'university_id'];
+
+    /**
     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
     */
     public function university() {
