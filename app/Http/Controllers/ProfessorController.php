@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Professor;
-use App\Chair;
+use Illuminate\Support\Facades\Validator;
+
 
 class ProfessorController extends Controller
 {
@@ -22,39 +23,26 @@ class ProfessorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $chairs = Chair::all();
-        return view('professors.create', compact('chairs'));
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'chair' => 'required',
-            'type' => 'required',
-            'level' => 'required',
+            'gender' => 'required|between:0,1',
+            'chair_id' => 'required'
         ]);
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
 
-        $professor = new Professor();
-        $professor->name = $request->name;
-        $professor->chair_id = $request->chair;
-        $professor->type = $request->type;
-        $professor->level = $request->level;
-        $professor->save();
+        $input = $request->all();
+        $professor = Professor::create($input);
 
-        return redirect()->route('professors.index');
+        return $professor;
     }
 
     /**
@@ -69,47 +57,32 @@ class ProfessorController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  Professor  $professor
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Professor $professor)
-    {
-        $chairs = Chair::all();
-        return view('professors.edit', compact(['professor', 'chairs']));
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $professor = Professor::find($id);
-        $professor->name = $request->name;
-        $professor->chair_id = $request->chair;
-        $professor->type = $request->type;
-        $professor->level = $request->level;
-        $professor->save();
+        $professor->update($input);
 
-        return redirect()->route('professors.index');
+        return $professor;
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
         $professor = Professor::find($id);
         $professor->delete();
 
-        return redirect()->route('professors.index');
+        return response()->json(['success'=>'deleted'], 401);
     }
 }

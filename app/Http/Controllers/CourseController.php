@@ -81,6 +81,6 @@ class CourseController extends Controller
         $course = Course::find($id);
         $course->delete();
 
-        return response()->json(['success'=>''], 401);
+        return response()->json(['success'=>'deleted'], 401);
     }
 }

@@ -26,3 +26,7 @@ Route::group(['middleware' => 'auth:api'], function(){
 Route::resources([
     'courses' => 'CourseController'
 ]);
+
+Route::resources([
+    'professors' => 'ProfessorController'
+]);

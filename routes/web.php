@@ -15,13 +15,6 @@ Route::get('/', function () {
     return view('landing');
 });
 
-/**
- * Courses routes
- */
-Route::resources([
-    'courses' => 'CourseController'
-]);
-
 Route::resources([
     'professors' => 'ProfessorController'
 ]);
