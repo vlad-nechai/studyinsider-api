@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Course extends Model
 {
@@ -38,7 +40,7 @@ class Course extends Model
     protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'chair_id'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function chair() {
         return $this->belongsTo('App\Chair');
@@ -53,7 +55,7 @@ class Course extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function reviews() {
         return $this
@@ -68,6 +70,14 @@ class Course extends Model
         return $this->reviews()
             ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function tags() {
+        return $this->belongsToMany('App\CourseTag',
+            'tag_course', 'course_id', 'tag_id');
     }
 
 }

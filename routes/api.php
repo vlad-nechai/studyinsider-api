@@ -30,3 +30,8 @@ Route::resources([
 Route::resources([
     'professors' => 'ProfessorController'
 ]);
+
+/**
+ * Courses tags
+ */
+Route::get('/tags', 'CoursesTagsController@index');

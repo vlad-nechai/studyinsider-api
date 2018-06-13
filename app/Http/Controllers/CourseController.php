@@ -51,7 +51,7 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        return $course->load(['professors', 'chair', 'avgRating']);
+        return $course->load(['professors', 'chair', 'avgRating', 'tags']);
     }
 
     /**
