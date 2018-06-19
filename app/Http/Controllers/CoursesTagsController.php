@@ -11,6 +11,7 @@ class CoursesTagsController extends Controller
     public function index()
     {
         $tags = CourseTag::withCount('courses')
+            ->with('topCourses')
             ->get();
 
         return $tags;

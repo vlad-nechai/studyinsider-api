@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 
 class CourseTag extends Model
 {
@@ -36,6 +35,6 @@ class CourseTag extends Model
      */
 //    public function topCourses()
 //    {
-//        return $this->courses()->selectRaw('count(tag_course.tag_id) as amount')->groupBy('tag_course.tag_id');
+//
 //    }
 }
