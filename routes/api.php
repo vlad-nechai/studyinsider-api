@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,14 +25,22 @@ Route::group(['middleware' => 'auth:api'], function(){
 });
 
 Route::resources([
-    'courses' => 'CourseController'
+    'courses' => 'CourseController',
+    'professors' => 'ProfessorController',
+    'universities' => 'UniversityController',
+    'faculties' => 'FacultyController',
+//    'departments' => 'DepartmentController',
+    'chairs' => 'ChairController',
+
 ]);
 
-Route::resources([
-    'professors' => 'ProfessorController'
-]);
+Route::group(['middleware' => 'auth:api'], function(){
+    Route::post('courses/{id}/review', 'CourseController@review');
+});
+
 
 /**
- * Courses tags
+ * Tags
  */
-Route::get('/tags', 'CoursesTagsController@index');
+Route::get('/tags/courses', 'CoursesTagsController@index');
+Route::get('/tags/professors', 'ProfessorsTagsController@index');

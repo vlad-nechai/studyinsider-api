@@ -15,23 +15,6 @@ Route::get('/', function () {
     return view('landing');
 });
 
-Route::resources([
-    'professors' => 'ProfessorController'
-]);
-
-Route::resources([
-    'universities' => 'UniversityController'
-]);
-
-Route::resources([
-    'chairs' => 'ChairController'
-]);
-
-Route::resources([
-    'faculties' => 'FacultiesController'
-]);
-
-
 //parser routes
 Route::post('/parser/linkedin', 'Parser\LinkedinController@index');
 Route::post('/parser/link', 'Parser\LinkedinController@link');
