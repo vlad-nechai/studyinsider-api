@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Professor extends Model
 {
@@ -40,10 +41,18 @@ class Professor extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function courses() {
         return $this->belongsToMany('App\Course',
             'course_professor', 'prof_id', 'course_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function tags() {
+        return $this->belongsToMany('App\CourseTag',
+            'tag_course', 'course_id', 'tag_id');
     }
 }
