@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\University;
+use Illuminate\Support\Facades\Validator;
 
 class UniversityController extends Controller
 {
@@ -22,89 +23,87 @@ class UniversityController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('universities.create');
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'type' => 'required',
             'location' => 'required',
+            'type' => 'required',
         ]);
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
 
-        $university = new University();
-        $university->name = $request->name;
-        $university->type = $request->type;
-        $university->location = $request->location;
-        $university->save();
+        $input = $request->all();
+        $university = University::create($input);
 
-        return redirect()->route('universities.index');
+        return $university;
     }
 
     /**
      * Display the specified resource.
      *
      * @param  University  $university
-     * @return \Illuminate\Http\Response
+     * @return University
      */
     public function show(University $university)
     {
-        return view('universities.show', compact('university'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  University  $university
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(University  $university)
-    {
-        return view('universities.edit', compact('university'));
+        return $university->load(['faculties']);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $university = University::find($id);
-        $university->name = $request->name;
-        $university->type = $request->type;
-        $university->location = $request->location;
-        $university->save();
+        $university->update($input);
 
-        return redirect()->route('universities.index');
+        return $university;
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
         $univesity = University::find($id);
         $univesity->delete();
 
-        return redirect()->route('universities.index');
+        return response()->json(['success'=>'deleted'], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function review(Request $request, $id) {
+        $university = University::find($id);
+
+        return $university;
+
+        //add star rating
+
+        //add tags and create new tags where needed
+
+        //add skills and create skills where needed
+
+        //full review where needed
     }
 }

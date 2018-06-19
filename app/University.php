@@ -14,6 +14,17 @@ class University extends Model
     protected $table = 'universities';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'location',
+        'type'
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function faculties() {
