@@ -14,6 +14,18 @@ class Faculty extends Model
     protected $table = 'faculties';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'location',
+        'type',
+        'university_id'
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
