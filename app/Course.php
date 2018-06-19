@@ -55,9 +55,17 @@ class Course extends Model
     }
 
     /**
-     * @return BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function reviews() {
+        return $this->belongsToMany('App\User',
+            'courses_rate', 'course_id', 'user_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function courseReviews() {
         return $this
             ->belongsToMany('App\Course','courses_rate');
     }
@@ -67,7 +75,7 @@ class Course extends Model
      */
     public function avgRating()
     {
-        return $this->reviews()
+        return $this->courseReviews()
             ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
@@ -80,4 +88,11 @@ class Course extends Model
             'tag_course', 'course_id', 'tag_id');
     }
 
+    /**
+     * @return BelongsToMany
+     */
+    public function skills() {
+        return $this->belongsToMany('App\Skill',
+            'skill_course', 'course_id', 'skill_id');
+    }
 }
