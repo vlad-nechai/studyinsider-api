@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Chair;
+use Illuminate\Support\Facades\Validator;
 
 class ChairController extends Controller
 {
@@ -13,7 +14,7 @@ class ChairController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function index()
     {
@@ -23,68 +24,66 @@ class ChairController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'location' => 'required',
+            'department_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
+
+        $input = $request->all();
+        $chair = Chair::create($input);
+
+        return $chair;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Chair $chair
+     * @return Chair
      */
-    public function show($id)
+    public function show(Chair $chair)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $chair->load(['courses', 'professors', 'department']);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->all();
+        $chair = Chair::find($id);
+        $chair->update($input);
+
+        return $chair;
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
-        //
+        $chair = Chair::find($id);
+        $chair->delete();
+
+        return response()->json(['success'=>'deleted'], 200);
     }
 }

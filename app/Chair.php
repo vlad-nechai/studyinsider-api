@@ -14,6 +14,17 @@ class Chair extends Model
     protected $table = 'chairs';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'location',
+        'department_id'
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
