@@ -46,13 +46,20 @@ class CourseController extends Controller
 
     /**
      * Display the specified resource.
+     * TODO: Add exceptions for not existing skills, tags
      *
      * @param  Course  $course
      * @return Course  $course
      */
     public function show(Course $course)
     {
-        return $course->load(['professors', 'chair', 'avgRating', 'tags', 'skills']);
+        return $course->load([
+            'professors',
+            'chair',
+            'avgRating',
+            'topTags',
+            'skills'
+        ]);
     }
 
     /**
@@ -129,6 +136,7 @@ class CourseController extends Controller
     }
 
     /**
+     * TODO: remake it to switch
      * @param Request $request
      * @return mixed
      */

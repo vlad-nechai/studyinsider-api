@@ -89,6 +89,19 @@ class Course extends Model
     }
 
     /**
+     * top 5 tags for the course
+     * @return BelongsToMany
+     */
+    public function topTags() {
+        return $this->tags()
+            ->selectRaw('count(tag_course.tag_id) as tagged, t.tag')
+            ->join('courses_tags as t', 't.id', '=', 'tag_course.tag_id', 'inner')
+            ->groupBy('tag_course.tag_id', 'tag_course.course_id', 't.tag')
+            ->orderBy('tagged','desc')
+            ->limit(5);
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function skills() {
