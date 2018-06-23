@@ -29,12 +29,18 @@ class ProfessorTag extends Model
             ->belongsToMany('App\Professor','tag_professor', 'tag_id', 'professor_id');
     }
 
-    //TODO 3 most tagged courses for each tag
     /**
+     * TODO: review effectiveness of the query
+     * 3 most tagged courses for each tag
      * @return mixed
      */
-//    public function topCourses()
-//    {
-//
-//    }
+    public function topProfessors()
+    {
+        return $this->professors()
+            ->selectRaw('count(tag_professor.professor_id) as tagged, p.name')
+            ->join('professors as p', 'p.id', '=', 'tag_professor.professor_id', 'inner')
+            ->groupBy('tag_professor.tag_id', 'tag_professor.professor_id', 'p.name')
+            ->orderBy('tagged','desc')
+            ->limit(3);
+    }
 }
