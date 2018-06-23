@@ -43,4 +43,6 @@ Route::group(['middleware' => 'auth:api'], function(){
  * Tags
  */
 Route::get('/tags/courses', 'CoursesTagsController@index');
+Route::get('/tags/courses/{courseTag}', 'CoursesTagsController@show');
 Route::get('/tags/professors', 'ProfessorsTagsController@index');
+Route::get('/tags/professors/{courseTag}', 'ProfessorsTagsController@show');

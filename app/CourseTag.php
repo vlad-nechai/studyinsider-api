@@ -29,12 +29,18 @@ class CourseTag extends Model
             ->belongsToMany('App\Course','tag_course', 'tag_id', 'course_id');
     }
 
-    //TODO 3 most tagged courses for each tag
     /**
+     * TODO: review effectiveness of the query
+     * 3 most tagged courses for each tag
      * @return mixed
      */
-//    public function topCourses()
-//    {
-//
-//    }
+    public function topCourses()
+    {
+        return $this->courses()
+            ->selectRaw('count(tag_course.course_id) as tagged, c.name')
+            ->join('courses as c', 'c.id', '=', 'tag_course.course_id', 'inner')
+            ->groupBy('tag_course.tag_id', 'tag_course.course_id', 'c.name')
+            ->orderBy('tagged','desc')
+            ->limit(3);
+    }
 }
