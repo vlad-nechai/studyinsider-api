@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CourseTag;
+use App\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Course;
@@ -139,8 +140,8 @@ class CourseController extends Controller
         $tags = $request->input('tags');
 
         //detaching old relationships
-        if ($course->users()->exists() && count($tags) > 0) {
-            $course->users()->detach([$user->id]);
+        if ($course->usersWhoTagged()->exists() && count($tags) > 0) {
+            $course->usersWhoTagged()->detach([$user->id]);
         }
 
         foreach ($tags as $tag) {
@@ -154,9 +155,7 @@ class CourseController extends Controller
             $courseTag->save();
 
             //attaching relationships
-            $course->users()->save($user, ['tag_id' => $courseTag->id]);
-
-
+            $course->usersWhoTagged()->save($user, ['tag_id' => $courseTag->id]);
         }
     }
 
@@ -168,7 +167,36 @@ class CourseController extends Controller
      * @return Response
      */
     public function attachSkills(Request $request, $id) {
+        $validator = Validator::make($request->all(), [
+            'skills' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
 
+        $course = Course::find($id);
+
+        $user = Auth::user();
+
+        $skills = $request->input('skills');
+
+        //detaching old relationships
+        if ($course->usersWhoAddedSkills()->exists() && count($skills) > 0) {
+            $course->usersWhoAddedSkills()->detach([$user->id]);
+        }
+
+        foreach ($skills as $skill) {
+            $courseSkill = Skill::firstOrNew([
+                'name' => $skill
+            ]);
+
+            $courseSkill->language = $courseSkill->language == null ? 'de' : $courseSkill->language;
+            $courseSkill->origin = $courseSkill->origin == null ? 'user_determined' : $courseSkill->origin;
+            $courseSkill->save();
+
+            //attaching relationships
+            $course->usersWhoAddedSkills()->save($user, ['skill_id' => $courseSkill->id]);
+        }
     }
 
     /**
