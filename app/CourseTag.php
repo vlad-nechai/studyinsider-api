@@ -22,6 +22,13 @@ class CourseTag extends Model
     protected $hidden = ['id', 'tag_type', 'created_at', 'updated_at'];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['tag', 'star_rating', 'tag_type'];
+
+    /**
      * @return BelongsToMany
      */
     public function courses() {

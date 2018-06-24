@@ -83,6 +83,14 @@ class Course extends Model
     /**
      * @return BelongsToMany
      */
+    public function users() {
+        return $this->belongsToMany('App\User',
+            'tag_course', 'course_id', 'user_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
     public function tags() {
         return $this->belongsToMany('App\CourseTag',
             'tag_course', 'course_id', 'tag_id');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CourseTag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Course;
@@ -22,6 +23,7 @@ class CourseController extends Controller
     }
 
     /**
+     * TODO: check more elegant Validators functions
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
@@ -97,7 +99,7 @@ class CourseController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return Response
+     * @return void
      */
     public function review(Request $request, $id) {
         $course = Course::find($id);
@@ -114,6 +116,7 @@ class CourseController extends Controller
     }
 
     /**
+     * TODO: attach responses
      * Attach tags to the course.
      *
      * @param  Request  $request
@@ -121,7 +124,40 @@ class CourseController extends Controller
      * @return Response
      */
     public function attachTags(Request $request, $id) {
+        $validator = Validator::make($request->all(), [
+            'star_rating' => 'required',
+            'tags' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
 
+        $course = Course::find($id);
+
+        $user = Auth::user();
+
+        $tags = $request->input('tags');
+
+        //detaching old relationships
+        if ($course->users()->exists() && count($tags) > 0) {
+            $course->users()->detach([$user->id]);
+        }
+
+        foreach ($tags as $tag) {
+            $courseTag = CourseTag::firstOrNew([
+                'tag' => $tag,
+                'star_rating' => $request->input('star_rating')
+            ]);
+
+            $courseTag->star_rating = $request->input('star_rating');
+            $courseTag->tag_type = $courseTag->tag_type == null ? 'user_determined' : $courseTag->tag_type;
+            $courseTag->save();
+
+            //attaching relationships
+            $course->users()->save($user, ['tag_id' => $courseTag->id]);
+
+
+        }
     }
 
     /**

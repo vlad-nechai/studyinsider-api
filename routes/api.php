@@ -36,6 +36,8 @@ Route::resources([
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('courses/{id}/review', 'CourseController@review');
+    Route::post('courses/{id}/tags', 'CourseController@attachTags');
+    Route::post('courses/{id}/skills', 'CourseController@attachSkills');
 });
 
 
