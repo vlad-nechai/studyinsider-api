@@ -29,12 +29,18 @@ class Skill extends Model
             ->belongsToMany('App\Course','skill_course', 'skill_id', 'course_id');
     }
 
-    //TODO 3 most tagged courses for each tag
     /**
+     * TODO: review effectiveness of the query
+     * 3 most tagged courses for each skill
      * @return mixed
      */
-//    public function topCourses()
-//    {
-//        return $this->courses()->selectRaw('count(tag_course.tag_id) as amount')->groupBy('tag_course.tag_id');
-//    }
+    public function topCourses()
+    {
+        return $this->courses()
+            ->selectRaw('count(skill_course.course_id) as tagged, c.name')
+            ->join('courses as c', 'c.id', '=', 'skill_course.course_id', 'inner')
+            ->groupBy('skill_course.skill_id', 'skill_course.course_id', 'c.name')
+            ->orderBy('tagged','desc')
+            ->limit(3);
+    }
 }
