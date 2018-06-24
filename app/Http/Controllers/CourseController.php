@@ -58,7 +58,7 @@ class CourseController extends Controller
             'chair',
             'avgRating',
             'topTags',
-            'skills'
+            'topSkills'
         ]);
     }
 

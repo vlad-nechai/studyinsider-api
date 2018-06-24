@@ -108,4 +108,17 @@ class Course extends Model
         return $this->belongsToMany('App\Skill',
             'skill_course', 'course_id', 'skill_id');
     }
+
+    /**
+     * top 5 skills for the course
+     * @return BelongsToMany
+     */
+    public function topSkills() {
+        return $this->skills()
+            ->selectRaw('count(skill_course.skill_id) as tagged, s.name')
+            ->join('skills as s', 's.id', '=', 'skill_course.skill_id', 'inner')
+            ->groupBy('skill_course.skill_id', 'skill_course.course_id', 's.name')
+            ->orderBy('tagged','desc')
+            ->limit(5);
+    }
 }
