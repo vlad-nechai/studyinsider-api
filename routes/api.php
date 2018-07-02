@@ -24,6 +24,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('details', 'API\UserController@details');
 });
 
+Route::group(['middleware' => 'cors'], function(){
 Route::resources([
     'courses' => 'CourseController',
     'professors' => 'ProfessorController',
@@ -33,6 +34,7 @@ Route::resources([
     'chairs' => 'ChairController',
 
 ]);
+});
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('courses/{id}/review', 'CourseController@review');
