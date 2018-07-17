@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(['auth:api', 'role:super-admin'])->only(['store', 'update', 'destroy']);
+    }
+
     //TODO: rates calculating in models
 
     public function index()

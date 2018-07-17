@@ -51,4 +51,13 @@ class Chair extends Model
     public function department() {
         return $this->belongsTo('App\Department');
     }
+
+
+// TODO: eager load faculties
+//    /**
+//     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+//     */
+//    public function faculties() {
+//        return $this->hasManyThrough;
+//    }
 }

@@ -14,34 +14,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-
-Route::post('login', 'API\UserController@login');
-Route::post('register', 'API\UserController@register');
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('details', 'API\UserController@details');
-});
 
-Route::group(['middleware' => 'cors'], function(){
-Route::resources([
-    'courses' => 'CourseController',
-    'professors' => 'ProfessorController',
-    'universities' => 'UniversityController',
-    'faculties' => 'FacultyController',
-//    'departments' => 'DepartmentController',
-    'chairs' => 'ChairController',
-
-]);
-});
-
-Route::group(['middleware' => 'auth:api'], function(){
     Route::post('courses/{id}/review', 'CourseController@review');
     Route::post('courses/{id}/tags', 'CourseController@attachTags');
     Route::post('courses/{id}/skills', 'CourseController@attachSkills');
 });
 
+Route::group(['middleware' => 'cors'], function(){
+    Route::post('login', 'API\UserController@login');
+    Route::post('register', 'API\UserController@register');
+    Route::resources([
+        'courses' => 'CourseController',
+        'professors' => 'ProfessorController',
+        'universities' => 'UniversityController',
+        'faculties' => 'FacultyController',
+    //    'departments' => 'DepartmentController',
+        'chairs' => 'ChairController',
+    ]);
+});
 
 /**
  * Tags
@@ -50,3 +42,8 @@ Route::get('/tags/courses', 'CoursesTagsController@index');
 Route::get('/tags/courses/{courseTag}', 'CoursesTagsController@show');
 Route::get('/tags/professors', 'ProfessorsTagsController@index');
 Route::get('/tags/professors/{courseTag}', 'ProfessorsTagsController@show');
+
+
+//Route::group(['middleware' => ['auth:api', 'role:super-admin']], function () {
+//    Route::post('fau', 'Univis\FauController@fau');
+//});
