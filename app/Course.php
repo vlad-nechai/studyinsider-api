@@ -59,7 +59,7 @@ class Course extends Model
      */
     public function reviews() {
         return $this->belongsToMany('App\User',
-            'courses_rate', 'course_id', 'user_id');
+            'courses_rate', 'course_id', 'user_id')->withTimestamps();
     }
 
     /**
