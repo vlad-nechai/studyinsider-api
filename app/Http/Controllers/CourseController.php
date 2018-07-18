@@ -55,7 +55,6 @@ class CourseController extends Controller
 
     /**
      * Display the specified resource.
-     * TODO: Add exceptions for not existing skills, tags
      *
      * @param  Course  $course
      * @return Course  $course

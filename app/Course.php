@@ -85,7 +85,7 @@ class Course extends Model
      */
     public function usersWhoTagged() {
         return $this->belongsToMany('App\User',
-            'tag_course', 'course_id', 'user_id');
+            'tag_course', 'course_id', 'user_id')->withTimestamps();
     }
 
     /**
@@ -93,7 +93,7 @@ class Course extends Model
      */
     public function usersWhoAddedSkills() {
         return $this->belongsToMany('App\User',
-            'skill_course', 'course_id', 'user_id');
+            'skill_course', 'course_id', 'user_id')->withTimestamps();
     }
 
     /**
