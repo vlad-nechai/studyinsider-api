@@ -115,11 +115,13 @@ class CourseController extends Controller
 
         $mappedArr = $this->mapRequest($request);
 
-        if ($course->reviews()->exists()) {
-            $course->reviews()->sync([$user->id => $mappedArr]);
-        } else {
-            $course->reviews()->save($user, $mappedArr);
-        }
+        $course->reviews()->save($user, $mappedArr);
+
+//        if ($course->reviews()->exists()) {
+//            $course->reviews()->sync([$user->id => $mappedArr]);
+//        } else {
+//            $course->reviews()->save($user, $mappedArr);
+//        }
     }
 
     /**
