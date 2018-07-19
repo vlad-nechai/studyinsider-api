@@ -55,7 +55,6 @@ class CourseController extends Controller
 
     /**
      * Display the specified resource.
-     * TODO: Add exceptions for not existing skills, tags
      *
      * @param  Course  $course
      * @return Course  $course
@@ -116,7 +115,7 @@ class CourseController extends Controller
         $mappedArr = $this->mapRequest($request);
 
         if ($course->reviews()->exists()) {
-            $course->reviews()->sync([$user->id => $mappedArr]);
+            $course->reviews()->sync([$user->id => $mappedArr], false);
         } else {
             $course->reviews()->save($user, $mappedArr);
         }

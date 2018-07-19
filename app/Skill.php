@@ -22,6 +22,13 @@ class Skill extends Model
     protected $hidden = ['id', 'origin', 'language', 'created_at', 'updated_at'];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'language', 'origin'];
+
+    /**
      * @return BelongsToMany
      */
     public function courses() {
