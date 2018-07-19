@@ -22,7 +22,7 @@ class CourseController extends Controller
 
     public function index()
     {
-        $courses = Course::with(['chair', 'professors', 'reviews', 'avgRating'])
+        $courses = Course::with(['chair', 'professors', 'reviews', 'avgRating', 'topTags'])
             ->withCount('reviews')
             ->paginate(10);
 
