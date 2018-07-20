@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Course;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -50,14 +51,49 @@ class UserController extends Controller
         $success['name'] =  $user->name;
         return response()->json(['success'=>$success], $this-> successStatus);
     }
+
     /**
      * details api
      *
      * @return \Illuminate\Http\Response
      */
-    public function details()
+    public function profile()
     {
         $user = Auth::user();
-        return response()->json(['success' => $user], $this-> successStatus);
+        $user->load('bookmarks');
+        return response()->json(['success' => $user], $this->successStatus);
+    }
+
+    /**
+     * details api
+     * @param integer $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addBookmark($id)
+    {
+        $user = Auth::user();
+
+        $message = "Course is already bookmarked";
+        $bookmark = $user->bookmarks()->where('course_id', $id)->first();
+        if (is_null($bookmark)) {
+            $user->bookmarks()->attach($id);
+            $message = "Course successfully bookmarked";
+        }
+        $user->load('bookmarks');
+        return response()->json(['message' => $message, 'user' => $user], $this->successStatus);
+    }
+
+    /**
+     * details api
+     * @param integer $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteBookmark($id)
+    {
+        $user = Auth::user();
+        $user->bookmarks()->detach($id);
+        $user->load('bookmarks');
+        $message = "Course bookmark has been deleted";
+        return response()->json(['message' => $message, 'user' => $user], $this->successStatus);
     }
 }

@@ -3,6 +3,7 @@
 namespace App;
 
 namespace App;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -31,4 +32,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function bookmarks() {
+        return $this
+            ->belongsToMany('App\Course','course_bookmark')->withTimestamps();
+    }
 }
