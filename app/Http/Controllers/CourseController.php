@@ -68,6 +68,7 @@ class CourseController extends Controller
             'avgDifficulty',
             'avgUsefulness',
             'percentageTakeAgain',
+            'percentageMustAttend',
             'topTags',
             'topSkills'
         ]);

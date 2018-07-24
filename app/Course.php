@@ -156,7 +156,7 @@ class Course extends Model
     public function percentageTakeAgain()
     {
         return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.take_again) as percentage, courses_rate.course_id')
+            ->selectRaw('avg(courses_rate.take_again)*100 as percentage, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
 
@@ -166,7 +166,7 @@ class Course extends Model
     public function percentageMustAttend()
     {
         return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.must_attend) as percentage, courses_rate.course_id')
+            ->selectRaw('avg(courses_rate.must_attend)*100 as percentage, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
 
@@ -176,7 +176,7 @@ class Course extends Model
     public function percentagePayAttentionInClass()
     {
         return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.pay_attention_in_class) as percentage, courses_rate.course_id')
+            ->selectRaw('avg(courses_rate.pay_attention_in_class)*100 as percentage, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
 
@@ -186,7 +186,7 @@ class Course extends Model
     public function percentageAttendSeminars()
     {
         return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.attend_seminars) as percentage, courses_rate.course_id')
+            ->selectRaw('avg(courses_rate.attend_seminars)*100 as percentage, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
 
