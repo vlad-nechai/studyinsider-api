@@ -65,6 +65,8 @@ class CourseController extends Controller
             'professors',
             'chair',
             'avgRating',
+            'avgDifficulty',
+            'avgUsefulness',
             'topTags',
             'topSkills'
         ]);

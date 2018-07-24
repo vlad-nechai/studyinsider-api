@@ -81,6 +81,76 @@ class Course extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function avgDifficulty()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.difficulty) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function avgUsefulness()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.usefulness) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function avgScriptQuality()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.script) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function avgClearness()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.clearness) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function avgCompleteness()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.completeness) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function avgBullshitmeter()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.bullshitmeter) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function avgRelevance()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.relevance) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function usersWhoTagged() {
