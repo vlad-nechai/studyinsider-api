@@ -151,6 +151,46 @@ class Course extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function percentageTakeAgain()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.take_again) as percentage, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function percentageMustAttend()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.must_attend) as percentage, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function percentagePayAttentionInClass()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.pay_attention_in_class) as percentage, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function percentageAttendSeminars()
+    {
+        return $this->courseReviews()
+            ->selectRaw('avg(courses_rate.attend_seminars) as percentage, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function usersWhoTagged() {
