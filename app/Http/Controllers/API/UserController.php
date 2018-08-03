@@ -60,7 +60,7 @@ class UserController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        $user->load('bookmarks');
+        $user->load(['bookmarks', 'reviewedCourses']);
         return response()->json(['success' => $user], $this->successStatus);
     }
 

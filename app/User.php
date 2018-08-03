@@ -40,4 +40,12 @@ class User extends Authenticatable
         return $this
             ->belongsToMany('App\Course','course_bookmark')->withTimestamps();
     }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function reviewedCourses() {
+        return $this
+            ->belongsToMany('App\Course','courses_rate')->withTimestamps();
+    }
 }
