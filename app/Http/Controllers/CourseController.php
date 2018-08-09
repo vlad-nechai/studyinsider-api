@@ -15,7 +15,7 @@ class CourseController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['auth:api', 'role:super-admin'])->only(['store', 'update', 'destroy']);
+        $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);
     }
 
     //TODO: rates calculating in models
