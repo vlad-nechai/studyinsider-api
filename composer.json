@@ -13,7 +13,8 @@
         "laravel/passport": "^6.0",
         "laravel/tinker": "~1.0",
         "santigarcor/laratrust": "5.0.9",
-        "spatie/laravel-permission": "2.12.2"
+        "spatie/laravel-permission": "2.12.2",
+        "tymon/jwt-auth": "^1.0.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
@@ -58,5 +59,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

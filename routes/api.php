@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'auth:api'], function(){
+Route::group(['middleware' => 'jwt:auth'], function(){
     // User
     Route::post('profile', 'API\UserController@profile');
 
@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth:api'], function(){
 
 Route::group(['middleware' => 'cors'], function(){
     Route::post('login', 'API\UserController@login');
+    Route::post('login-jwt', 'API\UserController@loginjwt');
     Route::post('register', 'API\UserController@register');
     Route::resources([
         'courses' => 'CourseController',
