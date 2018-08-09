@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'jwt:auth'], function(){
+Route::group(['middleware' => 'jwt.auth'], function(){
     // User
     Route::post('profile', 'API\UserController@profile');
 
@@ -29,9 +29,11 @@ Route::group(['middleware' => 'jwt:auth'], function(){
 });
 
 Route::group(['middleware' => 'cors'], function(){
-    Route::post('login', 'API\UserController@login');
-    Route::post('login-jwt', 'API\UserController@loginjwt');
-    Route::post('register', 'API\UserController@register');
+    //Login and register with Laravel Passport Auth
+    //Route::post('login', 'API\UserController@loginLaravelPassport');
+    //Route::post('register', 'API\UserController@registerLaravelPassport');
+    Route::post('login', 'API\UserController@loginJWT');
+    Route::post('register', 'API\UserController@registerJWT');
     Route::resources([
         'courses' => 'CourseController',
         'professors' => 'ProfessorController',

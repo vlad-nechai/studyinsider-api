@@ -7,54 +7,38 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
-use Tymon\JWTAuth\Facades\JWTFactory;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
 
 class UserController extends Controller
 {
+    // TODO: response errors with codes
     public $successStatus = 200;
+    public $unauthorizedStatus = 401;
+    public $internalServerErrorStatus = 500;
 
     /**
-     * login api
-     *
+     * login with with Laravel Passport
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function login(){
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+    public function loginLaravelPassport(Request $request){
+        if(Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
-            return response()->json(['success' => $success], $this-> successStatus);
+            return response()->json(['success' => $success], $this->successStatus);
         }
         else{
-            return response()->json(['error'=>'Unauthorised'], 401);
+            return response()->json(['error'=>'invalid credentials'], $this->unauthorizedStatus);
         }
-    }
-
-    public function loginjwt(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:255',
-            'password'=> 'required'
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        }
-        $credentials = $request->only('email', 'password');
-        try {
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
-            }
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'could_not_create_token'], 500);
-        }
-        return response()->json(compact('token'));
     }
 
     /**
-     * Register api
-     *
+     * Register with Laravel Passport
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function register(Request $request)
+    public function registerLaravelPassport(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -74,6 +58,62 @@ class UserController extends Controller
     }
 
     /**
+     * login with JWT
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function loginJWT(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+            'password'=> 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $credentials = $request->only('email', 'password');
+        try {
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'invalid credentials'], $this->unauthorizedStatus);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'could not create token'], $this->internalServerErrorStatus);
+        }
+
+        return response()->json(compact('token'), $this->successStatus);
+    }
+
+    /**
+     * login with JWT
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function registerJWT(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255|unique:users',
+            'name' => 'required',
+            'password'=> 'required',
+            'c_password' => 'required|same:password',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $input = $request->all();
+        $input['password'] = bcrypt($input['password']);
+        try {
+            $user = User::create($input);
+            $token = JWTAuth::fromUser($user);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'could not get user from token'], $this->internalServerErrorStatus);
+        }
+
+        return response()->json(compact('token'), $this->successStatus);
+    }
+
+    /**
      * details api
      *
      * @return \Illuminate\Http\Response
@@ -82,7 +122,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $user->load(['bookmarks', 'reviewedCourses']);
-        return response()->json(['success' => $user], $this->successStatus);
+        return response()->json($user, $this->successStatus);
     }
 
     /**
