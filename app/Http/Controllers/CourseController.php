@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Course;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
@@ -18,15 +19,40 @@ class CourseController extends Controller
         $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);
     }
 
-    //TODO: rates calculating in models
-
-    public function index()
+    //TODO: Validators for filters and sorting
+    public function index(Request $request)
     {
-        $courses = Course::with(['chair', 'professors', 'reviews', 'avgRating', 'topTags'])
+        // query for all courses
+        $courses = Course::where('id', '>', '0');
+
+        // filter by star rating
+        if ($request->filled('star_rating')) {
+            // TODO: add validator
+            $rating = $request->input('star_rating');
+            $courses->whereHas('reviews', function ($query) use ($rating) {
+                $query->where('star_rating', '=', $rating);
+            });
+        }
+
+        // filter by professors
+        if ($request->filled('professor')) {
+            // TODO: add validator
+            $professors = $request->input('professor');
+
+            $courses->whereHas('professors', function ($query) use ($professors) {
+                $query->whereIn('id', $professors);
+            });
+        }
+
+
+        return $courses->with([
+            'chair',
+            'professors',
+            'reviews',
+            'avgRating',
+            'topTags'])
             ->withCount('reviews')
             ->paginate(10);
-
-        return $courses;
     }
 
     /**
