@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Course;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
@@ -23,6 +22,7 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         // query for all courses
+        // TODO: more elegant way
         $courses = Course::where('id', '>', '0');
 
         // filter by star rating
@@ -44,6 +44,14 @@ class CourseController extends Controller
             });
         }
 
+        // sort by name
+        if ($request->filled('sort_name')) {
+            // TODO: add validator
+            $sort = strtolower($request->input('sort_name'));
+            if ($sort === 'desc' || $sort === 'asc') {
+                $courses->orderBy('name', $sort);
+            }
+        }
 
         return $courses->with([
             'chair',
