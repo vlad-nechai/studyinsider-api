@@ -120,8 +120,16 @@ class UserController extends Controller
      */
     public function profile()
     {
+
         $user = Auth::user();
-        $user->load(['bookmarks', 'reviewedCourses']);
+        $user->load([
+            'bookmarks.reviews',
+            'bookmarks.avgRating',
+            'bookmarks.topTags',
+            'reviewedCourses.reviews',
+            'reviewedCourses.avgRating',
+            'reviewedCourses.topTags'
+        ]);
         return response()->json($user, $this->successStatus);
     }
 
