@@ -242,6 +242,13 @@ class CourseController extends Controller
         }
     }
 
+    public function search(Request $request) {
+        $query = $request->input('q');
+        $courses = Course::search($query)->get();
+
+        return $courses;
+    }
+
     /**
      * TODO: remake it to switch
      * @param Request $request

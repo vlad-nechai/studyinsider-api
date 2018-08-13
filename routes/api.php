@@ -52,6 +52,8 @@ Route::get('/tags/courses/{courseTag}', 'CoursesTagsController@show');
 Route::get('/tags/professors', 'ProfessorsTagsController@index');
 Route::get('/tags/professors/{courseTag}', 'ProfessorsTagsController@show');
 
+Route::get('test', 'CourseController@search');
+
 
 //Route::group(['middleware' => ['auth:api', 'role:super-admin']], function () {
 //    Route::post('fau', 'Univis\FauController@fau');
