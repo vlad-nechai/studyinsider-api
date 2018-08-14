@@ -34,6 +34,7 @@ Route::group(['middleware' => 'cors'], function(){
     //Route::post('register', 'API\UserController@registerLaravelPassport');
     Route::post('login', 'API\UserController@loginJWT');
     Route::post('register', 'API\UserController@registerJWT');
+    Route::get('/courses/search', 'CourseController@search');
     Route::resources([
         'courses' => 'CourseController',
         'professors' => 'ProfessorController',

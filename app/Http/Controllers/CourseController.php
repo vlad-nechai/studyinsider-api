@@ -243,6 +243,22 @@ class CourseController extends Controller
     }
 
     /**
+     * Search for courses
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function search(Request $request) {
+        $query = $request->input('q');
+
+        $courses = Course::search($query)
+            ->with(['chair', 'professors', 'reviews', 'avgRating', 'topTags'])
+            ->paginate(10);
+
+        return $courses;
+    }
+
+    /**
      * TODO: remake it to switch
      * @param Request $request
      * @return mixed

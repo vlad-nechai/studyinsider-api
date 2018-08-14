@@ -5,9 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Course extends Model
 {
+    use SearchableTrait;
+
     /**
      * The table associated with the model.
      *
@@ -38,6 +41,19 @@ class Course extends Model
      * @var array
      */
     protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'chair_id'];
+
+    /**
+     * Searchable rules.
+     *
+     * @var array
+     */
+    protected $searchable = [
+        'columns' => [
+            'short_name' => 20,
+            'name' => 10,
+            'summary' => 2
+        ],
+    ];
 
     /**
      * @return BelongsTo
@@ -246,5 +262,25 @@ class Course extends Model
             ->groupBy('skill_course.skill_id', 'skill_course.course_id', 's.name')
             ->orderBy('tagged','desc')
             ->limit(5);
+    }
+
+    /**
+     * top 3 courses filtered by faculty and/or review property
+     * @return BelongsToMany
+     */
+    public function top3() {
+        return $this->reviews()
+            ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * top 4 courses filtered by faculty and/or review property
+     * @return BelongsToMany
+     */
+    public function top4() {
+        return $this->reviews()
+            ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
     }
 }
