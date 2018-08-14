@@ -87,6 +87,16 @@ class Course extends Model
     }
 
     /**
+     * @return BelongsToMany
+     */
+    public function reviewsCount() {
+        return $this
+            ->courseReviews()
+            ->selectRaw('user_id, count(*) as count')
+            ->groupBy('user_id');
+    }
+
+    /**
      * @return mixed
      */
     public function avgRating()

@@ -252,7 +252,7 @@ class CourseController extends Controller
         $query = $request->input('q');
 
         $courses = Course::search($query)
-            ->with(['chair', 'professors', 'reviews', 'avgRating', 'topTags'])
+            ->with(['chair', 'professors', 'reviews', 'avgRating', 'topTags', 'reviewsCount'])
             ->paginate(10);
 
         return $courses;
