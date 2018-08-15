@@ -69,7 +69,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json(['error' => $validator->errors(), 401]);
         }
 
         $credentials = $request->only('email', 'password');
@@ -98,7 +98,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
         $input = $request->all();
