@@ -54,7 +54,7 @@ class UserController extends Controller
         $user = User::create($input);
         $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
         $success['name'] =  $user->name;
-        return response()->json(['success'=>$success], $this-> successStatus);
+        return response()->json(['success'=>$success], $this->successStatus);
     }
 
     /**
@@ -93,6 +93,8 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255|unique:users',
             'name' => 'required',
+            'sex' => 'required',
+            'study_program' => 'required',
             'password'=> 'required',
             'c_password' => 'required|same:password',
         ]);

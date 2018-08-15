@@ -21,6 +21,9 @@ class CourseController extends Controller
     //TODO: Validators for filters and sorting
     public function index(Request $request)
     {
+        // array with attributes to be appended to pagination object
+        $appendArr = [];
+
         // query for all courses
         // TODO: more elegant way
         $courses = Course::where('id', '>', '0');
@@ -29,6 +32,9 @@ class CourseController extends Controller
         if ($request->filled('star_rating')) {
             // TODO: add validator
             $rating = $request->input('star_rating');
+
+            $appendArr['star_rating'] = $rating;
+
             $courses->whereHas('reviews', function ($query) use ($rating) {
                 $query->where('star_rating', '=', $rating);
             });
@@ -39,6 +45,8 @@ class CourseController extends Controller
             // TODO: add validator
             $professors = $request->input('professor');
 
+            $appendArr['professor'] = $professors;
+
             $courses->whereHas('professors', function ($query) use ($professors) {
                 $query->whereIn('id', $professors);
             });
@@ -48,6 +56,9 @@ class CourseController extends Controller
         if ($request->filled('sort_name')) {
             // TODO: add validator
             $sort = strtolower($request->input('sort_name'));
+
+            $appendArr['sort_name'] = $sort;
+
             if ($sort === 'desc' || $sort === 'asc') {
                 $courses->orderBy('name', $sort);
             }
@@ -60,7 +71,12 @@ class CourseController extends Controller
             'avgRating',
             'topTags'])
             ->withCount('reviews')
-            ->paginate(10);
+            ->paginate(10)
+            ->appends($appendArr);
+    }
+
+    protected function filter() {
+
     }
 
     /**
