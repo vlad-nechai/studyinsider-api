@@ -41,6 +41,7 @@ Route::group(['middleware' => 'cors'], function() {
     Route::get('/courses/search', 'CourseController@search');
 
     // Quick search
+    Route::get('/courses/quick-search', 'CourseController@quickSearch');
     Route::get('/professors/quick-search', 'ProfessorController@quickSearch');
     Route::get('/skills/quick-search', 'SkillsController@quickSearch');
 

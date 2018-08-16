@@ -255,6 +255,22 @@ class CourseController extends Controller
         }
     }
 
+
+    /**
+     * Search for courses
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function quickSearch(Request $request) {
+        $query = $request->input('q');
+
+
+        $courses = Course::search($query, null, true, true)->limit(7)->get(['id', 'name', 'relevance']);
+
+        return $courses;
+    }
+
     /**
      * Search for courses
      *

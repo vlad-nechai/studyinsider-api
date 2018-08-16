@@ -95,7 +95,7 @@ class ProfessorController extends Controller
     public function quickSearch(Request $request) {
         $query = $request->input('q');
 
-        $professors = Professor::search($query)->limit(7)->get(['id', 'name', 'relevance']);
+        $professors = Professor::search($query, null, true, true)->limit(7)->get(['id', 'name', 'relevance']);
 
 
         return $professors;
