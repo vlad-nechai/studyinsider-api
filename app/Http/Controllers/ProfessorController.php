@@ -85,4 +85,19 @@ class ProfessorController extends Controller
 
         return response()->json(['success'=>'deleted'], 401);
     }
+
+    /**
+     * Quick search professors for filters
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function quickSearch(Request $request) {
+        $query = $request->input('q');
+
+        $professors = Professor::search($query)->limit(7)->get(['id', 'name', 'relevance']);
+
+
+        return $professors;
+    }
 }

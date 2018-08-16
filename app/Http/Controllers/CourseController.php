@@ -75,10 +75,6 @@ class CourseController extends Controller
             ->appends($appendArr);
     }
 
-    protected function filter() {
-
-    }
-
     /**
      * TODO: check more elegant Validators functions
      * Store a newly created resource in storage.
@@ -159,7 +155,7 @@ class CourseController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return void
+     * @return Course
      */
     public function review(Request $request, $id) {
         $course = Course::find($id);
@@ -171,6 +167,8 @@ class CourseController extends Controller
         } else {
             $course->reviews()->save($user, $request->all());
         }
+
+        return $course;
 
     }
 

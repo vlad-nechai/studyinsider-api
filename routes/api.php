@@ -36,7 +36,14 @@ Route::group(['middleware' => 'cors'], function() {
 
     Route::post('login', 'API\UserController@loginJWT');
     Route::post('register', 'API\UserController@registerJWT');
+
+    // Search
     Route::get('/courses/search', 'CourseController@search');
+
+    // Quick search
+    Route::get('/professors/quick-search', 'ProfessorController@quickSearch');
+    Route::get('/skills/quick-search', 'SkillsController@quickSearch');
+
     Route::resources([
         'courses' => 'CourseController',
         'professors' => 'ProfessorController',

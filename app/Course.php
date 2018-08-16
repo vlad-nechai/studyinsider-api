@@ -71,11 +71,14 @@ class Course extends Model
     }
 
     /**
+     * TODO: add withPivot
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function reviews() {
         return $this->belongsToMany('App\User',
-            'courses_rate', 'course_id', 'user_id')->withTimestamps();
+            'courses_rate', 'course_id', 'user_id')
+            ->withTimestamps();
     }
 
     /**
@@ -292,5 +295,15 @@ class Course extends Model
         return $this->reviews()
             ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * Get the administrator flag for the user.
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->attributes['admin'] == 'yes';
     }
 }
