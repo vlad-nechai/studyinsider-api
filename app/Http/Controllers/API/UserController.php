@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
+use function PHPSTORM_META\elementType;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
 
@@ -106,6 +107,14 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         try {
+
+            // default image
+            if ($input['sex'] == 0) {
+                $input['image'] = '/assets/images/girl2.jpg';
+            } else {
+                $input['image'] = '/assets/images/guy2.jpg';
+            }
+
             $user = User::create($input);
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
