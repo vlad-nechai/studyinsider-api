@@ -24,9 +24,15 @@ class CourseController extends Controller
         // array with attributes to be appended to pagination object
         $appendArr = [];
 
-        // query for all courses
+        // search courses if query was input otherwise load all courses
         // TODO: more elegant way
-        $courses = Course::where('id', '>', '0');
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+            $appendArr['q'] = $q;
+            $courses = Course::search($q);
+        } else {
+            $courses = Course::where('id', '>', '0');
+        }
 
         // filter by star rating
         if ($request->filled('star_rating')) {
@@ -69,8 +75,8 @@ class CourseController extends Controller
             'professors',
             'reviews',
             'avgRating',
-            'topTags'])
-            ->withCount('reviews')
+            'topTags',
+            'reviewsCount'])
             ->paginate(10)
             ->appends($appendArr);
     }
@@ -270,21 +276,4 @@ class CourseController extends Controller
 
         return $courses;
     }
-
-    /**
-     * Search for courses
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function search(Request $request) {
-        $query = $request->input('q');
-
-        $courses = Course::search($query)
-            ->with(['chair', 'professors', 'reviews', 'avgRating', 'topTags', 'reviewsCount'])
-            ->paginate(10);
-
-        return $courses;
-    }
-
 }
