@@ -49,7 +49,7 @@ class CourseController extends Controller
         // filter by professors
         if ($request->filled('professor')) {
             // TODO: add validator
-            $professors = $request->input('professor');
+            $professors = json_decode($request->input('professor'));
 
             $appendArr['professor'] = $professors;
 
@@ -75,8 +75,7 @@ class CourseController extends Controller
             'professors',
             'reviews',
             'avgRating',
-            'topTags',
-            'reviewsCount'])
+            'topTags'])
             ->paginate(10)
             ->appends($appendArr);
     }
