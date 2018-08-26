@@ -121,6 +121,7 @@ class CourseController extends Controller
             'percentageTakeAgain',
             'percentageMustAttend',
             'topTags',
+            'reviews',
             'topSkills'
         ]);
     }
