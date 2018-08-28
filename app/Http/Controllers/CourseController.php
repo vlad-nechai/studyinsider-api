@@ -174,7 +174,7 @@ class CourseController extends Controller
             $course->reviews()->save($user, $request->all());
         }
 
-        return $course;
+        return $course->load(['avgRating']);
 
     }
 
@@ -219,6 +219,8 @@ class CourseController extends Controller
             //attaching relationships
             $course->usersWhoTagged()->save($user, ['tag_id' => $courseTag->id]);
         }
+
+        return $course->load(['topTags']);
     }
 
     /**
@@ -259,6 +261,8 @@ class CourseController extends Controller
             //attaching relationships
             $course->usersWhoAddedSkills()->save($user, ['skill_id' => $courseSkill->id]);
         }
+
+        return $course->load(['topSkills']);
     }
 
 
