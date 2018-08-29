@@ -51,11 +51,13 @@ class CourseController extends Controller
             // TODO: add validator
             $professors = json_decode($request->input('professor'));
 
-            $appendArr['professor'] = $professors;
+            if (count($professors) > 0) {
+                $appendArr['professor'] = $professors;
 
-            $courses->whereHas('professors', function ($query) use ($professors) {
-                $query->whereIn('id', $professors);
-            });
+                $courses->whereHas('professors', function ($query) use ($professors) {
+                    $query->whereIn('id', $professors);
+                });
+            }
         }
 
         // sort by name
