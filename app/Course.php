@@ -42,33 +42,6 @@ class Course extends Model
      */
     protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'chair_id'];
 
-
-    /**
-     * Searchable rules.
-     *
-     * @var array
-     */
-    protected $searchable = [
-        /**
-         * Columns and their priority in search results.
-         * Columns with higher values are more important.
-         * Columns with equal values have equal importance.
-         *
-         * @var array
-         */
-        'columns' => [
-            'name' => 10,
-            'short_name' => 10,
-            'summary' => 10,
-//            'users.email' => 5,
-//            'posts.title' => 2,
-//            'posts.body' => 1,
-        ],
-//        'joins' => [
-//            'posts' => ['users.id','posts.user_id'],
-//        ],
-    ];
-
     /**
      * Searchable rules.
      *

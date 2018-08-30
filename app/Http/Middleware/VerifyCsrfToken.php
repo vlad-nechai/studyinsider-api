@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        'parser/linkedin',
+        'parser/link',
+        'parser/link/get'
     ];
 }
