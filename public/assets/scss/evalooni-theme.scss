@@ -1,0 +1,114 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+// Styles
+body {
+  // font-family: $roboto-slab;
+  font-family: $botstrap-font;
+  font-weight: normal;
+}
+h1, h2, h3, h4, h5, h6 {
+  // font-family: $roboto-slab;
+  font-family: $botstrap-font;
+  font-weight: normal;
+}
+
+.button {
+  // font-family: $roboto-slab;
+  font-family: $botstrap-font;
+  font-weight: bold;
+}
+
+.profile-top {
+  @include linear-gradient(to right, #E47D7D 0%, #C195D3 50%, #4FB4E8 100%);
+}
+
+.profile-primary {
+  @include linear-gradient(to bottom right, $primary-red-9 0%, $primary-red-6 30%, $yellow 100%);
+}
+
+.graduation-cap {
+  color: $primary-red-10;
+  font-size: 1.8rem;
+}
+
+.book-bookmark {
+  // color: $primary-red-9;
+  // color: $primary-red-3;
+  color: $yellow;
+  font-size: 22px;
+  top: -2rem;
+  left: 1.3rem
+}
+
+.note-review {
+  // color: $primary-red-9;
+  //color: $primary-red-3;
+  color: $yellow;
+  font-size: 35px;
+  // left: -0.9rem;
+}
+
+.progress-hourglass {
+  color: $yellow;
+  font-size: 1.4rem;
+}
+
+.icon-size {
+  height: 200%;
+}
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+.featurette-divider-sm {
+  margin: 2rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.05rem;
+}
+
+input[type="button"]:focus {
+  border: !important none;
+  outline: !important none;
+}
+
+.text-theme {
+  color: $nice-blue;
+}
+
+.text-light-accent {
+  color: $accent-green;
+}
+
+.text-accent {
+  color: $green;
+}
+
+.text-base {
+  color: $base-black-7;
+}
+
+.card.no-borders-white {
+  // border-color: #F1F597 !important;
+  // border: 1px solid rgba(247, 121, 102, 1.00) !important;
+  // border: 1px solid rgba(247, 232, 162, 1.00) !important;
+  border: none;
+}
+
+.card-header.no-borders-white {
+  border: none !important;
+}
+
+.card.no-borders-bg-light {
+// border-color: #F1F597 !important;
+border: 1px solid rgba(248, 249, 250, 255) !important;
+}

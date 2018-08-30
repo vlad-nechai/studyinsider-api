@@ -12,12 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('landing');
+    View::addExtension('html', 'php');
+    return View::make('index');
 });
 
 //parser routes
-Route::post('/parser/linkedin', 'Parser\LinkedinController@index');
-Route::post('/parser/link', 'Parser\LinkedinController@link');
-Route::post('/parser/link/get', 'Parser\LinkedinController@getFirstLink');
+//Route::post('/parser/linkedin', 'Parser\LinkedinController@index');
+//Route::post('/parser/link', 'Parser\LinkedinController@link');
+//Route::post('/parser/link/get', 'Parser\LinkedinController@getFirstLink');
 
-Route::get('/fau', 'Univis\FauController@index');

@@ -1,0 +1,82 @@
+// Google Fonts
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab|Open+Sans:400italic,700italic,400,700);
+
+// Font Variables
+$botstrap-font: Helvetica, Arial;
+$roboto-slab: 'Roboto Slab', serif;
+$open-sans: 'Open Sans', sans-serif;
+$bootstrap: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+// $font-stack: $roboto-slab, Helvetica, sans-serif;
+$font-stack: $bootstrap;
+
+///Primary color palette
+$primary-red-10: #EC614D;
+$primary-red-9: #FB775D;
+$primary-red-8: #FB836B;
+$primary-red-7: #FB8F7A;
+$primary-red-6: #FC9C89;
+$primary-red-5: #FCA897;
+$primary-red-4: #FDC1B5;
+$primary-red-3: #FDD9D2;
+$primary-red-2: #FEE6E1;
+$primary-red-1: #FEF2F0;
+
+///Grayscale palette
+$base-black-13: #000F08;
+$base-black-12: #333333;
+$base-black-11: #393D3F;
+$base-black-10: #4B4E50;
+$base-black-9: #5D6061;
+$base-black-8: #6F7173;
+$base-black-7: #818384;
+$base-black-6: #939596;
+$base-black-5: #A5A6A7;
+$base-black-4: #B7B8B9;
+$base-black-3: #C9CACA;
+$base-black-2: #DBDBDC;
+$base-black-1: #EDEDED;
+
+$secondary-white: #FEFEFF;
+$secondary-gray: #EBEBEB;
+$secondary-blue: #D6EFFF;
+$secondary-marine: #59C3C3;
+$secondary-green: #CDE7B0;
+$secondary-yellow: #DFCC74;
+
+
+$accent-blue: #4062BB;
+$accent-violet: #52489C;
+
+///Rainbow colors
+$yellow: #FDEE4B;
+$sunny-yellow: #FDD444;
+$nice-yellow: #F7D04D;
+$green: #7AC74F;
+$lighter-green: #A1CF6B;
+$light-green: #D5D887;
+$accent-green: #D4CF44;
+$blue: #067BC2;
+$nice-blue: #3D7EBF;
+$light-blue: #84BCDA;
+/// Rainbow RGB palette
+$primary-rgb-1: rgba(251, 119, 93, 1);
+$primary-rgb-2: rgba(242, 197, 124, 1);
+$primary-rgb-3: rgba(221, 174, 126, 1);
+$primary-rgb-4: rgba(127, 182, 133, 1);
+$primary-rgb-5: rgba(66, 106, 90, 1);
+
+///Tetradic harmony
+$tetradic-primary-red: #fb775d;
+$tetradic-primary-violet: #775dfb;
+$tetradic-primary-blue: #5de1fb;
+$tetradic-primary-mindaro: #e1fb5d;
+
+///Triadic harmony
+$triadic-primary-red: #fb775d;
+$triadic-primary-blue: #775dfb;
+$triadic-primary-green: #6BF782;
+
+
+$primary: $primary-red-9;
+$danger: $primary-red-10;
