@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
+use function PHPSTORM_META\elementType;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
 
@@ -54,7 +55,7 @@ class UserController extends Controller
         $user = User::create($input);
         $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
         $success['name'] =  $user->name;
-        return response()->json(['success'=>$success], $this-> successStatus);
+        return response()->json(['success'=>$success], $this->successStatus);
     }
 
     /**
@@ -69,7 +70,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json(['error' => $validator->errors(), 401]);
         }
 
         $credentials = $request->only('email', 'password');
@@ -93,17 +94,27 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255|unique:users',
             'name' => 'required',
+            'sex' => 'required',
+            'study_program' => 'required',
             'password'=> 'required',
             'c_password' => 'required|same:password',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         try {
+
+            // default image
+            if ($input['sex'] == 0) {
+                $input['image'] = '/assets/images/girl2.jpg';
+            } else {
+                $input['image'] = '/assets/images/guy2.jpg';
+            }
+
             $user = User::create($input);
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {

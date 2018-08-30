@@ -21,14 +21,26 @@ class CourseController extends Controller
     //TODO: Validators for filters and sorting
     public function index(Request $request)
     {
-        // query for all courses
+        // array with attributes to be appended to pagination object
+        $appendArr = [];
+
+        // search courses if query was input otherwise load all courses
         // TODO: more elegant way
-        $courses = Course::where('id', '>', '0');
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+            $appendArr['q'] = $q;
+            $courses = Course::search($q);
+        } else {
+            $courses = Course::where('id', '>', '0');
+        }
 
         // filter by star rating
         if ($request->filled('star_rating')) {
             // TODO: add validator
             $rating = $request->input('star_rating');
+
+            $appendArr['star_rating'] = $rating;
+
             $courses->whereHas('reviews', function ($query) use ($rating) {
                 $query->where('star_rating', '=', $rating);
             });
@@ -37,17 +49,24 @@ class CourseController extends Controller
         // filter by professors
         if ($request->filled('professor')) {
             // TODO: add validator
-            $professors = $request->input('professor');
+            $professors = json_decode($request->input('professor'));
 
-            $courses->whereHas('professors', function ($query) use ($professors) {
-                $query->whereIn('id', $professors);
-            });
+            if (count($professors) > 0) {
+                $appendArr['professor'] = $professors;
+
+                $courses->whereHas('professors', function ($query) use ($professors) {
+                    $query->whereIn('id', $professors);
+                });
+            }
         }
 
         // sort by name
         if ($request->filled('sort_name')) {
             // TODO: add validator
             $sort = strtolower($request->input('sort_name'));
+
+            $appendArr['sort_name'] = $sort;
+
             if ($sort === 'desc' || $sort === 'asc') {
                 $courses->orderBy('name', $sort);
             }
@@ -59,8 +78,8 @@ class CourseController extends Controller
             'reviews',
             'avgRating',
             'topTags'])
-            ->withCount('reviews')
-            ->paginate(10);
+            ->paginate(10)
+            ->appends($appendArr);
     }
 
     /**
@@ -104,6 +123,7 @@ class CourseController extends Controller
             'percentageTakeAgain',
             'percentageMustAttend',
             'topTags',
+            'reviews',
             'topSkills'
         ]);
     }
@@ -143,20 +163,21 @@ class CourseController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return void
+     * @return Course
      */
     public function review(Request $request, $id) {
         $course = Course::find($id);
 
         $user = Auth::user();
 
-        $mappedArr = $this->mapRequest($request);
-
         if ($course->reviews()->exists()) {
-            $course->reviews()->sync([$user->id => $mappedArr], false);
+            $course->reviews()->sync([$user->id => $request->all()], false);
         } else {
-            $course->reviews()->save($user, $mappedArr);
+            $course->reviews()->save($user, $request->all());
         }
+
+        return $course->load(['avgRating']);
+
     }
 
     /**
@@ -200,6 +221,8 @@ class CourseController extends Controller
             //attaching relationships
             $course->usersWhoTagged()->save($user, ['tag_id' => $courseTag->id]);
         }
+
+        return $course->load(['topTags']);
     }
 
     /**
@@ -240,92 +263,23 @@ class CourseController extends Controller
             //attaching relationships
             $course->usersWhoAddedSkills()->save($user, ['skill_id' => $courseSkill->id]);
         }
+
+        return $course->load(['topSkills']);
     }
 
-    public function search(Request $request) {
-        $query = $request->input('q');
-        $courses = Course::search($query)->get();
-
-        return $courses;
-    }
 
     /**
-     * TODO: remake it to switch
+     * Search for courses
+     *
      * @param Request $request
      * @return mixed
      */
-    private function mapRequest(Request $request) {
-        $arr = [];
-        if ($request->has('star_rating'))
-            $arr['star_rating'] = $request['star_rating'];
+    public function quickSearch(Request $request) {
+        $query = $request->input('q');
 
-        if ($request->has('user_major'))
-            $arr['user_major'] = $request['user_major'];
 
-        if ($request->has('user_gpa'))
-            $arr['user_gpa'] = $request['user_gpa'];
+        $courses = Course::search($query, null, true, true)->limit(7)->get(['id', 'name', 'relevance']);
 
-        if ($request->has('user_course_grade'))
-            $arr['user_course_grade'] = $request['user_course_grade'];
-
-        if ($request->has('interesting'))
-            $arr['interesting'] = $request['interesting'];
-
-        if ($request->has('difficulty'))
-            $arr['difficulty'] = $request['difficulty'];
-
-        if ($request->has('usefulness'))
-            $arr['usefulness'] = $request['usefulness'];
-
-        if ($request->has('must_attend'))
-            $arr['must_attend'] = $request['must_attend'];
-
-        if ($request->has('often_study'))
-            $arr['often_study'] = $request['often_study'];
-
-        if ($request->has('take_again'))
-            $arr['take_again'] = $request['take_again'];
-
-        if ($request->has('pay_attention_in_class'))
-            $arr['pay_attention_in_class'] = $request['pay_attention_in_class'];
-
-        if ($request->has('script'))
-            $arr['script'] = $request['script'];
-
-        if ($request->has('clearness'))
-            $arr['clearness'] = $request['clearness'];
-
-        if ($request->has('completeness'))
-            $arr['completeness'] = $request['completeness'];
-
-        if ($request->has('bullshitmeter'))
-            $arr['bullshitmeter'] = $request['bullshitmeter'];
-
-        if ($request->has('relevance'))
-            $arr['relevance'] = $request['relevance'];
-
-        if ($request->has('attend_seminars'))
-            $arr['attend_seminars'] = $request['attend_seminars'];
-
-        if ($request->has('memorize_script'))
-            $arr['memorize_script'] = $request['memorize_script'];
-
-        if ($request->has('do_extra_work'))
-            $arr['do_extra_work'] = $request['do_extra_work'];
-
-        if ($request->has('study_old_exams'))
-            $arr['study_old_exams'] = $request['study_old_exams'];
-
-        if ($request->has('take_notes'))
-            $arr['take_notes'] = $request['take_notes'];
-
-        if ($request->has('come_to_class'))
-            $arr['come_to_class'] = $request['come_to_class'];
-
-        if ($request->has('effort'))
-            $arr['effort'] = $request['effort'];
-
-        return $arr;
-
+        return $courses;
     }
 }

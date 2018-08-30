@@ -70,6 +70,19 @@ class Course extends Model
     ];
 
     /**
+     * Searchable rules.
+     *
+     * @var array
+     */
+    protected $searchable = [
+        'columns' => [
+            'short_name' => 20,
+            'name' => 10,
+            'summary' => 2
+        ],
+    ];
+
+    /**
      * @return BelongsTo
      */
     public function chair() {
@@ -85,11 +98,14 @@ class Course extends Model
     }
 
     /**
+     * TODO: add withPivot
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function reviews() {
         return $this->belongsToMany('App\User',
-            'courses_rate', 'course_id', 'user_id')->withTimestamps();
+            'courses_rate', 'course_id', 'user_id')
+            ->withTimestamps();
     }
 
     /**
@@ -98,6 +114,16 @@ class Course extends Model
     public function courseReviews() {
         return $this
             ->belongsToMany('App\Course','courses_rate');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function reviewsCount() {
+        return $this
+            ->courseReviews()
+            ->selectRaw('user_id, count(*) as count')
+            ->groupBy('user_id');
     }
 
     /**
@@ -276,5 +302,35 @@ class Course extends Model
             ->groupBy('skill_course.skill_id', 'skill_course.course_id', 's.name')
             ->orderBy('tagged','desc')
             ->limit(5);
+    }
+
+    /**
+     * top 3 courses filtered by faculty and/or review property
+     * @return BelongsToMany
+     */
+    public function top3() {
+        return $this->reviews()
+            ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * top 4 courses filtered by faculty and/or review property
+     * @return BelongsToMany
+     */
+    public function top4() {
+        return $this->reviews()
+            ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
+            ->groupBy('courses_rate.course_id');
+    }
+
+    /**
+     * Get the administrator flag for the user.
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->attributes['admin'] == 'yes';
     }
 }

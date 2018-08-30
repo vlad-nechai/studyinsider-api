@@ -4,9 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Skill extends Model
 {
+
+    use SearchableTrait;
+
     /**
      * The table associated with the model.
      *
@@ -27,6 +31,17 @@ class Skill extends Model
      * @var array
      */
     protected $fillable = ['name', 'language', 'origin'];
+
+    /**
+     * Searchable rules.
+     *
+     * @var array
+     */
+    protected $searchable = [
+        'columns' => [
+            'name' => 10
+        ],
+    ];
 
     /**
      * @return BelongsToMany
@@ -50,4 +65,5 @@ class Skill extends Model
             ->orderBy('tagged','desc')
             ->limit(3);
     }
+
 }
