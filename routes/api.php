@@ -28,32 +28,31 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('courses/{id}/skills', 'CourseController@attachSkills');
 });
 
-Route::group(['middleware' => 'cors'], function() {
 
-    //Login and register with Laravel Passport Auth
-    //Route::post('login', 'API\UserController@loginLaravelPassport');
-    //Route::post('register', 'API\UserController@registerLaravelPassport');
+//Login and register with Laravel Passport Auth
+//Route::post('login', 'API\UserController@loginLaravelPassport');
+//Route::post('register', 'API\UserController@registerLaravelPassport');
 
-    Route::post('login', 'API\UserController@loginJWT');
-    Route::post('register', 'API\UserController@registerJWT');
+Route::post('login', 'API\UserController@loginJWT');
+Route::post('register', 'API\UserController@registerJWT');
 
-    // Search
-    Route::get('/courses/search', 'CourseController@search');
+// Search
+Route::get('/courses/search', 'CourseController@search');
 
-    // Quick search
-    Route::get('/courses/quick-search', 'CourseController@quickSearch');
-    Route::get('/professors/quick-search', 'ProfessorController@quickSearch');
-    Route::get('/skills/quick-search', 'SkillsController@quickSearch');
+// Quick search
+Route::get('/courses/quick-search', 'CourseController@quickSearch');
+Route::get('/professors/quick-search', 'ProfessorController@quickSearch');
+Route::get('/skills/quick-search', 'SkillsController@quickSearch');
 
-    Route::resources([
-        'courses' => 'CourseController',
-        'professors' => 'ProfessorController',
-        'universities' => 'UniversityController',
-        'faculties' => 'FacultyController',
-    //    'departments' => 'DepartmentController',
-        'chairs' => 'ChairController',
-    ]);
-});
+Route::resources([
+    'courses' => 'CourseController',
+    'professors' => 'ProfessorController',
+    'universities' => 'UniversityController',
+    'faculties' => 'FacultyController',
+//    'departments' => 'DepartmentController',
+    'chairs' => 'ChairController',
+]);
+
 
 /**
  * Tags
