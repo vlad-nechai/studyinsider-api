@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Nicolaslopezj\Searchable\SearchableTrait;
+use \Nicolaslopezj\Searchable\SearchableTrait;
 
 class Course extends Model
 {

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Nicolaslopezj\Searchable\SearchableTrait;
+use \Nicolaslopezj\Searchable\SearchableTrait;
 
 class Skill extends Model
 {
