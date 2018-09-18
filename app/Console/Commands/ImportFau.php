@@ -110,6 +110,7 @@ class ImportFau extends Command
                         $faculty->univis_id = $org->id;
                         $faculty->univis_orgnr = $org->attributes()['orgnr'];
                         $faculty->univis_key = $org->attributes()['key'];
+                        $faculty->univis_hash = hash('sha256', $org->asXML());
                         $faculty->location = $org->ort;
                         $faculty->save();
 
