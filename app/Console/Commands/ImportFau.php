@@ -158,7 +158,7 @@ class ImportFau extends Command
                             $department->univis_id = $org->id;
                             $department->univis_orgnr = $org->attributes()['orgnr'];
                             $department->univis_key = $org->attributes()['key'];
-//                            $department->univis_hash = hash('sha256', $org->id);
+                            $department->univis_hash = hash('sha256', $org->asXML());
                             $department->location = $org->ort;
                             $department->save();
 
@@ -209,6 +209,7 @@ class ImportFau extends Command
                             $chair->univis_id = $org->id;
                             $chair->univis_orgnr = $org->attributes()['orgnr'];
                             $chair->univis_key = $org->attributes()['key'];
+                            $chair->univis_hash = hash('sha256', $org->asXML());
                             $chair->location = $org->ort;
                             $chair->save();
 
@@ -256,6 +257,7 @@ class ImportFau extends Command
                         $course->course_type = $lecture->type;
                         $course->univis_id = $lecture->id;
                         $course->univis_key = $lecture->attributes()['key'];
+                        $course->univis_hash = hash('sha256', $lecture->asXML());
                         $course->ects = $lecture->ects_cred;
                         $course->sws = $lecture->sws;
                         $course->max_turnout = $lecture->maxturnout;
@@ -304,6 +306,7 @@ class ImportFau extends Command
                         $professor->gender = ($person->gender == "f") ? 0 : 1;
                         $professor->univis_id = $person->id;
                         $professor->univis_key = $person->attributes()['key'];
+                        $professor->univis_hash = hash('sha256', $person->asXML());
                         $professor->chair_id = $chair->id;
 
                         $professor->save();
