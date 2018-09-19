@@ -7,6 +7,20 @@ use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 use \Nicolaslopezj\Searchable\SearchableTrait;
 
+/**
+ * @property string name
+ * @property string short_name
+ * @property int chair_id
+ * @property string course_type
+ * @property string univis_id
+ * @property string univis_key
+ * @property string univis_hash
+ * @property string ects
+ * @property int sws
+ * @property int max_turnout
+ * @property string language
+ * @property string summary
+ */
 class Course extends Model
 {
     use SearchableTrait;

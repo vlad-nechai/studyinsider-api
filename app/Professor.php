@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Nicolaslopezj\Searchable\SearchableTrait;
 
+/**
+ * @property string name
+ * @property string title
+ * @property int gender
+ * @property string univis_id
+ * @property string univis_key
+ * @property string univis_hash
+ * @property int chair_id
+ */
 class Professor extends Model
 {
 
