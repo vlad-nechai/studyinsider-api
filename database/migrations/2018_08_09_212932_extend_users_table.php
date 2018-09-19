@@ -31,6 +31,12 @@ class ExtendUsersTable extends Migration
      */
     public function down()
     {
-        //no reason to drop it cause it is going to be dropped in other migration
+        Schema::table('users', function($table) {
+            $table->dropColumn('sex');
+            $table->dropColumn('birth_date');
+            $table->dropColumn('location');
+            $table->dropColumn('study_program');
+            $table->dropColumn('image');
+        });
     }
 }
