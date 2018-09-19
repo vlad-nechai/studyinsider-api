@@ -35,6 +35,11 @@ class ImportFau extends Command
     protected $client;
 
     /**
+     * Semesters that are used for import of professors and courses
+     */
+    private $semesters;
+
+    /**
      * Create a new command instance.
      * @var Client $client
      * @return void
@@ -44,6 +49,7 @@ class ImportFau extends Command
         parent::__construct();
 
         $this->client = new Client(['headers' => ['Content-Type' => 'application/xml']]);
+        $this->semesters = ["2016w", "2017s", "2017w", "2018s", "2018w"];
     }
 
     /**
@@ -59,6 +65,7 @@ class ImportFau extends Command
      */
     public function handle()
     {
+
         switch ($this->argument('type')) {
             case "faculties":
                 $this->importFaculties();
@@ -99,7 +106,6 @@ class ImportFau extends Command
 
                 $xml = simplexml_load_string($res->getBody()->getContents());
 
-                //TODO: fix hash attribute
                 $list = $xml->xpath("//Org[not(contains(substring-after(@key, 'Org.'), '.'))]");
                 foreach ($list as $org) {
                     try {
@@ -125,7 +131,7 @@ class ImportFau extends Command
             }
         }
 
-        echo "Faculties import finished";
+        echo "Faculties import finished" . "\n";
     }
 
     /**
@@ -147,7 +153,6 @@ class ImportFau extends Command
 
                     $xml = simplexml_load_string($res->getBody()->getContents());
 
-                    //TODO: fix hash attribute
                     $list = $xml->xpath("//Org[not(contains(substring-after(@key, '" . $faculty->univis_key . ".'), '.')) and (contains(@key, '" . $faculty->univis_key . ".'))]");
                     foreach ($list as $org) {
                         try {
@@ -174,7 +179,7 @@ class ImportFau extends Command
             }
         }
 
-        echo "Departments import finished";
+        echo "Departments import finished" . "\n";
     }
 
     /**
@@ -194,7 +199,6 @@ class ImportFau extends Command
 
                 $xml = simplexml_load_string($res->getBody()->getContents());
 
-                //TODO: fix hash attribute
                 $list = $xml->xpath("//Org");
                 foreach ($list as $org) {
                     try {
@@ -226,7 +230,7 @@ class ImportFau extends Command
             }
         }
 
-        echo "Chairs import finished";
+        echo "Chairs import finished" . "\n";
     }
 
     /**
@@ -277,7 +281,7 @@ class ImportFau extends Command
             }
         }
 
-        echo "Courses import finished";
+        echo "Courses import finished" . "\n";
     }
 
     /**
@@ -286,44 +290,71 @@ class ImportFau extends Command
     private function importProfessors()
     {
         $chairs = Chair::all();
-        foreach ($chairs as $chair) {
-            try {
-                $res = $this->client->get($this->endPoint, [
-                    'query' => [
-                        'search' => 'persons',
-                        'department' => $chair->univis_id,
-                        'show' => 'xml'
-                    ],
-                ]);
+        foreach ($this->semesters as $semester) {
+            foreach ($chairs as $chair) {
+                try {
+                    $res = $this->client->get($this->endPoint, [
+                        'query' => [
+                            'search' => 'persons',
+                            'department' => $chair->univis_id,
+                            'show' => 'xml',
+                            'sem' => $semester
+                        ],
+                    ]);
 
-                $xml = simplexml_load_string($res->getBody()->getContents());
-                $list = $xml->xpath("//Person");
-                foreach ($list as $person) {
-                    try {
-                        $professor = new Professor;
-                        $professor->name = $person->firstname . " " . $person->lastname;
-                        $professor->title = $person->title;
-                        $professor->gender = ($person->gender == "f") ? 0 : 1;
-                        $professor->univis_id = $person->id;
-                        $professor->univis_key = $person->attributes()['key'];
-                        $professor->univis_hash = hash('sha256', $person->asXML());
-                        $professor->chair_id = $chair->id;
+                    $xml = simplexml_load_string($res->getBody()->getContents());
+                    $list = $xml->xpath("//Person");
+                    foreach ($list as $person) {
+                        try {
+                            // check if record already exists
+                            $oldProfessor = Professor::where('univis_id', $person->id)->first();
 
-                        $professor->save();
+                            if (is_null($oldProfessor)) {
+                                $professor = new Professor;
+                                $professor->name = $person->firstname . " " . $person->lastname;
+                                $professor->title = $person->title;
+                                $professor->gender = ($person->gender == "f") ? 0 : 1;
+                                $professor->univis_id = $person->id;
+                                $professor->univis_key = $person->attributes()['key'];
+                                $professor->univis_hash = hash('sha256', $person->asXML());
+                                $professor->chair_id = $chair->id;
 
-                        echo $person->attributes()['key'] . "\n";
+                                $professor->save();
 
-                    } catch (\Exception $e) {
-                        echo($e->getMessage() . "\n");
-                    }
-}
+                                echo $person->attributes()['key'] . " imported \n";
+                            } else {
+                                // calculating new hash value
+                                $newHash = hash('sha256', $person->asXML());
 
-            } catch (\Exception $e) {
-                echo($e->getMessage() . "\n");
-            }
+                                // if there are updates, save them
+                                if ($newHash != $oldProfessor->univis_hash) {
+                                    $oldProfessor->name = $person->firstname . " " . $person->lastname;
+                                    $oldProfessor->title = $person->title;
+                                    $oldProfessor->gender = ($person->gender == "f") ? 0 : 1;
+                                    $oldProfessor->univis_id = $person->id;
+                                    $oldProfessor->univis_key = $person->attributes()['key'];
+                                    $oldProfessor->univis_hash = hash('sha256', $person->asXML());
+                                    $oldProfessor->chair_id = $chair->id;
+
+                                    $oldProfessor->save();
+
+                                    echo $person->attributes()['key'] . " updated \n";
+                                }
+                            }
+
+
+                        } catch (\Exception $e) {
+                            echo($e->getMessage() . "\n");
+                        }
+    }
+
+                } catch (\Exception $e) {
+                    echo($e->getMessage() . "\n");
+                }
+        }
         }
 
-        echo "import Professors finished";
+        echo "import Professors finished" . "\n";
     }
 
     /**
@@ -362,6 +393,6 @@ class ImportFau extends Command
             }
         }
 
-        echo "Mapping courses to professors task is finished.";
+        echo "Mapping courses to professors task is finished." . "\n";
     }
 }
