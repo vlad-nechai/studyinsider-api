@@ -20,6 +20,7 @@ use \Nicolaslopezj\Searchable\SearchableTrait;
  * @property int max_turnout
  * @property string language
  * @property string summary
+ * @property string semester
  */
 class Course extends Model
 {

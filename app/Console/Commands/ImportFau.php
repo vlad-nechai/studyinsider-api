@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Chair;
 use App\Course;
+use App\CourseTerm;
 use App\Department;
 use App\Faculty;
 use App\Professor;
@@ -65,7 +66,6 @@ class ImportFau extends Command
      */
     public function handle()
     {
-
         switch ($this->argument('type')) {
             case "faculties":
                 $this->importFaculties();
@@ -239,45 +239,79 @@ class ImportFau extends Command
     private function importCourses()
     {
         $chairs = Chair::all();
-        foreach ($chairs as $chair) {
-            try {
-                $res = $this->client->get($this->endPoint, [
-                    'query' => [
-                        'search' => 'lectures',
-                        'department' => $chair->univis_id,
-                        'show' => 'xml'
-                    ],
-                ]);
+        foreach ($this->semesters as $semester) {
+            foreach ($chairs as $chair) {
+                try {
+                    $res = $this->client->get($this->endPoint, [
+                        'query' => [
+                            'search' => 'lectures',
+                            'department' => $chair->univis_id,
+                            'show' => 'xml',
+                            'sem' => $semester
+                        ],
+                    ]);
 
-                $xml = simplexml_load_string($res->getBody()->getContents());
-                $list = $xml->xpath("//Lecture ");
+                    $xml = simplexml_load_string($res->getBody()->getContents());
+                    $list = $xml->xpath("//Lecture ");
 
-                foreach ($list as $lecture) {
-                    try {
-                        $course = new Course;
-                        $course->name = $lecture->name;
-                        $course->short_name = $lecture->short;
-                        $course->chair_id = $chair->id;
-                        $course->course_type = $lecture->type;
-                        $course->univis_id = $lecture->id;
-                        $course->univis_key = $lecture->attributes()['key'];
-                        $course->univis_hash = hash('sha256', $lecture->asXML());
-                        $course->ects = $lecture->ects_cred;
-                        $course->sws = $lecture->sws;
-                        $course->max_turnout = $lecture->maxturnout;
-                        $course->language = $lecture->leclanguage;
-                        $course->summary = $lecture->summary;
+                    foreach ($list as $lecture) {
+                        try {
+                            // check if record already exists
+                            $oldCourse = Course::where('univis_id', $lecture->id)->first();
 
-                        $course->save();
+                            if (is_null($oldCourse)) {
+                                if (empty($lecture->import_parent_id)) {
+                                    $course = new Course;
+                                    $course->name = $lecture->name;
+                                    $course->short_name = $lecture->short;
+                                    $course->chair_id = $chair->id;
+                                    $course->course_type = $lecture->type;
+                                    $course->univis_id = $lecture->id;
+                                    $course->univis_key = $lecture->attributes()['key'];
+                                    $course->univis_hash = hash('sha256', $lecture->asXML());
+                                    $course->ects = $lecture->ects_cred;
+                                    $course->sws = $lecture->sws;
+                                    $course->max_turnout = $lecture->maxturnout;
+                                    $course->language = $lecture->leclanguage;
+                                    $course->summary = $lecture->summary;
+                                    $course->semester = $semester;
 
-                        echo $lecture->attributes()['key'] . "\n";
+                                    $course->save();
 
-                    } catch (\Exception $e) {
-                        echo($e->getMessage() . "\n");
+                                    echo $lecture->attributes()['key'] . " created" . "\n";
+                                }
+                            } else {
+                                // calculating new hash value
+                                $newHash = hash('sha256', $lecture->asXML());
+
+                                // if there are updates, save them
+                                if ($newHash != $oldCourse->univis_hash) {
+                                    $oldCourse->name = $lecture->name;
+                                    $oldCourse->short_name = $lecture->short;
+                                    $oldCourse->chair_id = $chair->id;
+                                    $oldCourse->course_type = $lecture->type;
+                                    $oldCourse->univis_id = $lecture->id;
+                                    $oldCourse->univis_key = $lecture->attributes()['key'];
+                                    $oldCourse->univis_hash = hash('sha256', $lecture->asXML());
+                                    $oldCourse->ects = $lecture->ects_cred;
+                                    $oldCourse->sws = $lecture->sws;
+                                    $oldCourse->max_turnout = $lecture->maxturnout;
+                                    $oldCourse->language = $lecture->leclanguage;
+                                    $oldCourse->summary = $lecture->summary;
+
+                                    $oldCourse->save();
+
+                                    echo $lecture->attributes()['key'] . " updated \n";
+                                }
+                            }
+
+                        } catch (\Exception $e) {
+                            echo($e->getMessage() . "\n");
+                        }
                     }
+                } catch (\Exception $e) {
+                    echo($e->getMessage() . "\n");
                 }
-            } catch (\Exception $e) {
-                echo($e->getMessage() . "\n");
             }
         }
 
