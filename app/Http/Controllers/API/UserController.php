@@ -48,7 +48,7 @@ class UserController extends Controller
             'c_password' => 'required|same:password',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 401);
+            return response()->json(['error'=>$validator->errors()], 400);
         }
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
@@ -70,13 +70,13 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors(), 401]);
+            return response()->json(['error' => $validator->errors(), 400]);
         }
 
         $credentials = $request->only('email', 'password');
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid credentials'], $this->unauthorizedStatus);
+                return response()->json(['error' => 'invalid credentials'], 403);
             }
         } catch (JWTException $e) {
             return response()->json(['error' => 'could not create token'], $this->internalServerErrorStatus);
