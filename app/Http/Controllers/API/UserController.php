@@ -95,7 +95,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'name' => 'required',
             'sex' => 'required',
-            'study_program' => 'required',
+            'major_id' => 'required',
             'password'=> 'required',
             'c_password' => 'required|same:password',
         ]);
@@ -131,9 +131,9 @@ class UserController extends Controller
      */
     public function profile()
     {
-
         $user = Auth::user();
         $user->load([
+            'major',
             'bookmarks.reviews',
             'bookmarks.avgRating',
             'bookmarks.topTags',

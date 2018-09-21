@@ -3,6 +3,7 @@
 namespace App;
 
 namespace App;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -55,6 +56,14 @@ class User extends Authenticatable implements JWTSubject
     public function reviewedCourses() {
         return $this
             ->belongsToMany('App\Course','courses_rate')->withTimestamps();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function major() {
+        return $this
+            ->belongsTo('App\Major');
     }
 
     /**
