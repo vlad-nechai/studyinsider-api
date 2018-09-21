@@ -84,4 +84,18 @@ class MajorController extends Controller
     {
         //
     }
+
+    /**
+     * Quick search majors
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function quickSearch(Request $request) {
+        $query = $request->input('q');
+
+        $majors = Major::search($query, null, true, true)->limit(7)->get(['id', 'name', 'relevance']);
+
+        return $majors;
+    }
 }

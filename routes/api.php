@@ -43,6 +43,7 @@ Route::get('/courses/search', 'CourseController@search');
 Route::get('/courses/quick-search', 'CourseController@quickSearch');
 Route::get('/professors/quick-search', 'ProfessorController@quickSearch');
 Route::get('/skills/quick-search', 'SkillsController@quickSearch');
+Route::get('/majors/quick-search', 'MajorController@quickSearch');
 
 Route::resources([
     'courses' => 'CourseController',
