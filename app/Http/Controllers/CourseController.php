@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Chair;
 use App\CourseTag;
+use App\Department;
 use App\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -32,6 +34,25 @@ class CourseController extends Controller
             $courses = Course::search($q);
         } else {
             $courses = Course::where('id', '>', '0');
+        }
+
+        // filter by faculties
+        if ($request->filled('faculty')) {
+            $faculties = json_decode($request->input('faculty'));
+
+            if (count($faculties) > 0) {
+                $appendArr['chair'] = $faculties;
+
+                // get all departments for a faculty
+                $departments = Department::whereIn('faculty_id', $faculties)->pluck('id')->toArray();
+
+                // get all chairs for a department
+                $chairs = Chair::whereIn('department_id', $departments)->pluck('id')->toArray();
+
+                $courses->whereHas('chair', function ($query) use ($chairs) {
+                    $query->whereIn('id', $chairs);
+                });
+            }
         }
 
         // filter by star rating
