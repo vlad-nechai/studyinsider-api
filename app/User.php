@@ -58,6 +58,22 @@ class User extends Authenticatable implements JWTSubject
             ->belongsToMany('App\Course','courses_rate')->withTimestamps();
     }
 
+
+    /** Loads tags pro review pro user
+     * TODO: rebuild models with operation efficiency
+     * @return BelongsToMany
+     */
+    public function courseTags() {
+
+        return $this->reviewedCourses()
+            ->selectRaw('tag_course.tag_id, courses_tags.tag')
+            ->join('tag_course', function($q) {
+                $q->on('tag_course.course_id', '=', 'courses_rate.course_id');
+                $q->on('tag_course.user_id', '=', 'courses_rate.user_id');
+            })
+            ->join('courses_tags', 'tag_course.tag_id', '=', 'courses_tags.id', 'inner');
+    }
+
     /**
      * @return BelongsTo
      */

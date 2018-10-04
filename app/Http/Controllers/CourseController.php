@@ -290,17 +290,15 @@ class CourseController extends Controller
 
     /**
      * Load previous reviews for a course
-     *
+     * TODO: rebuild models with operation efficiency
      * @param  int  $id
      * @return Course  $course
      */
     public function loadReviews($id)
     {
-
-        return Course::find($id)->load([
-            'reviews',
-            'tagsByUser'
-            ]);
+        return Course::find($id)->load(['reviews.courseTags' => function($q) use ($id) {
+            $q->where('courses_rate.course_id', $id);
+        }]);
     }
 
 

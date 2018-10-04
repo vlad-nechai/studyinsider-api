@@ -253,23 +253,10 @@ class Course extends Model
     /**
      * @return BelongsToMany
      */
-    public function tagsByUser() {
-
-        return $this->belongsToMany('App\User',
-            'courses_rate', 'course_id', 'user_id')
-            ->selectRaw('users.id as user_id, courses_tags.id as tag_id, courses_tags.tag')
-            ->join('tag_course', 'users.id', '=', 'tag_course.user_id', 'inner')
-            ->join('courses_tags', 'tag_course.tag_id', '=', 'courses_tags.id', 'inner')
-            ->where('tag_course.course_id', '=', $this->id)
-            ;
-    }
-
-    /**
-     * @return BelongsToMany
-     */
     public function tags() {
         return $this->belongsToMany('App\CourseTag',
-            'tag_course', 'course_id', 'tag_id');
+            'tag_course', 'course_id', 'tag_id')
+            ->withPivot('user_id');
     }
 
     /**
