@@ -74,6 +74,21 @@ class User extends Authenticatable implements JWTSubject
             ->join('courses_tags', 'tag_course.tag_id', '=', 'courses_tags.id', 'inner');
     }
 
+    /** Loads skills pro review pro user
+     * TODO: rebuild models with operation efficiency
+     * @return BelongsToMany
+     */
+    public function courseSkills() {
+
+        return $this->reviewedCourses()
+            ->selectRaw('skill_course.skill_id, skills.name')
+            ->join('skill_course', function($q) {
+                $q->on('skill_course.course_id', '=', 'courses_rate.course_id');
+                $q->on('skill_course.user_id', '=', 'courses_rate.user_id');
+            })
+            ->join('skills', 'skill_course.skill_id', '=', 'skills.id', 'inner');
+    }
+
     /**
      * @return BelongsTo
      */

@@ -296,9 +296,13 @@ class CourseController extends Controller
      */
     public function loadReviews($id)
     {
-        return Course::find($id)->load(['reviews.courseTags' => function($q) use ($id) {
-            $q->where('courses_rate.course_id', $id);
-        }]);
+        return Course::find($id)->load([
+            'reviews.courseTags' => function($q) use ($id) {
+                $q->where('courses_rate.course_id', $id);
+            },
+            'reviews.courseSkills' => function($q) use ($id) {
+                $q->where('courses_rate.course_id', $id);
+            }]);
     }
 
 
