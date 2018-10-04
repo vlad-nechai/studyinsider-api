@@ -54,6 +54,9 @@ Route::resources([
     'chairs' => 'ChairController',
 ]);
 
+// Load course prev reviews
+Route::get('courses/{id}/reviews', 'CourseController@loadReviews');
+
 
 /**
  * Tags

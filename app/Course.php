@@ -86,13 +86,13 @@ class Course extends Model
     }
 
     /**
-     * TODO: add withPivot
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function reviews() {
         return $this->belongsToMany('App\User',
             'courses_rate', 'course_id', 'user_id')
+            ->withPivot('difficulty', 'must_attend', 'take_again')
             ->withTimestamps();
     }
 
@@ -248,6 +248,20 @@ class Course extends Model
     public function usersWhoAddedSkills() {
         return $this->belongsToMany('App\User',
             'skill_course', 'course_id', 'user_id')->withTimestamps();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function tagsByUser() {
+
+        return $this->belongsToMany('App\User',
+            'courses_rate', 'course_id', 'user_id')
+            ->selectRaw('users.id as user_id, courses_tags.id as tag_id, courses_tags.tag')
+            ->join('tag_course', 'users.id', '=', 'tag_course.user_id', 'inner')
+            ->join('courses_tags', 'tag_course.tag_id', '=', 'courses_tags.id', 'inner')
+            ->where('tag_course.course_id', '=', $this->id)
+            ;
     }
 
     /**

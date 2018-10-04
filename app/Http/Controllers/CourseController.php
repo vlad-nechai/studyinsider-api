@@ -288,6 +288,21 @@ class CourseController extends Controller
         return $course->load(['topSkills']);
     }
 
+    /**
+     * Load previous reviews for a course
+     *
+     * @param  int  $id
+     * @return Course  $course
+     */
+    public function loadReviews($id)
+    {
+
+        return Course::find($id)->load([
+            'reviews',
+            'tagsByUser'
+            ]);
+    }
+
 
     /**
      * Search for courses
