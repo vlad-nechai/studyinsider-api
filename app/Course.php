@@ -315,7 +315,7 @@ class Course extends Model
 
     /**
      * Get the administrator flag for the user.
-     *
+     * TODO: check if it is necessary
      * @return bool
      */
     public function getIsAdminAttribute()
