@@ -137,9 +137,11 @@ class UserController extends Controller
             'bookmarks.reviews',
             'bookmarks.avgRating',
             'bookmarks.topTags',
+            'bookmarks.chair',
             'reviewedCourses.reviews',
             'reviewedCourses.avgRating',
-            'reviewedCourses.topTags'
+            'reviewedCourses.topTags',
+            'reviewedCourses.chair'
         ]);
         return response()->json($user, $this->successStatus);
     }
