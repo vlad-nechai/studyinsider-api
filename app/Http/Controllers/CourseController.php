@@ -141,7 +141,7 @@ class CourseController extends Controller
             'avgRating',
             'avgDifficulty',
             'avgUsefulness',
-            'percentageTakeAgain',
+            'percentageRecommendToFriends',
             'percentageMustAttend',
             'topTags',
             'reviews',

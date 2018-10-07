@@ -92,7 +92,7 @@ class Course extends Model
     public function reviews() {
         return $this->belongsToMany('App\User',
             'courses_rate', 'course_id', 'user_id')
-            ->withPivot('difficulty', 'must_attend', 'take_again')
+            ->withPivot('difficulty', 'must_attend', 'recommend_to_friends', 'comments')
             ->withTimestamps();
     }
 
@@ -197,10 +197,10 @@ class Course extends Model
     /**
      * @return mixed
      */
-    public function percentageTakeAgain()
+    public function percentageRecommendToFriends()
     {
         return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.take_again)*100 as percentage, courses_rate.course_id')
+            ->selectRaw('avg(courses_rate.recommend_to_friends)*100 as percentage, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
 
@@ -227,10 +227,10 @@ class Course extends Model
     /**
      * @return mixed
      */
-    public function percentageAttendSeminars()
+    public function percentageAttendanceRequired()
     {
         return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.attend_seminars)*100 as percentage, courses_rate.course_id')
+            ->selectRaw('avg(courses_rate.attendance_required)*100 as percentage, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
 
