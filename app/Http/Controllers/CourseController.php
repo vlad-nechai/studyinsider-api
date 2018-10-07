@@ -302,7 +302,7 @@ class CourseController extends Controller
             },
             'reviews.courseSkills' => function($q) use ($id) {
                 $q->where('courses_rate.course_id', $id);
-            }]);
+            }, 'reviews.major']);
     }
 
 

@@ -92,7 +92,7 @@ class Course extends Model
     public function reviews() {
         return $this->belongsToMany('App\User',
             'courses_rate', 'course_id', 'user_id')
-            ->withPivot('difficulty', 'must_attend', 'recommend_to_friends', 'comments')
+            ->withPivot('difficulty', 'must_attend', 'recommend_to_friends', 'comments', 'star_rating')
             ->withTimestamps();
     }
 
