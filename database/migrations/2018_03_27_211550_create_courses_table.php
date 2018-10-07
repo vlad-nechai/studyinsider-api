@@ -25,9 +25,6 @@ class CreateCoursesTable extends Migration
             $table->string('ects')->nullable();
             $table->integer('sws')->nullable()->comment = "Semester Wochen Stunden";
             $table->integer('max_turnout')->nullable()->comment = "Maximum amount of students";
-//            TODO: add later when modelling majors and study programs
-//            $table->string('semester')->nullable()->comment = "Winter or summer semester";
-//            $table->unsignedTinyInteger('mandatory')->nullable()->comment = "1: yes(mandatory); 0:no(elective)";
             $table->string('language')->nullable()->comment = "D, DE: german; E, EN:english";
             $table->text('summary')->nullable()->comment = "Course description";
             $table->timestamps();
