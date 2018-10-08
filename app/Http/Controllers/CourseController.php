@@ -144,7 +144,8 @@ class CourseController extends Controller
             'percentageRecommendToFriends',
             'percentageMustAttend',
             'topTags',
-            'reviews',
+            'reviews.addedTagsToCourse',
+            'tags',
             'topSkills'
         ]);
     }
@@ -177,6 +178,30 @@ class CourseController extends Controller
         $course->delete();
 
         return response()->json(['success'=>'deleted'], 200);
+    }
+
+
+    /**
+     * Get course review for the user
+     *
+     * @param  int  $id
+     * @return Course
+     */
+    public function getReview($id) {
+        $course = Course::find($id);
+
+        $user = Auth::user();
+
+        return $course->load([
+            'reviews' => function($q) use ($user) {
+                $q->where('courses_rate.user_id', $user->id);
+            },
+            'reviews.courseTags' => function($q) use ($id) {
+                $q->where('courses_rate.course_id', $id);
+            },
+            'reviews.courseSkills' => function($q) use ($id) {
+                $q->where('courses_rate.course_id', $id);
+            }]);
     }
 
     /**

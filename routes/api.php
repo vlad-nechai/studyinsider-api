@@ -24,12 +24,13 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
     // Course review, tags and skills
     Route::post('courses/{id}/review', 'CourseController@review');
+    Route::get('courses/{id}/review', 'CourseController@getReview');
     Route::post('courses/{id}/tags', 'CourseController@attachTags');
     Route::post('courses/{id}/skills', 'CourseController@attachSkills');
 });
 
 
-//Login and register with Laravel Passport Auth
+//Login and register with Laravel PasSsport Auth
 //Route::post('login', 'API\UserController@loginLaravelPassport');
 //Route::post('register', 'API\UserController@registerLaravelPassport');
 
