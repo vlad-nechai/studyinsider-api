@@ -144,7 +144,8 @@ class CourseController extends Controller
             'percentageRecommendToFriends',
             'percentageMustAttend',
             'topTags',
-            'reviews.addedTagsToCourse',
+            'reviews.courseTags',
+            'reviews.courseSkills',
             'tags',
             'topSkills'
         ]);
