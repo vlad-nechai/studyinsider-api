@@ -156,11 +156,11 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $message = "Course is already bookmarked";
+        $message = "Die Lehrveranstaltung wurde bereits gespeichert";
         $bookmark = $user->bookmarks()->where('course_id', $id)->first();
         if (is_null($bookmark)) {
             $user->bookmarks()->attach($id);
-            $message = "Course successfully bookmarked";
+            $message = "Die Lehrveranstaltung wurde gespeichert";
         }
         $user->load('bookmarks');
         return response()->json(['message' => $message, 'user' => $user], $this->successStatus);
@@ -176,7 +176,7 @@ class UserController extends Controller
         $user = Auth::user();
         $user->bookmarks()->detach($id);
         $user->load('bookmarks');
-        $message = "Course bookmark has been deleted";
+        $message = "Die Lehrveranstaltung wurde gelöscht";
         return response()->json(['message' => $message, 'user' => $user], $this->successStatus);
     }
 }
