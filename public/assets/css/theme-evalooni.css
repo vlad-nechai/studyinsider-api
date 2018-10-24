@@ -1742,7 +1742,8 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary:hover {
-  color: #212529;
+  /* color: #212529; */
+  color: white;
   background-color: #fb775d;
   border-color: #fb775d
 }
@@ -1754,8 +1755,8 @@ fieldset:disabled a.btn {
 
 .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-  color: #fb775d;
-  background-color: transparent
+  color: #fb775d !important;
+  background-color: transparent !important;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active,
