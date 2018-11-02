@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'jwt.auth'], function() {
     // User
     Route::post('profile', 'API\UserController@profile');
+    Route::put('profile', 'API\UserController@edit');
+    Route::delete('profile', 'API\UserController@delete');
 
     // Bookmarks
     Route::post('bookmark/{id}', 'API\UserController@addBookmark');

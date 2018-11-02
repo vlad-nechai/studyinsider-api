@@ -126,13 +126,57 @@ class UserController extends Controller
     }
 
     /**
-     * details api
+     * user profile data
      *
      * @return \Illuminate\Http\Response
      */
     public function profile()
     {
         $user = Auth::user();
+        $user->load([
+            'major',
+            'bookmarks.reviews',
+            'bookmarks.avgRating',
+            'bookmarks.topTags',
+            'bookmarks.chair',
+            'reviewedCourses.reviews',
+            'reviewedCourses.avgRating',
+            'reviewedCourses.topTags',
+            'reviewedCourses.chair'
+        ]);
+        return response()->json($user, $this->successStatus);
+    }
+
+    /**
+     * edit user profile data
+     *
+     * @param Request $request user data to be edited
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Request $request)
+    {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'username' => 'required',
+            'sex' => 'required',
+            'major_id' => 'required',
+            'password' => 'sometimes|required|confirmed', // when password is changed then validate
+            'password_confirmation' => 'sometimes|required|same:password', // when password is changed then validate
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        // email shall not be edited
+        $input = $request->except(['email']);
+        if ($request->has('password')) {
+            $input['password'] = bcrypt($input['password']);
+        }
+
+        $user->update($input);
         $user->load([
             'major',
             'bookmarks.reviews',
