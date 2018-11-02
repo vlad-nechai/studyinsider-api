@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
-use function PHPSTORM_META\elementType;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
 
@@ -132,19 +132,24 @@ class UserController extends Controller
      */
     public function profile()
     {
-        $user = Auth::user();
-        $user->load([
-            'major',
-            'bookmarks.reviews',
-            'bookmarks.avgRating',
-            'bookmarks.topTags',
-            'bookmarks.chair',
-            'reviewedCourses.reviews',
-            'reviewedCourses.avgRating',
-            'reviewedCourses.topTags',
-            'reviewedCourses.chair'
-        ]);
-        return response()->json($user, $this->successStatus);
+        try {
+
+            $user = Auth::user();
+            $user->load([
+                'major',
+                'bookmarks.reviews',
+                'bookmarks.avgRating',
+                'bookmarks.topTags',
+                'bookmarks.chair',
+                'reviewedCourses.reviews',
+                'reviewedCourses.avgRating',
+                'reviewedCourses.topTags',
+                'reviewedCourses.chair'
+            ]);
+            return response()->json($user, $this->successStatus);
+        } catch (UnauthorizedHttpException $exception) {
+            return response()->json(['error' => 'user not found'], $this->unauthorizedStatus);
+        }
     }
 
     /**
@@ -189,6 +194,20 @@ class UserController extends Controller
             'reviewedCourses.chair'
         ]);
         return response()->json($user, $this->successStatus);
+    }
+
+    /**
+     * delete user profile
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function delete()
+    {
+        $user = Auth::user();
+
+        $user->delete();
+
+        return response()->json(['message' => 'user was successfully deleted'], $this->successStatus);
     }
 
     /**
