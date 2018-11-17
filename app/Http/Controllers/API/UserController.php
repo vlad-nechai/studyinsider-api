@@ -198,6 +198,12 @@ class UserController extends Controller
         return response()->json($user, $this->successStatus);
     }
 
+    /**
+     * user image upload
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function uploadImage(Request $request) {
         $user = Auth::user();
 
