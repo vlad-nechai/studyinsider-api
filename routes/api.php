@@ -18,6 +18,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     // User
     Route::post('profile', 'API\UserController@profile');
     Route::put('profile', 'API\UserController@edit');
+    Route::post('profile/image', 'API\UserController@uploadImage');
     Route::delete('profile', 'API\UserController@delete');
 
     // Bookmarks

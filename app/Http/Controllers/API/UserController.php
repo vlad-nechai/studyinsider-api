@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use JWTAuth;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
 
 class UserController extends Controller
 {
@@ -164,7 +165,7 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'username' => 'required',
+            'username' => 'required', // TODO: unique for username
             'sex' => 'required',
             'major_id' => 'required',
             'password' => 'sometimes|required|confirmed', // when password is changed then validate
@@ -182,6 +183,7 @@ class UserController extends Controller
         }
 
         $user->update($input);
+
         $user->load([
             'major',
             'bookmarks.reviews',
@@ -194,6 +196,31 @@ class UserController extends Controller
             'reviewedCourses.chair'
         ]);
         return response()->json($user, $this->successStatus);
+    }
+
+    public function uploadImage(Request $request) {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = str_slug($user->name, '_').'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/assets/images/profile-pictures');
+            $imagePath = $destinationPath. "/".  $name;
+            $image->move($destinationPath, $name);
+
+            $user->image = '/assets/images/profile-pictures/' . $name;
+            $user->save();
+
+            return response()->json(['message' => 'user image was successfully saved'], $this->successStatus);
+        }
     }
 
     /**
