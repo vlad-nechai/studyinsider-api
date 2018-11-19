@@ -111,9 +111,9 @@ class UserController extends Controller
 
             // default image
             if ($input['sex'] == 0) {
-                $input['image'] = '/assets/images/girl2.jpg';
+                $input['image'] = 'https://evalooni.de/assets/images/girl2.jpg';
             } else {
-                $input['image'] = '/assets/images/guy2.jpg';
+                $input['image'] = 'https://evalooni.de/assets/images/guy2.jpg';
             }
 
             $user = User::create($input);
