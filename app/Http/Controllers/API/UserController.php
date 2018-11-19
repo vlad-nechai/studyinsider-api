@@ -222,7 +222,7 @@ class UserController extends Controller
             $imagePath = $destinationPath. "/".  $name;
             $image->move($destinationPath, $name);
 
-            $user->image = '/assets/images/profile-pictures/' . $name;
+            $user->image = 'https://evalooni.de/assets/images/profile-pictures/' . $name;
             $user->save();
 
             return response()->json(['message' => 'user image was successfully saved'], $this->successStatus);
