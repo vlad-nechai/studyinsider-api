@@ -198,6 +198,35 @@ class UserController extends Controller
         return response()->json($user, $this->successStatus);
     }
 
+
+    /**
+     * edit user password
+     *
+     * @param Request $request user data to be edited
+     * @return \Illuminate\Http\Response
+     */
+    public function editPassword(Request $request)
+    {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required|same:password',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $password = bcrypt($request->input('password'));
+
+        $user->password = $password;
+        $user->save();
+
+        return response()->json(['message' => 'password has been successfully changed'], $this->successStatus);
+
+    }
+
     /**
      * user image upload
      *
