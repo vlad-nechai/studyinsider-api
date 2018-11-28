@@ -24,4 +24,3 @@ Route::get('/', function () {
 
 Route::get('auth/callback/{provider}', 'SocialAuthController@callback');
 Route::get('auth/redirect/{provider}', 'SocialAuthController@redirect');
-
