@@ -21,3 +21,7 @@ Route::get('/', function () {
 //Route::post('/parser/link', 'Parser\LinkedinController@link');
 //Route::post('/parser/link/get', 'Parser\LinkedinController@getFirstLink');
 
+
+Route::get('auth/callback/{provider}', 'SocialAuthController@callback');
+Route::get('auth/redirect/{provider}', 'SocialAuthController@redirect');
+
