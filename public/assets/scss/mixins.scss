@@ -57,3 +57,9 @@
 
   @return 90deg - $value;
 }
+
+@mixin children-margin($margin) {
+  > *:not(:last-child) {
+    margin-bottom: $margin;
+  }
+}

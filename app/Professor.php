@@ -43,7 +43,7 @@ class Professor extends Model
      *
      * @var array
      */
-    protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'chair_id'];
+    protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'chair_id', 'pivot'];
 
     /**
      * Searchable rules.

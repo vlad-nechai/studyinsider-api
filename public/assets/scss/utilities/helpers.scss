@@ -1,0 +1,9 @@
+.children-margin {
+  @include children-margin(15px);
+}
+
+@media only screen and (max-width: 767px) {
+  .children-margin-sm {
+    @include children-margin(15px);
+  }
+}
