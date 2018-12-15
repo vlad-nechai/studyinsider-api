@@ -15,7 +15,7 @@ class AddSocialLoginToUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('provider_id')->after('id');
-            $table->string('provider')->after('provider_id');;
+            $table->string('provider')->after('provider_id');
         });
     }
 

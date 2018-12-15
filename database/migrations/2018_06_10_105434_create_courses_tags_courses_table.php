@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CoursesTagsCoursesTable extends Migration
+class CreateCoursesTagsCoursesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,14 +16,14 @@ class CoursesTagsCoursesTable extends Migration
         Schema::create('tag_course', function (Blueprint $table) {
             $table->unsignedInteger('course_id');
             $table->unsignedInteger('tag_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('course_review_id');
             $table->timestamps();
 
-            $table->foreign('course_id')->references('id')->on('courses');
-            $table->foreign('tag_id')->references('id')->on('courses_tags');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');;
+            $table->foreign('tag_id')->references('id')->on('courses_tags')->onDelete('cascade');;
+            $table->foreign('course_review_id')->references('id')->on('courses_reviews')->onDelete('cascade');;
 
-            $table->primary(['course_id', 'tag_id', 'user_id']);
+            $table->primary(['course_id', 'tag_id', 'course_review_id'], 'course_tag_review');
         });
     }
 

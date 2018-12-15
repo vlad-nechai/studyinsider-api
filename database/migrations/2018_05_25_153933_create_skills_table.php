@@ -15,7 +15,9 @@ class CreateSkillsTable extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->comment = "LinkedIn skills";
+            $table->string('name')->comment = "Skill";
+            $table->string("language")->default("en");
+            $table->string("origin")->default("linkedin");
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterProfessorsTagsTable extends Migration
+class CreateStudyProgramsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class AlterProfessorsTagsTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('professors_tags');
-
-        Schema::create('professors_tags', function (Blueprint $table) {
+        Schema::create('study_programs', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer("star_rating");
-            $table->string("tag_type")->default("predefined");;
-            $table->string("tag");
+            $table->unsignedInteger('university_id')->index();
+            $table->string('name');
+            $table->string('type');
             $table->timestamps();
+
+            $table->foreign('university_id')->references('id')->on('universities');
         });
     }
 
@@ -31,6 +31,6 @@ class AlterProfessorsTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('professors_tags');
+        Schema::dropIfExists('study_programs');
     }
 }

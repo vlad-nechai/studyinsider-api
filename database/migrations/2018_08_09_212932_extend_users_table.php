@@ -15,12 +15,9 @@ class ExtendUsersTable extends Migration
     {
         Schema::table('users', function($table)
         {
-            $table->integer('sex')->after('last_name');
-            $table->string("email")->after('name')->unique()->change();
-            $table->string("birth_date", 50)->after('email')->nullable();
-            $table->string("location", 50)->after('birth_place')->nullable();
-            $table->string("study_program", 50)->after('location');
-            $table->string("image", 100)->after('study_program')->default('assets/images/girl2.jpg');
+            $table->unsignedInteger('study_program_id')->index()->after('location');
+
+            $table->foreign('study_program_id')->references('id')->on('study_programs');
         });
     }
 
@@ -32,11 +29,8 @@ class ExtendUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function($table) {
-            $table->dropColumn('sex');
-            $table->dropColumn('birth_date');
-            $table->dropColumn('location');
-            $table->dropColumn('study_program');
-            $table->dropColumn('image');
+            $table->dropColumn('study_program_id');
+
         });
     }
 }

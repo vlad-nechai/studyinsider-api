@@ -16,15 +16,15 @@ class CreateChairsTable extends Migration
         Schema::create('chairs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedInteger('department_id');
+            $table->unsignedInteger('faculty_id')->index();
             $table->string('univis_id')->nullable()->unique();
             $table->string('univis_orgnr')->nullable()->unique();
             $table->string('univis_key')->nullable()->unique();
-            $table->string('univis_hash')->nullable()->unique();
             $table->string('location');
+            $table->string('image')->nullable();
             $table->timestamps();
 
-            $table->foreign('department_id')->references('id')->on('departments');
+            $table->foreign('faculty_id')->references('id')->on('faculties');
         });
     }
 

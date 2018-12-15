@@ -19,9 +19,8 @@ class CreateProfessorsTable extends Migration
             $table->string('title')->nullable();
             $table->tinyInteger('gender')->comment = "0: female; 1:male";
             $table->string('univis_id')->nullable()->unique();
-            $table->string('univis_hash')->nullable()->unique();
             $table->string('univis_key')->nullable()->unique();
-            $table->unsignedInteger('chair_id');
+            $table->unsignedInteger('chair_id')->index();
             $table->timestamps();
 
             $table->foreign('chair_id')->references('id')->on('chairs');

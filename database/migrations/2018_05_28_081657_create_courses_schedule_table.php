@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCoursesLocationsTable extends Migration
+class CreateCoursesScheduleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,20 @@ class CreateCoursesLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('courses_locations', function (Blueprint $table) {
+        Schema::create('courses_schedule', function (Blueprint $table) {
             $table->increments('id');
+
             $table->unsignedInteger("course_id");
-//            TODO: add room_id after modelling room entities
-//            $table->unsignedInteger("room_id");
+            $table->unsignedInteger("semester_id");
+
+            $table->string("start_time");
+            $table->string("end_time");
+            $table->string("room");
+            $table->string("repeat");
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses');
-//            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('semester_id')->references('id')->on('semesters');
         });
     }
 
@@ -32,6 +37,6 @@ class CreateCoursesLocationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses_locations');
+        Schema::dropIfExists('courses_schedule');
     }
 }

@@ -19,10 +19,10 @@ class CreateFacultiesTable extends Migration
             $table->string('type');
             $table->string('univis_id')->nullable()->unique();
             $table->string('univis_orgnr')->nullable()->unique();
-            $table->string('univis_hash')->nullable()->unique();
             $table->string('univis_key')->nullable()->unique();
             $table->string('location');
-            $table->unsignedInteger('university_id');
+            $table->string('image')->nullable();
+            $table->unsignedInteger('university_id')->index();
             $table->timestamps();
 
             $table->foreign('university_id')->references('id')->on('universities');
