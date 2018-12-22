@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Chair;
 use App\CourseTag;
 use App\Department;
+use App\Http\Controllers\Controller;
 use App\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Course;
+use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,7 +22,7 @@ class CourseController extends Controller
     }
 
     //TODO: Validators for filters and sorting
-    public function index(Request $request)
+    public function oldIndex(Request $request)
     {
         // array with attributes to be appended to pagination object
         $appendArr = [];
@@ -101,6 +102,21 @@ class CourseController extends Controller
             'topTags'])
             ->paginate(10)
             ->appends($appendArr);
+    }
+
+    /**
+     * TODO: check more elegant Validators functions
+     * List a courses collection
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function index(Request $request) {
+        $courses = Course::with(['chair',
+            'professors',
+            'semesters', 'reviews'])->paginate(10);
+
+        return $courses;
     }
 
     /**

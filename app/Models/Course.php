@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -42,12 +42,7 @@ class Course extends Model
         'name',
         'short_name',
         'chair_id',
-        'course_type',
-        'ects',
-        'sws',
-        'max_turnout',
-        'language',
-        'summary'
+        'course_type'
     ];
 
     /**
@@ -65,8 +60,7 @@ class Course extends Model
     protected $searchable = [
         'columns' => [
             'short_name' => 20,
-            'name' => 10,
-            'summary' => 2
+            'name' => 10
         ],
     ];
 
@@ -78,22 +72,36 @@ class Course extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * Get all of the professors for the course.
      */
-    public function professors() {
-        return $this->belongsToMany('App\Professor',
-            'course_professor', 'course_id', 'prof_id');
+    public function professors()
+    {
+        return $this->belongsToMany(
+            Professor::class,
+            'course_professor_semester',
+            'course_id',
+            'professor_id');
+    }
+
+    /**
+     * Get all of the semesters, when the course is offered.
+     */
+    public function semesters()
+    {
+        return $this->belongsToMany(
+            Semester::class,
+            'course_professor_semester',
+            'course_id',
+            'semester_id');
     }
 
     /**
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function reviews() {
-        return $this->belongsToMany('App\User',
-            'courses_rate', 'course_id', 'user_id')
-            ->withPivot('difficulty', 'must_attend', 'recommend_to_friends', 'comments', 'star_rating', 'when_course_taken', 'user_course_grade')
-            ->withTimestamps();
+        return $this->hasMany(Review::class,
+            'course_id');
     }
 
     /**
@@ -102,16 +110,6 @@ class Course extends Model
     public function courseReviews() {
         return $this
             ->belongsToMany('App\Course','courses_rate');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function reviewsCount() {
-        return $this
-            ->courseReviews()
-            ->selectRaw('user_id, count(*) as count')
-            ->groupBy('user_id');
     }
 
     /**
@@ -131,66 +129,6 @@ class Course extends Model
     {
         return $this->courseReviews()
             ->selectRaw('avg(courses_rate.difficulty) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function avgUsefulness()
-    {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.usefulness) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function avgScriptQuality()
-    {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.script) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function avgClearness()
-    {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.clearness) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function avgCompleteness()
-    {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.completeness) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function avgBullshitmeter()
-    {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.bullshitmeter) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function avgRelevance()
-    {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.relevance) as average, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
     }
 

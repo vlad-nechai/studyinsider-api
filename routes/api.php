@@ -33,7 +33,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 });
 
 
-//Login and register with Laravel PasSsport Auth
+//Login and register with Laravel Passport Auth
 //Route::post('login', 'API\UserController@loginLaravelPassport');
 //Route::post('register', 'API\UserController@registerLaravelPassport');
 
@@ -50,7 +50,7 @@ Route::get('/skills/quick-search', 'SkillsController@quickSearch');
 Route::get('/majors/quick-search', 'MajorController@quickSearch');
 
 Route::resources([
-    'courses' => 'CourseController',
+    'courses' => 'API\CourseController',
     'professors' => 'ProfessorController',
     'universities' => 'UniversityController',
     'faculties' => 'FacultyController',
