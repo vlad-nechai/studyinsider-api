@@ -53,7 +53,9 @@ class Course extends Model
     protected $appends = [
         'count_reviews',
         'average_rating',
-        'average_difficulty'
+        'average_difficulty',
+        'percentage_attendance_recommended',
+        'percentage_recommend'
     ];
 
     /**
@@ -115,11 +117,6 @@ class Course extends Model
         return $this->hasMany(Review::class, 'course_id');
     }
 
-    public function getCountReviewsAttribute()
-    {
-        return $this->reviews()->count();
-    }
-
     /**
      * @return mixed
      */
@@ -140,6 +137,44 @@ class Course extends Model
             ->groupBy('courses_reviews.course_id');
     }
 
+    /**
+     * @return mixed
+     */
+    public function percentageRecommendToFriends()
+    {
+        return $this->reviews()
+            ->selectRaw('avg(courses_reviews.recommend)*100 as percentage, courses_reviews.course_id')
+            ->groupBy('courses_reviews.course_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function percentageAttendanceRecommended()
+    {
+        return $this->reviews()
+            ->selectRaw('avg(courses_reviews.attendance_recommended)*100 as percentage, courses_reviews.course_id')
+            ->groupBy('courses_reviews.course_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function courseReviews() {
+        return $this
+            ->belongsToMany('App\Course','courses_rate');
+    }
+
+    /* =================
+     * Model attributes
+     * =================
+     */
+
+    public function getCountReviewsAttribute()
+    {
+        return $this->reviews()->count();
+    }
+
     public function getAverageRatingAttribute()
     {
         return $this->avgRating()->first()['average'];
@@ -150,33 +185,14 @@ class Course extends Model
         return $this->avgDifficulty()->first()['average'];
     }
 
-    /**
-     * @return mixed
-     */
-    public function percentageRecommendToFriends()
+    public function getPercentageRecommendAttribute()
     {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.recommend_to_friends)*100 as percentage, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
+        return $this->percentageRecommendToFriends()->first()['percentage'];
     }
 
-    /**
-     * @return mixed
-     */
-    public function percentageAttendanceRecommended()
+    public function getPercentageAttendanceRecommendedAttribute()
     {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.attendance_required)*100 as percentage, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-
-    /**
-     * @return BelongsToMany
-     */
-    public function courseReviews() {
-        return $this
-            ->belongsToMany('App\Course','courses_rate');
+        return $this->percentageAttendanceRecommended()->first()['percentage'];
     }
 
     /**
