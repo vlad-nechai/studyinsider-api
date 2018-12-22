@@ -46,6 +46,17 @@ class Course extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'count_reviews',
+        'average_rating',
+        'average_difficulty'
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -96,20 +107,17 @@ class Course extends Model
     }
 
     /**
+     * Course reviews
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function reviews() {
-        return $this->hasMany(Review::class,
-            'course_id');
+        return $this->hasMany(Review::class, 'course_id');
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function courseReviews() {
-        return $this
-            ->belongsToMany('App\Course','courses_rate');
+    public function getCountReviewsAttribute()
+    {
+        return $this->reviews()->count();
     }
 
     /**
@@ -117,9 +125,9 @@ class Course extends Model
      */
     public function avgRating()
     {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
+        return $this->reviews()
+            ->selectRaw('avg(courses_reviews.star_rating) as average, courses_reviews.course_id')
+            ->groupBy('courses_reviews.course_id');
     }
 
     /**
@@ -127,9 +135,19 @@ class Course extends Model
      */
     public function avgDifficulty()
     {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.difficulty) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
+        return $this->reviews()
+            ->selectRaw('avg(courses_reviews.difficulty) as average, courses_reviews.course_id')
+            ->groupBy('courses_reviews.course_id');
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->avgRating()->first()['average'];
+    }
+
+    public function getAverageDifficultyAttribute()
+    {
+        return $this->avgDifficulty()->first()['average'];
     }
 
     /**
@@ -145,31 +163,20 @@ class Course extends Model
     /**
      * @return mixed
      */
-    public function percentageMustAttend()
-    {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.must_attend)*100 as percentage, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function percentagePayAttentionInClass()
-    {
-        return $this->courseReviews()
-            ->selectRaw('avg(courses_rate.pay_attention_in_class)*100 as percentage, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function percentageAttendanceRequired()
+    public function percentageAttendanceRecommended()
     {
         return $this->courseReviews()
             ->selectRaw('avg(courses_rate.attendance_required)*100 as percentage, courses_rate.course_id')
             ->groupBy('courses_rate.course_id');
+    }
+
+
+    /**
+     * @return BelongsToMany
+     */
+    public function courseReviews() {
+        return $this
+            ->belongsToMany('App\Course','courses_rate');
     }
 
     /**

@@ -114,7 +114,9 @@ class CourseController extends Controller
     public function index(Request $request) {
         $courses = Course::with(['chair',
             'professors',
-            'semesters', 'reviews'])->paginate(10);
+            'semesters',
+            'reviews'
+        ])->paginate(10);
 
         return $courses;
     }
