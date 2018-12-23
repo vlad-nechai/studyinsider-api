@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\CourseTag;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -81,7 +82,7 @@ class Course extends Model
      * @return BelongsTo
      */
     public function chair() {
-        return $this->belongsTo('App\Chair');
+        return $this->belongsTo(Chair::class);
     }
 
     /**
@@ -215,7 +216,7 @@ class Course extends Model
      * @return BelongsToMany
      */
     public function tags() {
-        return $this->belongsToMany('App\CourseTag',
+        return $this->belongsToMany(CourseTag::class,
             'tag_course', 'course_id', 'tag_id')
             ->withPivot('user_id');
     }
@@ -237,7 +238,7 @@ class Course extends Model
      * @return BelongsToMany
      */
     public function skills() {
-        return $this->belongsToMany('App\Skill',
+        return $this->belongsToMany(Skill::class,
             'skill_course', 'course_id', 'skill_id');
     }
 
