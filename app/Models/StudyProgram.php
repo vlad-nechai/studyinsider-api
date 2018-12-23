@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
-class Major extends Model
+class StudyProgram extends Model
 {
 
     use SearchableTrait;
@@ -15,7 +15,7 @@ class Major extends Model
      *
      * @var string
      */
-    protected $table = 'majors';
+    protected $table = 'study_programs';
 
     /**
      * Searchable rules.
@@ -29,10 +29,9 @@ class Major extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function universities() {
-        return $this->belongsToMany('App\University',
-            'major_university', 'major_id', 'university_id');
+    public function university() {
+        return $this->belongsTo(University::class);
     }
 }

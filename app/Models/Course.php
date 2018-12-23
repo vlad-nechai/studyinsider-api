@@ -256,26 +256,6 @@ class Course extends Model
     }
 
     /**
-     * top 3 courses filtered by faculty and/or review property
-     * @return BelongsToMany
-     */
-    public function top3() {
-        return $this->reviews()
-            ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
-     * top 4 courses filtered by faculty and/or review property
-     * @return BelongsToMany
-     */
-    public function top4() {
-        return $this->reviews()
-            ->selectRaw('avg(courses_rate.star_rating) as average, courses_rate.course_id')
-            ->groupBy('courses_rate.course_id');
-    }
-
-    /**
      * Get the administrator flag for the user.
      * TODO: check if it is necessary
      * @return bool

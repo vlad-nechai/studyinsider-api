@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Chair;
 use App\CourseTag;
-use App\Department;
 use App\Http\Controllers\Controller;
-use App\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Course;
@@ -116,7 +113,7 @@ class CourseController extends Controller
             'professors',
             'semesters',
             'reviews',
-            'skills'
+            'topSkills'
         ])->paginate(10);
 
         return $courses;

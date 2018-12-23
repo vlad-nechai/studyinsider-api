@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Major;
+use App\StudyProgram;
 
 class MajorController extends Controller
 {
@@ -15,7 +15,7 @@ class MajorController extends Controller
      */
     public function index()
     {
-        $majors = Major::all();
+        $majors = StudyProgram::all();
         return $majors;
     }
 
@@ -94,7 +94,7 @@ class MajorController extends Controller
     public function quickSearch(Request $request) {
         $query = $request->input('q');
 
-        $majors = Major::search($query, null, true, true)->limit(5)->get(['id', 'name', 'relevance']);
+        $majors = StudyProgram::search($query, null, true, true)->limit(5)->get(['id', 'name', 'relevance']);
 
         return $majors;
     }

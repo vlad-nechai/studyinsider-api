@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-namespace App;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Passport\HasApiTokens;
@@ -97,7 +96,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function major() {
         return $this
-            ->belongsTo('App\Major');
+            ->belongsTo('App\StudyProgram');
     }
 
     /**

@@ -60,22 +60,14 @@ class Professor extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function chair() {
-        return $this->belongsTo('App\Chair');
+        return $this->belongsTo(Chair::class);
     }
 
     /**
      * @return BelongsToMany
      */
     public function courses() {
-        return $this->belongsToMany('App\Course',
-            'course_professor', 'prof_id', 'course_id');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function tags() {
-        return $this->belongsToMany('App\CourseTag',
-            'tag_course', 'course_id', 'tag_id');
+        return $this->belongsToMany(Course::class,
+            'course_professor_semester', 'professor_id', 'course_id');
     }
 }

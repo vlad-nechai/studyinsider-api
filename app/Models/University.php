@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,14 +28,13 @@ class University extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function faculties() {
-        return $this->hasMany('App\Faculty');
+        return $this->hasMany(Faculty::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function majors() {
-        return $this->belongsToMany('App\Major',
-            'major_university', 'university_id', 'major_id');
+    public function studyPrograms() {
+        return $this->hasMany(StudyProgram::class);
     }
 }

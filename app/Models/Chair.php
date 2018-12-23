@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Faculty;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -44,29 +45,21 @@ class Chair extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function courses() {
-        return $this->hasMany('App\Course');
+        return $this->hasMany(Course::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function professors() {
-        return $this->hasMany('App\Professor');
+        return $this->hasMany(Professor::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function department() {
-        return $this->belongsTo('App\Department');
+    public function faculty() {
+        return $this->belongsTo(Faculty::class);
     }
 
-
-// TODO: eager load faculties
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-//     */
-//    public function faculties() {
-//        return $this->hasManyThrough;
-//    }
 }

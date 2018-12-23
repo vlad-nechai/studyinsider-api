@@ -23,7 +23,7 @@ class Skill extends Model
      *
      * @var array
      */
-    protected $hidden = ['id', 'origin', 'language', 'created_at', 'updated_at'];
+    protected $hidden = ['id', 'origin', 'language', 'created_at', 'updated_at', 'pivot'];
 
     /**
      * The attributes that are mass assignable.
