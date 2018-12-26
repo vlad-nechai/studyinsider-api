@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Course;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -15,10 +17,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-    // TODO: response errors with codes
-    public $successStatus = 200;
-    public $unauthorizedStatus = 401;
-    public $internalServerErrorStatus = 500;
 
     /**
      * @deprecated Deprecated: no use in our application
@@ -81,7 +79,6 @@ class UserController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (! $token = JWTAuth::attempt($credentials)) {
-            dd('jddh');
             return response()->json(['error' => 'invalid credentials'], ResponseCode::HTTP_UNAUTHORIZED);
         }
 
@@ -134,7 +131,6 @@ class UserController extends Controller
     public function profile()
     {
         try {
-
             $user = Auth::user();
             $user->load([
                 'studyProgram',
@@ -266,35 +262,56 @@ class UserController extends Controller
     }
 
     /**
-     * details api
-     * @param integer $id
+     * Adding bookmark for a specific semester
+     *
+     * @param integer $courseId
+     * @param integer $semesterId
      * @return Response
      */
-    public function addBookmark($id)
+    public function addBookmark($courseId, $semesterId)
     {
         $user = Auth::user();
 
-        $message = "Die Lehrveranstaltung wurde bereits gespeichert";
-        $bookmark = $user->bookmarks()->where('course_id', $id)->first();
-        if (is_null($bookmark)) {
-            $user->bookmarks()->attach($id);
-            $message = "Die Lehrveranstaltung wurde gespeichert";
+        try {
+            $course = Course::findOrFail($courseId);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['message' => 'Course with this ID does not exist'], ResponseCode::HTTP_BAD_REQUEST);
         }
-        $user->load('bookmarks');
-        return response()->json(['message' => $message, 'user' => $user], $this->successStatus);
+
+        $bookmarkExists = $user->bookmarks()->where([
+            'course_id' => $course->id,
+            'semester_id' => $semesterId])
+            ->exists();
+
+        if ($bookmarkExists) {
+            return response()->json(['message' => 'Course is saved already'], ResponseCode::HTTP_ALREADY_REPORTED);
+        } else {
+            $user->bookmarks()->save($course, ['semester_id' => $semesterId]);
+            return response()->json(['message' => 'Course has been successfully saved'], ResponseCode::HTTP_CREATED);
+        }
     }
 
     /**
-     * details api
-     * @param integer $id
+     * Deletes bookmark for a given semester
+     *
+     * @param integer $courseId
+     * @param integer $semesterId
      * @return Response
      */
-    public function deleteBookmark($id)
+    public function deleteBookmark($courseId, $semesterId)
     {
         $user = Auth::user();
-        $user->bookmarks()->detach($id);
-        $user->load('bookmarks');
-        $message = "Die Lehrveranstaltung wurde gelöscht";
-        return response()->json(['message' => $message, 'user' => $user], $this->successStatus);
+
+        try {
+            $course = Course::findOrFail($courseId);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['message' => 'Course with this ID does not exist'], ResponseCode::HTTP_BAD_REQUEST);
+        }
+
+        $user->bookmarks()
+            ->wherePivot('semester_id', $semesterId)
+            ->detach($course->id, ['semester_id' => $semesterId]);
+
+        return response()->json('', ResponseCode::HTTP_NO_CONTENT);
     }
 }
