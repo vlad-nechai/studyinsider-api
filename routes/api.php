@@ -18,7 +18,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('profile', 'API\UserController@profile');
     Route::put('profile', 'API\UserController@edit');
     Route::put('profile/edit-password', 'API\UserController@editPassword');
-    Route::post('profile/image', 'API\UserController@uploadImage');
+//    Route::post('profile/image', 'API\UserController@uploadImage');
     Route::delete('profile', 'API\UserController@delete');
 
     // Bookmarks
@@ -31,11 +31,6 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('courses/{id}/tags', 'CourseController@attachTags');
     Route::post('courses/{id}/skills', 'CourseController@attachSkills');
 });
-
-
-//Login and register with Laravel Passport Auth
-//Route::post('login', 'API\UserController@loginLaravelPassport');
-//Route::post('register', 'API\UserController@registerLaravelPassport');
 
 Route::post('login', 'API\UserController@loginJWT');
 Route::post('register', 'API\UserController@registerJWT');

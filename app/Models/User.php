@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -70,17 +71,17 @@ class User extends Authenticatable implements JWTSubject
      */
     public function bookmarks() {
         return $this
-            ->belongsToMany('App\Course','course_bookmark')->withTimestamps();
+            ->belongsToMany(Course::class,'course_semester_bookmarks')
+            ->withTimestamps();
     }
 
     /**
      * Reviews created by User
      *
-     * @return BelongsToMany
+     * @return HasMany
      */
     public function reviews() {
-        return $this
-            ->belongsToMany('App\Course','courses_rate')->withTimestamps();
+        return $this->hasMany(Review::class,'user_id');
     }
 
     /**

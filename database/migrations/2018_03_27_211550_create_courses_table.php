@@ -19,13 +19,6 @@ class CreateCoursesTable extends Migration
             $table->string('short_name')->nullable()->comment = "Short course name in univis";
             $table->unsignedInteger('chair_id')->index();
             $table->string('course_type')->index()->comment = "Lecture, seminar or tutorial";
-//            $table->string('univis_id')->nullable()->unique();
-//            $table->string('univis_key')->nullable()->unique();
-//            $table->string('ects')->nullable();
-//            $table->integer('sws')->nullable()->comment = "Semester Wochen Stunden";
-//            $table->integer('max_turnout')->nullable()->comment = "Maximum amount of students";
-//            $table->string('language')->nullable()->comment = "D, DE: german; E, EN:english";
-//            $table->text('summary')->nullable()->comment = "Course description";
             $table->timestamps();
 
             $table->foreign('chair_id')->references('id')->on('chairs');

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpFoundation\Response as ResponseCode;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -65,7 +64,8 @@ class UserController extends Controller
     }
 
     /**
-     * login with JWT
+     * User login with JWT
+     *
      * @param Request $request
      * @return Response
      */
@@ -76,11 +76,12 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors(), ResponseCode::HTTP_BAD_REQUEST]);
+            return response()->json(['error' => $validator->errors()], ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $credentials = $request->only('email', 'password');
         if (! $token = JWTAuth::attempt($credentials)) {
+            dd('jddh');
             return response()->json(['error' => 'invalid credentials'], ResponseCode::HTTP_UNAUTHORIZED);
         }
 
@@ -122,11 +123,11 @@ class UserController extends Controller
         $user = User::create($input);
         $token = JWTAuth::fromUser($user);
 
-        return response()->json(compact('token'), $this->successStatus);
+        return response()->json(compact('token'), ResponseCode::HTTP_OK);
     }
 
     /**
-     * user profile data
+     * User profile data
      *
      * @return Response
      */
@@ -136,24 +137,24 @@ class UserController extends Controller
 
             $user = Auth::user();
             $user->load([
-                'major',
-                'bookmarks.reviews',
-                'bookmarks.avgRating',
+                'studyProgram',
+                'bookmarks.topSkills',
                 'bookmarks.topTags',
-                'bookmarks.chair',
-                'reviewedCourses.reviews',
-                'reviewedCourses.avgRating',
-                'reviewedCourses.topTags',
-                'reviewedCourses.chair'
+                'reviews.skills',
+                'reviews.tags'
             ]);
-            return response()->json($user, $this->successStatus);
+
+            return response()->json($user, ResponseCode::HTTP_OK);
+
         } catch (UnauthorizedHttpException $exception) {
-            return response()->json(['error' => 'user not found'], $this->unauthorizedStatus);
+
+            return response()->json(['error' => 'user not found'], ResponseCode::HTTP_UNAUTHORIZED);
+
         }
     }
 
     /**
-     * edit user profile data
+     * Edit User profile data
      *
      * @param Request $request user data to be edited
      * @return Response
@@ -163,43 +164,35 @@ class UserController extends Controller
         $user = Auth::user();
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'username' => 'required', // TODO: unique for username
-            'sex' => 'required',
-            'major_id' => 'required',
-            'password' => 'sometimes|required|confirmed', // when password is changed then validate
-            'password_confirmation' => 'sometimes|required|same:password', // when password is changed then validate
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'username' => 'required|unique:users',
+            'gender' => 'required',
+            'study_program_id' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
         }
 
-        // email shall not be edited
-        $input = $request->except(['email']);
-        if ($request->has('password')) {
-            $input['password'] = bcrypt($input['password']);
-        }
+        // email and password shall not be edited here
+        $input = $request->except(['email', 'password']);
 
         $user->update($input);
 
         $user->load([
-            'major',
-            'bookmarks.reviews',
-            'bookmarks.avgRating',
+            'studyProgram',
+            'bookmarks.topSkills',
             'bookmarks.topTags',
-            'bookmarks.chair',
-            'reviewedCourses.reviews',
-            'reviewedCourses.avgRating',
-            'reviewedCourses.topTags',
-            'reviewedCourses.chair'
+            'reviews.skills',
+            'reviews.tags'
         ]);
-        return response()->json($user, $this->successStatus);
+        return response()->json($user, ResponseCode::HTTP_ACCEPTED);
     }
 
 
     /**
-     * edit user password
+     * Edit User password
      *
      * @param Request $request user data to be edited
      * @return Response
@@ -214,7 +207,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $password = bcrypt($request->input('password'));
@@ -222,11 +215,12 @@ class UserController extends Controller
         $user->password = $password;
         $user->save();
 
-        return response()->json(['message' => 'password has been successfully changed'], $this->successStatus);
+        return response()->json(['message' => 'password has been successfully changed'], ResponseCode::HTTP_ACCEPTED);
 
     }
 
     /**
+     * TODO: fix, it does not work
      * user image upload
      *
      * @param Request $request
@@ -258,7 +252,7 @@ class UserController extends Controller
     }
 
     /**
-     * delete user profile
+     * Delete User profile
      *
      * @return Response
      */
@@ -268,7 +262,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json(['message' => 'user was successfully deleted'], $this->successStatus);
+        return response()->json(['message' => 'user was successfully deleted'], ResponseCode::HTTP_NO_CONTENT);
     }
 
     /**

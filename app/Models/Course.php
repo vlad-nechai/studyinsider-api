@@ -63,7 +63,7 @@ class Course extends Model
      *
      * @var array
      */
-    protected $hidden = ['chair_id'];
+    protected $hidden = ['chair_id', 'pivot'];
 
     /**
      * Searchable rules.
