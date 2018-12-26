@@ -7,14 +7,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property int id
  * @property string name
  * @property string type
- * @property int university_id
  * @property string univis_id
  * @property string univis_orgnr
  * @property string univis_key
- * @property string univis_hash
  * @property string location
+ * @property string image
+ * @property int university_id
+ * @property int created_at
+ * @property int updated_at
  */
 class Faculty extends Model
 {
@@ -42,7 +45,7 @@ class Faculty extends Model
      *
      * @var array
      */
-    protected $hidden = ['univis_id', 'univis_orgnr', 'univis_key', 'univis_hash', 'university_id'];
+    protected $hidden = ['univis_id', 'univis_orgnr', 'univis_key', 'university_id'];
 
     /**
     * @return BelongsTo
