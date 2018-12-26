@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -20,25 +22,27 @@ class UserController extends Controller
     public $internalServerErrorStatus = 500;
 
     /**
+     * @deprecated Deprecated: no use in our application
      * login with with Laravel Passport
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function loginLaravelPassport(Request $request){
         if(Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
-            return response()->json(['success' => $success], $this->successStatus);
+            return response()->json(['success' => $success], ResponseCode::HTTP_OK);
         }
         else{
-            return response()->json(['error'=>'invalid credentials'], $this->unauthorizedStatus);
+            return response()->json(['error'=>'invalid credentials'], ResponseCode::HTTP_UNAUTHORIZED);
         }
     }
 
     /**
+     * @deprecated Deprecated: no use in our application
      * Register with Laravel Passport
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function registerLaravelPassport(Request $request)
     {
@@ -49,20 +53,21 @@ class UserController extends Controller
             'password_confirmation' => 'required|same:password',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 400);
+            return response()->json(['error'=>$validator->errors()], ResponseCode::HTTP_BAD_REQUEST);
         }
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
         $success['name'] =  $user->name;
-        return response()->json(['success'=>$success], $this->successStatus);
+
+        return response()->json(['success'=>$success], ResponseCode::HTTP_OK);
     }
 
     /**
      * login with JWT
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function loginJWT(Request $request) {
         $validator = Validator::make($request->all(), [
@@ -71,57 +76,51 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors(), 400]);
+            return response()->json(['error' => $validator->errors(), ResponseCode::HTTP_BAD_REQUEST]);
         }
 
         $credentials = $request->only('email', 'password');
-        try {
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid credentials'], 403);
-            }
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'could not create token'], $this->internalServerErrorStatus);
+        if (! $token = JWTAuth::attempt($credentials)) {
+            return response()->json(['error' => 'invalid credentials'], ResponseCode::HTTP_UNAUTHORIZED);
         }
 
-        return response()->json(compact('token'), $this->successStatus);
+        return response()->json(compact('token'), ResponseCode::HTTP_OK);
     }
 
     /**
-     * login with JWT
+     * Register User with JWT
+     *
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function registerJWT(Request $request) {
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255|unique:users',
-            'name' => 'required',
-            'username' => 'required',
-            'sex' => 'required',
-            'major_id' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'username' => 'required|unique:users',
+            'gender' => 'required',
+            'study_program_id' => 'required',
             'password'=> 'required|confirmed',
             'password_confirmation' => 'required|same:password',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-        try {
 
-            // default image
-            if ($input['sex'] == 0) {
-                $input['image'] = 'https://evalooni.de/assets/images/girl2.jpg';
-            } else {
-                $input['image'] = 'https://evalooni.de/assets/images/guy2.jpg';
-            }
-
-            $user = User::create($input);
-            $token = JWTAuth::fromUser($user);
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'could not get user from token'], $this->internalServerErrorStatus);
+        // default image
+        if ($input['gender'] == 0) {
+            $input['image'] = 'https://evalooni.de/assets/images/girl2.jpg';
+        } else {
+            $input['image'] = 'https://evalooni.de/assets/images/guy2.jpg';
         }
+
+        $user = User::create($input);
+        $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('token'), $this->successStatus);
     }
@@ -129,7 +128,7 @@ class UserController extends Controller
     /**
      * user profile data
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function profile()
     {
@@ -157,7 +156,7 @@ class UserController extends Controller
      * edit user profile data
      *
      * @param Request $request user data to be edited
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Request $request)
     {
@@ -203,7 +202,7 @@ class UserController extends Controller
      * edit user password
      *
      * @param Request $request user data to be edited
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function editPassword(Request $request)
     {
@@ -261,7 +260,7 @@ class UserController extends Controller
     /**
      * delete user profile
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function delete()
     {
@@ -275,7 +274,7 @@ class UserController extends Controller
     /**
      * details api
      * @param integer $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function addBookmark($id)
     {
@@ -294,7 +293,7 @@ class UserController extends Controller
     /**
      * details api
      * @param integer $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function deleteBookmark($id)
     {

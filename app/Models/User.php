@@ -10,6 +10,24 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+
+/**
+ * User
+ *
+ * @property int id
+ * @property int provider_id
+ * @property string provider
+ * @property string first_name
+ * @property string last_name
+ * @property string username
+ * @property string email
+ * @property string password
+ * @property int gender
+ * @property int birth_date
+ * @property string location
+ * @property int study_program_id
+ * @property string image
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens;
@@ -22,16 +40,17 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name',
         'provider',
         'provider_id',
+        'first_name',
+        'last_name',
         'email',
         'username',
         'password',
-        'sex',
-        'major_id',
-        'birth_place',
+        'gender',
+        'birth_date',
         'location',
+        'study_program_id',
         'image'
     ];
 
@@ -45,6 +64,8 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
+     * Courses bookmarked by the user
+     *
      * @return BelongsToMany
      */
     public function bookmarks() {
@@ -53,12 +74,25 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Reviews created by User
+     *
      * @return BelongsToMany
      */
-    public function reviewedCourses() {
+    public function reviews() {
         return $this
             ->belongsToMany('App\Course','courses_rate')->withTimestamps();
     }
+
+    /**
+     * Study Program pursued by User
+     *
+     * @return BelongsTo
+     */
+    public function studyProgram() {
+        return $this
+            ->belongsTo(StudyProgram::class);
+    }
+
 
 
     /** Loads tags pro review pro user
@@ -91,13 +125,6 @@ class User extends Authenticatable implements JWTSubject
             ->join('skills', 'skill_course.skill_id', '=', 'skills.id', 'inner');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function major() {
-        return $this
-            ->belongsTo('App\StudyProgram');
-    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -117,7 +144,9 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [
-            'name' => $this->name,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'username' => $this->username,
             'email' => $this->email,
             'image' => $this->image,
         ];

@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('email', 50)->unique();
             $table->string('password');
             $table->integer('gender');
-            $table->string("birth_date", 50)->nullable();
+            $table->date("birth_date")->nullable();
             $table->string("location", 50)->nullable();
             $table->string("image", 100)->default('assets/images/girl2.jpg');
             $table->rememberToken();
