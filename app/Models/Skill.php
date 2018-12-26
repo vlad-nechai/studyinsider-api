@@ -52,7 +52,7 @@ class Skill extends Model
     }
 
     /**
-     * TODO: review effectiveness of the query
+     * TODO: check if works and review effectiveness of the query
      * 3 most tagged courses for each skill
      * @return mixed
      */

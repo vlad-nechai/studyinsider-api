@@ -7,13 +7,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property int id
  * @property string name
- * @property int department_id
+ * @property int faculty_id
  * @property string univis_id
  * @property string univis_orgnr
  * @property string univis_key
- * @property string univis_hash
  * @property string location
+ * @property string image
+ * @property int created_at
+ * @property int updated_at
  */
 class Chair extends Model
 {
@@ -31,8 +34,11 @@ class Chair extends Model
      */
     protected $fillable = [
         'name',
+        'faculty_id',
+        'univis_id',
+        'univis_orgnr',
+        'univis_key',
         'location',
-        'department_id'
     ];
 
     /**
@@ -40,7 +46,7 @@ class Chair extends Model
      *
      * @var array
      */
-    protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'department_id'];
+    protected $hidden = ['univis_id', 'univis_key', 'univis_orgnr', 'faculty_id'];
 
     /**
      * @return HasMany
