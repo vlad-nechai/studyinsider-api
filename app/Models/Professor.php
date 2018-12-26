@@ -3,17 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Nicolaslopezj\Searchable\SearchableTrait;
 
 /**
+ * @property int id
  * @property string name
  * @property string title
  * @property int gender
  * @property string univis_id
  * @property string univis_key
- * @property string univis_hash
  * @property int chair_id
+ * @property int created_at
+ * @property int updated_at
  */
 class Professor extends Model
 {
@@ -43,7 +46,7 @@ class Professor extends Model
      *
      * @var array
      */
-    protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'chair_id', 'pivot'];
+    protected $hidden = ['univis_id', 'univis_key', 'chair_id', 'pivot'];
 
     /**
      * Searchable rules.
@@ -57,13 +60,17 @@ class Professor extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Chair to which Prof belongs to
+     *
+     * @return BelongsTo
      */
     public function chair() {
         return $this->belongsTo(Chair::class);
     }
 
     /**
+     * Courses that professor teaches
+     *
      * @return BelongsToMany
      */
     public function courses() {
