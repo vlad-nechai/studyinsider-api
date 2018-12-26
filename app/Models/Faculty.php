@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string name
@@ -43,14 +45,14 @@ class Faculty extends Model
     protected $hidden = ['univis_id', 'univis_orgnr', 'univis_key', 'univis_hash', 'university_id'];
 
     /**
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    * @return BelongsTo
     */
     public function university() {
         return $this->belongsTo(University::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function chairs() {
         return $this->hasMany(Chair::class);

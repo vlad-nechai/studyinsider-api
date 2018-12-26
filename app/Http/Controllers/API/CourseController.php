@@ -112,7 +112,8 @@ class CourseController extends Controller
         $courses = Course::with(['chair',
             'professors',
             'semesters',
-            'reviews',
+            'reviews.skills',
+            'reviews.tags',
             'topSkills',
             'topTags'
         ])->paginate(10);

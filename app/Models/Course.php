@@ -165,7 +165,7 @@ class Course extends Model
             ->belongsToMany('App\Course','courses_rate');
     }
 
-    /**
+    /** TODO: do i need this?
      * @return BelongsToMany
      */
     public function usersWhoTagged() {
@@ -173,7 +173,7 @@ class Course extends Model
             'tag_course', 'course_id', 'user_id')->withTimestamps();
     }
 
-    /**
+    /** TODO: do i need this?
      * @return BelongsToMany
      */
     public function usersWhoAddedSkills() {
@@ -182,6 +182,8 @@ class Course extends Model
     }
 
     /**
+     * All course tags
+     *
      * @return BelongsToMany
      */
     public function tags() {
@@ -191,6 +193,7 @@ class Course extends Model
 
     /**
      * top 5 tags for the course
+     *
      * @return BelongsToMany
      */
     public function topTags() {
@@ -203,6 +206,8 @@ class Course extends Model
     }
 
     /**
+     * All the skills of the course
+     *
      * @return BelongsToMany
      */
     public function skills() {
@@ -212,6 +217,7 @@ class Course extends Model
 
     /**
      * top 5 skills for the course
+     *
      * @return BelongsToMany
      */
     public function topSkills() {
