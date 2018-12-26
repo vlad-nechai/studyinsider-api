@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\University;
+use App\Models\University;
 use Illuminate\Support\Facades\Validator;
 
 class UniversityController extends Controller
@@ -13,7 +15,7 @@ class UniversityController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function index()
     {
@@ -53,7 +55,7 @@ class UniversityController extends Controller
      */
     public function show(University $university)
     {
-        return $university->load(['faculties']);
+        return $university->load(['faculties', 'studyPrograms']);
     }
 
     /**
@@ -80,30 +82,9 @@ class UniversityController extends Controller
      */
     public function destroy($id)
     {
-        $univesity = University::find($id);
-        $univesity->delete();
+        $university = University::find($id);
+        $university->delete();
 
         return response()->json(['success'=>'deleted'], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Request  $request
-     * @param  int  $id
-     * @return Response
-     */
-    public function review(Request $request, $id) {
-        $university = University::find($id);
-
-        return $university;
-
-        //add star rating
-
-        //add tags and create new tags where needed
-
-        //add skills and create skills where needed
-
-        //full review where needed
     }
 }

@@ -52,7 +52,7 @@ Route::get('/majors/quick-search', 'MajorController@quickSearch');
 Route::resources([
     'courses' => 'API\CourseController',
     'professors' => 'ProfessorController',
-    'universities' => 'UniversityController',
+    'universities' => 'API\UniversityController',
     'faculties' => 'FacultyController',
 //    'departments' => 'DepartmentController',
     'chairs' => 'ChairController',
