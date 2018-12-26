@@ -47,15 +47,15 @@ Route::get('/courses/search', 'CourseController@search');
 Route::get('/courses/quick-search', 'CourseController@quickSearch');
 Route::get('/professors/quick-search', 'ProfessorController@quickSearch');
 Route::get('/skills/quick-search', 'SkillsController@quickSearch');
-Route::get('/majors/quick-search', 'MajorController@quickSearch');
+Route::get('/majors/quick-search', 'StudyProgramController@quickSearch');
 
 Route::resources([
     'courses' => 'API\CourseController',
     'professors' => 'ProfessorController',
     'universities' => 'API\UniversityController',
     'faculties' => 'FacultyController',
-//    'departments' => 'DepartmentController',
     'chairs' => 'ChairController',
+    'study-programs' => 'API\StudyProgramController',
 ]);
 
 // Load course prev reviews

@@ -3,26 +3,24 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\University;
+use App\Models\StudyProgram;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response as ResponseCode;
 
-class UniversityController extends Controller
+class StudyProgramController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
-     * @return LengthAwarePaginator
+     * @return Response
      */
     public function index()
     {
-        $universities = University::with(['faculties'])->paginate(10);
+        $studyPrograms = StudyProgram::paginate(10);
 
-        return $universities;
+        return response()->json($studyPrograms, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -35,7 +33,7 @@ class UniversityController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'location' => 'required',
+            'university_id' => 'required',
             'type' => 'required',
         ]);
         if ($validator->fails()) {
@@ -43,20 +41,20 @@ class UniversityController extends Controller
         }
 
         $input = $request->all();
-        $university = University::create($input);
+        $studyProgram = StudyProgram::create($input);
 
-        return $university;
+        return response()->json($studyProgram, ResponseCode::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  University  $university
-     * @return University
+     * @param  StudyProgram $studyProgram
+     * @return Response
      */
-    public function show(University $university)
+    public function show(StudyProgram $studyProgram)
     {
-        return $university->load(['faculties', 'studyPrograms']);
+        return response()->json($studyProgram->load(['university']), ResponseCode::HTTP_OK);
     }
 
     /**
@@ -69,10 +67,10 @@ class UniversityController extends Controller
     public function update(Request $request, $id)
     {
         $input = $request->all();
-        $university = University::find($id);
-        $university->update($input);
+        $studyProgram = StudyProgram::find($id);
+        $studyProgram->update($input);
 
-        return $university;
+        return response()->json($studyProgram, ResponseCode::HTTP_ACCEPTED);
     }
 
     /**
@@ -83,9 +81,23 @@ class UniversityController extends Controller
      */
     public function destroy($id)
     {
-        $university = University::find($id);
-        $university->delete();
+        $studyProgram = StudyProgram::find($id);
+        $studyProgram->delete();
 
-        return response()->json(['success'=>'deleted'], 200);
+        return response()->json('', ResponseCode::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Quick search majors
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function quickSearch(Request $request) {
+        $query = $request->input('q');
+
+        $studyPrograms = StudyProgram::search($query, null, true, true)->limit(5)->get(['id', 'name', 'relevance']);
+
+        return response()->json($studyPrograms, ResponseCode::HTTP_OK);
     }
 }

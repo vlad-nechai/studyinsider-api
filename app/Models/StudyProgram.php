@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
 class StudyProgram extends Model
@@ -29,9 +31,20 @@ class StudyProgram extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * University that study program is associated with
+     *
+     * @return BelongsTo
      */
     public function university() {
         return $this->belongsTo(University::class);
+    }
+
+    /**
+     * Users that are enlisted in the study program
+     *
+     * @return HasMany
+     */
+    public function users() {
+        return $this->hasMany(User::class, 'study_program_id');
     }
 }
