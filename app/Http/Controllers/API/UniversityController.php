@@ -16,13 +16,13 @@ class UniversityController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return LengthAwarePaginator
+     * @return Response
      */
     public function index()
     {
         $universities = University::with(['faculties'])->paginate(10);
 
-        return $universities;
+        return response()->json($universities, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -45,18 +45,20 @@ class UniversityController extends Controller
         $input = $request->all();
         $university = University::create($input);
 
-        return $university;
+        return response()->json($university, ResponseCode::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  University  $university
-     * @return University
+     * @return Response
      */
     public function show(University $university)
     {
-        return $university->load(['faculties', 'studyPrograms']);
+        $university->load(['faculties', 'studyPrograms']);
+
+        return response()->json($university, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -72,7 +74,7 @@ class UniversityController extends Controller
         $university = University::find($id);
         $university->update($input);
 
-        return $university;
+        return response()->json($university, ResponseCode::HTTP_ACCEPTED);
     }
 
     /**
@@ -86,6 +88,6 @@ class UniversityController extends Controller
         $university = University::find($id);
         $university->delete();
 
-        return response()->json(['success'=>'deleted'], 200);
+        return response()->json('', ResponseCode::HTTP_NO_CONTENT);
     }
 }
