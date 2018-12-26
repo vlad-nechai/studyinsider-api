@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\CourseTag;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -166,36 +165,6 @@ class Course extends Model
             ->belongsToMany('App\Course','courses_rate');
     }
 
-    /* =================
-     * Model attributes
-     * =================
-     */
-
-    public function getCountReviewsAttribute()
-    {
-        return $this->reviews()->count();
-    }
-
-    public function getAverageRatingAttribute()
-    {
-        return $this->avgRating()->first()['average'];
-    }
-
-    public function getAverageDifficultyAttribute()
-    {
-        return $this->avgDifficulty()->first()['average'];
-    }
-
-    public function getPercentageRecommendAttribute()
-    {
-        return $this->percentageRecommendToFriends()->first()['percentage'];
-    }
-
-    public function getPercentageAttendanceRecommendedAttribute()
-    {
-        return $this->percentageAttendanceRecommended()->first()['percentage'];
-    }
-
     /**
      * @return BelongsToMany
      */
@@ -217,8 +186,7 @@ class Course extends Model
      */
     public function tags() {
         return $this->belongsToMany(CourseTag::class,
-            'tag_course', 'course_id', 'tag_id')
-            ->withPivot('user_id');
+            'tag_course', 'course_id', 'tag_id');
     }
 
     /**
@@ -254,6 +222,41 @@ class Course extends Model
             ->orderBy('tagged','desc')
             ->limit(5);
     }
+
+    /* =================
+     * Model attributes
+     * =================
+     */
+
+    public function getCountReviewsAttribute()
+    {
+        return $this->reviews()->count();
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->avgRating()->first()['average'];
+    }
+
+    public function getAverageDifficultyAttribute()
+    {
+        return $this->avgDifficulty()->first()['average'];
+    }
+
+    public function getPercentageRecommendAttribute()
+    {
+        return $this->percentageRecommendToFriends()->first()['percentage'];
+    }
+
+    public function getPercentageAttendanceRecommendedAttribute()
+    {
+        return $this->percentageAttendanceRecommended()->first()['percentage'];
+    }
+
+    /* =================
+     * Model attributes
+     * =================
+     */
 
     /**
      * Get the administrator flag for the user.

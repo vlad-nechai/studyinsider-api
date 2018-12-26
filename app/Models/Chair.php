@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Faculty;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string name
@@ -42,21 +43,21 @@ class Chair extends Model
     protected $hidden = ['univis_id', 'univis_key', 'univis_hash', 'department_id'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function courses() {
         return $this->hasMany(Course::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function professors() {
         return $this->hasMany(Professor::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function faculty() {
         return $this->belongsTo(Faculty::class);

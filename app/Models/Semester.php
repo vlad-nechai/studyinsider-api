@@ -12,4 +12,11 @@ class Semester extends Model
      * @var string
      */
     protected $table = 'semesters';
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['pivot'];
 }

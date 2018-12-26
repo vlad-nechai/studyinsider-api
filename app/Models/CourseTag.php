@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,7 +19,7 @@ class CourseTag extends Model
      *
      * @var array
      */
-    protected $hidden = ['id', 'tag_type', 'created_at', 'updated_at'];
+    protected $hidden = ['id', 'tag_type', 'created_at', 'updated_at', 'pivot'];
 
     /**
      * The attributes that are mass assignable.

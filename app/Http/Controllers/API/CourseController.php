@@ -113,7 +113,8 @@ class CourseController extends Controller
             'professors',
             'semesters',
             'reviews',
-            'topSkills'
+            'topSkills',
+            'topTags'
         ])->paginate(10);
 
         return $courses;
