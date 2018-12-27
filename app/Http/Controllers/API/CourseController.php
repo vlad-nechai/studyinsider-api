@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 
 class CourseController extends Controller
 {
@@ -110,7 +111,8 @@ class CourseController extends Controller
      * @return Response
      */
     public function index(Request $request) {
-        $courses = Course::with(['chair',
+        $courses = Course::with([
+            'chair',
             'professors',
             'semesters',
             'reviews.skills',
@@ -119,7 +121,7 @@ class CourseController extends Controller
             'topTags'
         ])->paginate(10);
 
-        return $courses;
+        return response()->json($courses, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -143,31 +145,28 @@ class CourseController extends Controller
         $input = $request->all();
         $course = Course::create($input);
 
-        return $course;
+        return response()->json($course, ResponseCode::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  Course  $course
-     * @return Course  $course
+     * @return Response
      */
     public function show(Course $course)
     {
-        return $course->load([
-            'professors',
+        $course->load([
             'chair',
-            'avgRating',
-            'avgDifficulty',
-            'avgUsefulness',
-            'percentageRecommendToFriends',
-            'percentageMustAttend',
-            'topTags',
-            'reviews.courseTags',
-            'reviews.courseSkills',
-            'tags',
-            'topSkills'
+            'professors',
+            'semesters',
+            'reviews.skills',
+            'reviews.tags',
+            'topSkills',
+            'topTags'
         ]);
+
+        return response()->json($course, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -183,7 +182,7 @@ class CourseController extends Controller
         $course = Course::find($id);
         $course->update($input);
 
-        return $course;
+        return response()->json($course, ResponseCode::HTTP_ACCEPTED);
     }
 
     /**
@@ -197,13 +196,14 @@ class CourseController extends Controller
         $course = Course::find($id);
         $course->delete();
 
-        return response()->json(['success'=>'deleted'], 200);
+        return response()->json('', ResponseCode::HTTP_NO_CONTENT);
     }
 
 
     /**
      * Get course review for the user
      *
+     * @deprecated
      * @param  int  $id
      * @return Course
      */
@@ -224,8 +224,8 @@ class CourseController extends Controller
             }]);
     }
 
-    /**
-     * Attach review to the course.
+    /** TODO: rewrite and fix
+     * Attach review to the course with tags and skills
      *
      * @param  Request  $request
      * @param  int  $id
@@ -247,9 +247,9 @@ class CourseController extends Controller
     }
 
     /**
-     * TODO: attach responses
      * Attach tags to the course.
      *
+     * @deprecated
      * @param  Request  $request
      * @param  int  $id
      * @return Response
@@ -294,6 +294,7 @@ class CourseController extends Controller
     /**
      * Attach skills to the course.
      *
+     * @deprecated
      * @param  Request  $request
      * @param  int  $id
      * @return Response
@@ -335,7 +336,8 @@ class CourseController extends Controller
 
     /**
      * Load previous reviews for a course
-     * TODO: rebuild models with operation efficiency
+     *
+     * @deprecated
      * @param  int  $id
      * @return Course  $course
      */
@@ -355,14 +357,15 @@ class CourseController extends Controller
      * Search for courses
      *
      * @param Request $request
-     * @return mixed
+     * @return Response
      */
     public function quickSearch(Request $request) {
         $query = $request->input('q');
 
+        $courses = Course::search($query, null, true, true)
+            ->limit(7)
+            ->get(['id', 'name', 'relevance']);
 
-        $courses = Course::search($query, null, true, true)->limit(7)->get(['id', 'name', 'relevance']);
-
-        return $courses;
+        return response()->json($courses, ResponseCode::HTTP_OK);
     }
 }
