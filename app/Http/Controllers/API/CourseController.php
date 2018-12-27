@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\CourseTag;
+use App\Models\CourseTag;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 class CourseController extends Controller
 {
 
+    // TODO: fix roles
     public function __construct()
     {
         $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);

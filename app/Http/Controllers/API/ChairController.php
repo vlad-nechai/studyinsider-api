@@ -4,23 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Chair;
+use App\Models\Chair;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 
 class ChairController extends Controller
 {
 
-    //TODO: fix chair-faculty relation
+    // TODO: fix roles
+    public function __construct()
+    {
+        $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return Response
      */
     public function index()
     {
         $chairs = Chair::with(['courses', 'professors'])->paginate(10);
 
-        return $chairs;
+        return response()->json($chairs, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -34,16 +40,16 @@ class ChairController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'location' => 'required',
-            'department_id' => 'required',
+            'faculty_id' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 401);
+            return response()->json(['error'=>$validator->errors()], ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $input = $request->all();
         $chair = Chair::create($input);
 
-        return $chair;
+        return response()->json($chair, ResponseCode::HTTP_CREATED);
     }
 
     /**
@@ -54,7 +60,9 @@ class ChairController extends Controller
      */
     public function show(Chair $chair)
     {
-        return $chair->load(['courses', 'professors', 'department']);
+        $chair->load(['courses', 'professors', 'faculty']);
+
+        return response()->json($chair, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -70,7 +78,7 @@ class ChairController extends Controller
         $chair = Chair::find($id);
         $chair->update($input);
 
-        return $chair;
+        return response()->json($chair, ResponseCode::HTTP_ACCEPTED);
     }
 
     /**
@@ -84,6 +92,6 @@ class ChairController extends Controller
         $chair = Chair::find($id);
         $chair->delete();
 
-        return response()->json(['success'=>'deleted'], 200);
+        return response()->json('', ResponseCode::HTTP_NO_CONTENT);
     }
 }
