@@ -4,28 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Professor;
+use App\Models\Professor;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 
 
 class ProfessorController extends Controller
 {
+    // TODO: fix roles
+    public function __construct()
+    {
+        $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return Response
      */
     public function index()
     {
         $professors = Professor::with(['chair', 'courses'])->has('courses')->paginate(10);
 
-        return $professors;
+        return response()->json($professors, ResponseCode::HTTP_OK);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return Response
      */
     public function store(Request $request)
@@ -36,13 +43,13 @@ class ProfessorController extends Controller
             'chair_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 401);
+            return response()->json(['error'=>$validator->errors()], ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $input = $request->all();
         $professor = Professor::create($input);
 
-        return $professor;
+        return response()->json($professor, ResponseCode::HTTP_CREATED);
     }
 
     /**
@@ -59,7 +66,7 @@ class ProfessorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
      * @return Response
      */
@@ -69,7 +76,7 @@ class ProfessorController extends Controller
         $professor = Professor::find($id);
         $professor->update($input);
 
-        return $professor;
+        return response()->json($professor, ResponseCode::HTTP_ACCEPTED);
     }
 
     /**
@@ -83,7 +90,7 @@ class ProfessorController extends Controller
         $professor = Professor::find($id);
         $professor->delete();
 
-        return response()->json(['success'=>'deleted'], 401);
+        return response()->json('', ResponseCode::HTTP_NO_CONTENT);
     }
 
     /**
@@ -97,7 +104,6 @@ class ProfessorController extends Controller
 
         $professors = Professor::search($query, null, true, true)->limit(7)->get(['id', 'name', 'relevance']);
 
-
-        return $professors;
+        return response()->json($professors, ResponseCode::HTTP_OK);
     }
 }
