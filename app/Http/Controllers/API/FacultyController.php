@@ -4,21 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Faculty;
+use App\Models\Faculty;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 
 class FacultyController extends Controller
 {
+    // TODO: fix roles
+    public function __construct()
+    {
+        $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return Response
      */
     public function index()
     {
-        $faculties = Faculty::with(['university', 'departments'])->paginate(10);
+        $faculties = Faculty::with(['university', 'chairs'])->paginate(10);
 
-        return $faculties;
+        return response()->json($faculties, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -36,13 +43,13 @@ class FacultyController extends Controller
             'university_id' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 401);
+            return response()->json(['error'=>$validator->errors()], ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $input = $request->all();
         $faculty = Faculty::create($input);
 
-        return $faculty;
+        return response()->json($faculty, ResponseCode::HTTP_CREATED);
     }
 
     /**
@@ -53,7 +60,7 @@ class FacultyController extends Controller
      */
     public function show(Faculty $faculty)
     {
-        return $faculty->load(['university', 'departments']);
+        return $faculty->load(['university', 'chairs']);
     }
 
     /**
@@ -69,7 +76,7 @@ class FacultyController extends Controller
         $faculty = Faculty::find($id);
         $faculty->update($input);
 
-        return $faculty;
+        return response()->json($faculty, ResponseCode::HTTP_ACCEPTED);
     }
 
     /**
@@ -83,6 +90,6 @@ class FacultyController extends Controller
         $faculty = Faculty::find($id);
         $faculty->delete();
 
-        return response()->json(['success'=>'deleted'], 200);
+        return response()->json('', ResponseCode::HTTP_NO_CONTENT);
     }
 }
