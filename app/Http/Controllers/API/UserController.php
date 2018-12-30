@@ -19,8 +19,9 @@ class UserController extends Controller
 {
 
     /**
-     * @deprecated Deprecated: no use in our application
      * login with with Laravel Passport
+     *
+     * @deprecated Deprecated: no use in our application
      * @param Request $request
      * @return Response
      */
@@ -36,8 +37,9 @@ class UserController extends Controller
     }
 
     /**
-     * @deprecated Deprecated: no use in our application
      * Register with Laravel Passport
+     *
+     * @deprecated Deprecated: no use in our application
      * @param Request $request
      * @return Response
      */

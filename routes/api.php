@@ -26,7 +26,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::delete('bookmark/{course}/semester/{semester}', 'API\UserController@deleteBookmark');
 
     // Course review, tags and skills
-    Route::post('courses/{id}/review', 'CourseController@review');
+    Route::post('courses/{id}/review/semester/{semester}', 'CourseController@review');
     Route::get('courses/{id}/review', 'CourseController@getReview');
     Route::post('courses/{id}/tags', 'CourseController@attachTags');
     Route::post('courses/{id}/skills', 'CourseController@attachSkills');

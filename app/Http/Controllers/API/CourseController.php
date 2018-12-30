@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Chair;
 use App\Models\CourseTag;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Course;
@@ -20,9 +22,16 @@ class CourseController extends Controller
         $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);
     }
 
-    //TODO: Validators for filters and sorting
-    public function oldIndex(Request $request)
+    public function index(Request $request)
     {
+        //TODO: Validators for filters and sorting
+        $validator = Validator::make($request->all(), [
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
+        }
+
         // array with attributes to be appended to pagination object
         $appendArr = [];
 
@@ -43,33 +52,22 @@ class CourseController extends Controller
             if (count($faculties) > 0) {
                 $appendArr['chair'] = $faculties;
 
-                // get all departments for a faculty
-                $departments = Department::whereIn('faculty_id', $faculties)->pluck('id')->toArray();
+                // get all chairs for a faculty
+                $chairsIds = Chair::whereIn('faculty_id', $faculties)->pluck('id')->toArray();
 
-                // get all chairs for a department
-                $chairs = Chair::whereIn('department_id', $departments)->pluck('id')->toArray();
-
-                $courses->whereHas('chair', function ($query) use ($chairs) {
-                    $query->whereIn('id', $chairs);
+                $courses->whereHas('chair', function ($query) use ($chairsIds) {
+                    $query->whereIn('id', $chairsIds);
                 });
             }
         }
 
-        // filter by star rating
-        if ($request->filled('star_rating')) {
-            // TODO: add validator
-            $rating = $request->input('star_rating');
-
-            $appendArr['star_rating'] = $rating;
-
-            $courses->whereHas('reviews', function ($query) use ($rating) {
-                $query->where('star_rating', '=', $rating);
-            });
+        // TODO: filter by star rating
+        if ($request->filled('average_rating')) {
+            $rating = $request->input('average_rating');
         }
 
         // filter by professors
         if ($request->filled('professor')) {
-            // TODO: add validator
             $professors = json_decode($request->input('professor'));
 
             if (count($professors) > 0) {
@@ -83,7 +81,6 @@ class CourseController extends Controller
 
         // sort by name
         if ($request->filled('sort_name')) {
-            // TODO: add validator
             $sort = strtolower($request->input('sort_name'));
 
             $appendArr['sort_name'] = $sort;
@@ -93,35 +90,16 @@ class CourseController extends Controller
             }
         }
 
+        // TODO: sort by star rating
+
         return $courses->with([
             'chair',
             'professors',
             'reviews',
-            'avgRating',
+            'topSkills',
             'topTags'])
             ->paginate(10)
             ->appends($appendArr);
-    }
-
-    /**
-     * TODO: check more elegant Validators functions
-     * List a courses collection
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function index(Request $request) {
-        $courses = Course::with([
-            'chair',
-            'professors',
-            'semesters',
-            'reviews.skills',
-            'reviews.tags',
-            'topSkills',
-            'topTags'
-        ])->paginate(10);
-
-        return response()->json($courses, ResponseCode::HTTP_OK);
     }
 
     /**
@@ -207,7 +185,8 @@ class CourseController extends Controller
      * @param  int  $id
      * @return Course
      */
-    public function getReview($id) {
+    public function getReview($id)
+    {
         $course = Course::find($id);
 
         $user = Auth::user();
@@ -228,16 +207,28 @@ class CourseController extends Controller
      * Attach review to the course with tags and skills
      *
      * @param  Request  $request
-     * @param  int  $id
-     * @return Course
+     * @param  int  $courseId
+     * @param  int  $semesterId
+     * @return Response
      */
-    public function review(Request $request, $id) {
-        $course = Course::find($id);
-
+    public function review(Request $request, $courseId, $semesterId)
+    {
         $user = Auth::user();
 
-        if ($course->reviews()->exists()) {
-            $course->reviews()->sync([$user->id => $request->all()], false);
+        try {
+            $course = Course::findOrFail($courseId);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['message' => 'Course with this ID does not exist'], ResponseCode::HTTP_BAD_REQUEST);
+        }
+
+        $reviewExists = $course->reviews()->where([
+            'user_id' => $user->id,
+            'semester_id' => $semesterId])
+            ->exists();
+
+        // TODO: do we overwrite reviews?
+        if ($reviewExists) {
+            // $course->reviews()->sync([$user->id => $request->all()], false);
         } else {
             $course->reviews()->save($user, $request->all());
         }
