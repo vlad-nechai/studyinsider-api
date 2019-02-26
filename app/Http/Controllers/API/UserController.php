@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Notifications\SignupActivate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -117,7 +118,14 @@ class UserController extends Controller
                 $input['image'] = 'https://evalooni.de/assets/images/guy2.jpg';
             }
 
+            // setting activation token
+            $input['activation_token'] = str_random(60);
+
             $user = User::create($input);
+
+            // sending notification
+            $user->notify(new SignupActivate($user));
+
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
             return response()->json(['error' => 'could not get user from token'], $this->internalServerErrorStatus);
@@ -125,6 +133,9 @@ class UserController extends Controller
 
         return response()->json(compact('token'), $this->successStatus);
     }
+
+
+
 
     /**
      * user profile data

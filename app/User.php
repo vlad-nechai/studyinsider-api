@@ -5,6 +5,7 @@ namespace App;
 namespace App;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,6 +17,7 @@ class User extends Authenticatable implements JWTSubject
     use HasApiTokens;
     use Notifiable;
     use HasRoles;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +31,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'username',
         'password',
+        'active',
+        'activation_token',
         'sex',
         'major_id',
         'birth_place',
@@ -42,7 +46,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token'
+        'password', 'remember_token', 'activation_token'
     ];
 
     /**
