@@ -76,6 +76,7 @@ class UserController extends Controller
         }
 
         $credentials = $request->only('email', 'password');
+        $credentials['active'] = 1;
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid credentials'], 403);
@@ -121,6 +122,7 @@ class UserController extends Controller
             // setting activation token
             $input['activation_token'] = str_random(60);
 
+            // save user
             $user = User::create($input);
 
             // sending notification
@@ -134,8 +136,23 @@ class UserController extends Controller
         return response()->json(compact('token'), $this->successStatus);
     }
 
-
-
+    /**
+     * @param $token
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function activate($token)
+    {
+        $user = User::where('activation_token', $token)->first();
+        if (!$user) {
+            return response()->json([
+                'message' => 'This activation token is invalid.'
+            ], 404);
+        }
+        $user->active = true;
+        $user->activation_token = '';
+        $user->save();
+        return $user;
+    }
 
     /**
      * user profile data
