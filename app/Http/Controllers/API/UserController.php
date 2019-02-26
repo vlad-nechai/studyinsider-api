@@ -10,15 +10,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpFoundation\Response as ResponseCode;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class UserController extends Controller
 {
-    // TODO: response errors with codes
-    public $successStatus = 200;
-    public $unauthorizedStatus = 401;
-    public $internalServerErrorStatus = 500;
 
     /**
      * login with with Laravel Passport
@@ -29,10 +26,10 @@ class UserController extends Controller
         if(Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
-            return response()->json(['success' => $success], $this->successStatus);
+            return response()->json(['success' => $success], ResponseCode::HTTP_OK);
         }
         else{
-            return response()->json(['error'=>'invalid credentials'], $this->unauthorizedStatus);
+            return response()->json(['error'=>'invalid credentials'], ResponseCode::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -50,14 +47,14 @@ class UserController extends Controller
             'password_confirmation' => 'required|same:password',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 400);
+            return response()->json(['error'=>$validator->errors()], ResponseCode::HTTP_BAD_REQUEST);
         }
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
         $success['name'] =  $user->name;
-        return response()->json(['success'=>$success], $this->successStatus);
+        return response()->json(['success'=>$success], ResponseCode::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -72,20 +69,20 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors(), 400]);
+            return response()->json(['error' => $validator->errors(), ResponseCode::HTTP_BAD_REQUEST]);
         }
 
         $credentials = $request->only('email', 'password');
         $credentials['active'] = 1;
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid credentials'], 403);
+                return response()->json(['error' => 'invalid credentials'], ResponseCode::HTTP_FORBIDDEN);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'could not create token'], $this->internalServerErrorStatus);
+            return response()->json(['error' => 'could not create token'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->json(compact('token'), $this->successStatus);
+        return response()->json(compact('token'), ResponseCode::HTTP_OK);
     }
 
     /**
@@ -105,7 +102,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $input = $request->all();
@@ -130,10 +127,10 @@ class UserController extends Controller
 
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'could not get user from token'], $this->internalServerErrorStatus);
+            return response()->json(['error' => 'could not get user from token'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->json(compact('token'), $this->successStatus);
+        return response()->json(compact('token'), ResponseCode::HTTP_OK);
     }
 
     /**
@@ -146,12 +143,13 @@ class UserController extends Controller
         if (!$user) {
             return response()->json([
                 'message' => 'This activation token is invalid.'
-            ], 404);
+            ], ResponseCode::HTTP_NOT_FOUND);
         }
         $user->active = true;
         $user->activation_token = '';
         $user->save();
-        return $user;
+        $token = JWTAuth::fromUser($user);
+        return redirect('/');
     }
 
     /**
@@ -162,7 +160,6 @@ class UserController extends Controller
     public function profile()
     {
         try {
-
             $user = Auth::user();
             $user->load([
                 'major',
@@ -175,9 +172,9 @@ class UserController extends Controller
                 'reviewedCourses.topTags',
                 'reviewedCourses.chair'
             ]);
-            return response()->json($user, $this->successStatus);
+            return response()->json($user, ResponseCode::HTTP_OK);
         } catch (UnauthorizedHttpException $exception) {
-            return response()->json(['error' => 'user not found'], $this->unauthorizedStatus);
+            return response()->json(['error' => 'user not found'], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 
@@ -201,7 +198,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
         }
 
         // email shall not be edited
@@ -243,15 +240,14 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
         }
 
         $password = bcrypt($request->input('password'));
-
         $user->password = $password;
         $user->save();
 
-        return response()->json(['message' => 'password has been successfully changed'], $this->successStatus);
+        return response()->json(['message' => 'password has been successfully changed'], ResponseCode::HTTP_ACCEPTED);
 
     }
 
@@ -269,7 +265,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
         }
 
         if ($request->hasFile('image')) {
@@ -282,7 +278,7 @@ class UserController extends Controller
             $user->image = 'https://evalooni.de/assets/images/profile-pictures/' . $name;
             $user->save();
 
-            return response()->json(['message' => 'user image was successfully saved'], $this->successStatus);
+            return response()->json(['message' => 'user image was successfully saved'], ResponseCode::HTTP_ACCEPTED);
         }
     }
 
@@ -297,7 +293,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json(['message' => 'user was successfully deleted'], $this->successStatus);
+        return response()->json(['message' => 'user was successfully deleted'], ResponseCode::HTTP_NO_CONTENT);
     }
 
     /**
@@ -316,7 +312,7 @@ class UserController extends Controller
             $message = "Die Lehrveranstaltung wurde gespeichert";
         }
         $user->load('bookmarks');
-        return response()->json(['message' => $message, 'user' => $user], $this->successStatus);
+        return response()->json(['message' => $message, 'user' => $user], ResponseCode::HTTP_CREATED);
     }
 
     /**
@@ -330,6 +326,6 @@ class UserController extends Controller
         $user->bookmarks()->detach($id);
         $user->load('bookmarks');
         $message = "Die Lehrveranstaltung wurde gelöscht";
-        return response()->json(['message' => $message, 'user' => $user], $this->successStatus);
+        return response()->json(['message' => $message, 'user' => $user], ResponseCode::HTTP_NO_CONTENT);
     }
 }
