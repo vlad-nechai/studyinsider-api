@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,13 +13,21 @@ class SignupActivate extends Notification
     use Queueable;
 
     /**
+     * User Object
+     *
+     * @var User user
+     */
+    public $user;
+
+    /**
      * Create a new notification instance.
      *
-     * @return void
+     * SignupActivate constructor.
+     * @param User $user
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
@@ -43,6 +52,7 @@ class SignupActivate extends Notification
         $url = url('/api/register/activate/'.$notifiable->activation_token);
         return (new MailMessage)
             ->subject('Confirm your account')
+            ->from('Studyinsider Team')
             ->greeting('Hello there!')
             ->line('Thanks for signup! Please before you begin, you must confirm your account.')
             ->level('success')

@@ -73,7 +73,7 @@ class UserController extends Controller
         }
 
         $credentials = $request->only('email', 'password');
-        $credentials['active'] = 1;
+        // $credentials['active'] = 1;
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid credentials'], ResponseCode::HTTP_FORBIDDEN);
