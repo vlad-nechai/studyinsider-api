@@ -46,10 +46,10 @@ Route::get('/majors/quick-search', 'StudyProgramController@quickSearch');
 
 Route::resources([
     'courses' => 'API\CourseController',
-    'professors' => 'ProfessorController',
+    'professors' => 'API\ProfessorController',
     'universities' => 'API\UniversityController',
-    'faculties' => 'FacultyController',
-    'chairs' => 'ChairController',
+    'faculties' => 'API\FacultyController',
+    'chairs' => 'API\ChairController',
     'study-programs' => 'API\StudyProgramController',
 ]);
 
