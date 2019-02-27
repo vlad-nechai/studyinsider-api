@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Course;
+use App\Models\Semester;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -17,51 +18,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-
-    /**
-     * login with with Laravel Passport
-     *
-     * @deprecated Deprecated: no use in our application
-     * @param Request $request
-     * @return Response
-     */
-    public function loginLaravelPassport(Request $request){
-        if(Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])){
-            $user = Auth::user();
-            $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
-            return response()->json(['success' => $success], ResponseCode::HTTP_OK);
-        }
-        else{
-            return response()->json(['error'=>'invalid credentials'], ResponseCode::HTTP_UNAUTHORIZED);
-        }
-    }
-
-    /**
-     * Register with Laravel Passport
-     *
-     * @deprecated Deprecated: no use in our application
-     * @param Request $request
-     * @return Response
-     */
-    public function registerLaravelPassport(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed',
-            'password_confirmation' => 'required|same:password',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], ResponseCode::HTTP_BAD_REQUEST);
-        }
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('Evalooni angular')-> accessToken;
-        $success['name'] =  $user->name;
-
-        return response()->json(['success'=>$success], ResponseCode::HTTP_OK);
-    }
 
     /**
      * User login with JWT
@@ -114,9 +70,9 @@ class UserController extends Controller
 
         // default image
         if ($input['gender'] == 0) {
-            $input['image'] = 'https://evalooni.de/assets/images/girl2.jpg';
+            $input['image'] = 'https://studyinsider.de/assets/images/girl2.jpg';
         } else {
-            $input['image'] = 'https://evalooni.de/assets/images/guy2.jpg';
+            $input['image'] = 'https://studyinsider.de/assets/images/guy2.jpg';
         }
 
         $user = User::create($input);
@@ -242,7 +198,7 @@ class UserController extends Controller
             $imagePath = $destinationPath. "/".  $name;
             $image->move($destinationPath, $name);
 
-            $user->image = 'https://evalooni.de/assets/images/profile-pictures/' . $name;
+            $user->image = 'https://studyinsider.de/assets/images/profile-pictures/' . $name;
             $user->save();
 
             return response()->json(['message' => 'user image was successfully saved'], $this->successStatus);
@@ -315,5 +271,25 @@ class UserController extends Controller
             ->detach($course->id, ['semester_id' => $semesterId]);
 
         return response()->json('', ResponseCode::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Lists bookmarks for a given semester for the user
+     *
+     * @param integer $semesterId
+     * @return Response
+     */
+    public function semesterBookmarks($semesterId) {
+        $user = Auth::user();
+
+        try {
+            $semester = Semester::findOrFail($semesterId);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['message' => 'Semester with this ID does not exist'], ResponseCode::HTTP_BAD_REQUEST);
+        }
+
+        $bookmarks = $user->bookmarks()->wherePivot('semester_id', $semesterId)->get();
+
+        return response()->json($bookmarks->load(['topSkills', 'topTags']), ResponseCode::HTTP_OK);
     }
 }

@@ -21,8 +21,12 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 //    Route::post('profile/image', 'API\UserController@uploadImage');
     Route::delete('profile', 'API\UserController@delete');
 
-    // Bookmarks for a semester
+    // User bookmarked courses for a semester
+    Route::get('profile/bookmarks/{semesterId}', 'API\UserController@semesterBookmarks');
+
+    // Bookmark a course for a semester
     Route::post('bookmark/{course}/semester/{semester}', 'API\UserController@addBookmark');
+    // Remove bookmarked course for a semester
     Route::delete('bookmark/{course}/semester/{semester}', 'API\UserController@deleteBookmark');
 
     // Course review, tags and skills
@@ -36,13 +40,13 @@ Route::post('login', 'API\UserController@loginJWT');
 Route::post('register', 'API\UserController@registerJWT');
 
 // Search
-Route::get('/courses/search', 'CourseController@search');
+Route::get('/courses/search', 'API\CourseController@search');
 
 // Quick search
-Route::get('/courses/quick-search', 'CourseController@quickSearch');
-Route::get('/professors/quick-search', 'ProfessorController@quickSearch');
-Route::get('/skills/quick-search', 'SkillsController@quickSearch');
-Route::get('/majors/quick-search', 'StudyProgramController@quickSearch');
+Route::get('/courses/quick-search', 'API\CourseController@quickSearch');
+Route::get('/professors/quick-search', 'API\ProfessorController@quickSearch');
+Route::get('/skills/quick-search', 'API\SkillsController@quickSearch');
+Route::get('/study-programs/quick-search', 'API\StudyProgramController@quickSearch');
 
 Route::resources([
     'courses' => 'API\CourseController',
