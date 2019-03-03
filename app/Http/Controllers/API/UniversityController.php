@@ -12,6 +12,11 @@ use Symfony\Component\HttpFoundation\Response as ResponseCode;
 class UniversityController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware(['jwt.auth', 'role:admin'])->only(['store', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *

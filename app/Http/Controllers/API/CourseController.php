@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Chair;
 use App\Models\CourseTag;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,10 +17,9 @@ use Symfony\Component\HttpFoundation\Response as ResponseCode;
 class CourseController extends Controller
 {
 
-    // TODO: fix roles
     public function __construct()
     {
-        $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);
+        $this->middleware(['jwt.auth', 'role:admin'])->only(['store', 'update', 'destroy']);
     }
 
     public function index(Request $request)

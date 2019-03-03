@@ -12,10 +12,9 @@ use Symfony\Component\HttpFoundation\Response as ResponseCode;
 
 class ProfessorController extends Controller
 {
-    // TODO: fix roles
     public function __construct()
     {
-        $this->middleware(['jwt.auth', 'role:super-admin'])->only(['store', 'update', 'destroy']);
+        $this->middleware(['jwt.auth', 'role:admin'])->only(['store', 'update', 'destroy']);
     }
 
     /**
