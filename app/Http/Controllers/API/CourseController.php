@@ -62,8 +62,8 @@ class CourseController extends Controller
         }
 
         // TODO: filter by star rating
-        if ($request->filled('average_rating')) {
-            $rating = $request->input('average_rating');
+        if ($request->filled('rating_filter')) {
+            $ratingFilter = $request->input('rating_filter');
         }
 
         // filter by professors
@@ -93,9 +93,6 @@ class CourseController extends Controller
         // TODO: sort by star rating
 
         return $courses->with([
-            'chair',
-            'professors',
-            'reviews',
             'topSkills',
             'topTags'])
             ->paginate(10)
@@ -234,7 +231,6 @@ class CourseController extends Controller
         }
 
         return $course->load(['avgRating']);
-
     }
 
     /**
