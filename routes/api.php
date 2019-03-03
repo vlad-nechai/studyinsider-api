@@ -29,11 +29,8 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     // Remove bookmarked course for a semester
     Route::delete('bookmark/{course}/semester/{semester}', 'API\UserController@deleteBookmark');
 
-    // Course review, tags and skills
-    Route::post('courses/{id}/review/semester/{semester}', 'CourseController@review');
-    Route::get('courses/{id}/review', 'CourseController@getReview');
-    Route::post('courses/{id}/tags', 'CourseController@attachTags');
-    Route::post('courses/{id}/skills', 'CourseController@attachSkills');
+    // Review a course with tags and skills
+    Route::post('courses/{id}/review/semester/{semester}', 'API\CourseController@review');
 });
 
 Route::post('login', 'API\UserController@loginJWT');
@@ -56,18 +53,6 @@ Route::resources([
     'chairs' => 'API\ChairController',
     'study-programs' => 'API\StudyProgramController',
 ]);
-
-// Load course prev reviews
-Route::get('courses/{id}/reviews', 'CourseController@loadReviews');
-
-
-/**
- * Tags
- */
-Route::get('/tags/courses', 'CoursesTagsController@index');
-Route::get('/tags/courses/{courseTag}', 'CoursesTagsController@show');
-Route::get('/tags/professors', 'ProfessorsTagsController@index');
-Route::get('/tags/professors/{courseTag}', 'ProfessorsTagsController@show');
 
 
 //Route::group(['middleware' => ['auth:api', 'role:super-admin']], function () {

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Models\Chair;
 use App\Models\CourseTag;
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Review;
+use App\Models\Semester;
+use App\Models\Skill;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -100,7 +102,6 @@ class CourseController extends Controller
     }
 
     /**
-     * TODO: check more elegant Validators functions
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
@@ -174,6 +175,101 @@ class CourseController extends Controller
         return response()->json('', ResponseCode::HTTP_NO_CONTENT);
     }
 
+    /** TODO: rewrite and fix
+     * Attach review to the course with tags and skills
+     *
+     * @param  Request  $request
+     * @param  int  $courseId
+     * @param  int  $semesterId
+     * @return Response
+     */
+    public function review(Request $request, $courseId, $semesterId)
+    {
+        $user = Auth::user();
+
+        try {
+            $course = Course::findOrFail($courseId);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['message' => 'Course with this ID does not exist'], ResponseCode::HTTP_NOT_FOUND);
+        }
+
+        try {
+            $semester = Semester::findOrFail($semesterId);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['message' => 'Semester with this ID does not exist'], ResponseCode::HTTP_NOT_FOUND);
+        }
+
+        $reviewExists = $course->reviews()->where([
+            'user_id' => $user->id,
+            'semester_id' => $semesterId])
+            ->exists();
+
+        // We do not override reviews, so we throw an exception if one exists
+        if ($reviewExists) {
+            // $course->reviews()->sync([$user->id => $request->all()], false);
+            return response()->json(['message' => 'Review can not be overwritten'], ResponseCode::HTTP_BAD_REQUEST);
+        } else {
+            $input = $request->all();
+            $input["user_id"] = $user->id;
+            $input["semester_id"] = $semesterId;
+            $input["course_id"] = $courseId;
+
+            // persist review
+            $review = Review::create($input);
+
+            // attach skills
+            $skills = $input["skills"];
+            if (!empty($skills)) {
+                foreach ($skills as $skill) {
+                    $courseSkill = Skill::firstOrNew([
+                        'name' => $skill
+                    ]);
+                    $review->skills()->save($courseSkill, ['course_id' => $courseId]);
+                }
+            }
+
+            // attach tags
+            $tags = $input['tags'];
+            if (!empty($tags)) {
+                foreach ($tags as $tag) {
+                    $courseTag = CourseTag::firstOrNew([
+                        'tag' => $tag
+                    ]);
+                    $review->tags()->save($courseTag, ['course_id' => $courseId]);
+                }
+            }
+
+            return $review->load(['skills', 'tags']);
+        }
+    }
+
+    /**
+     * Search for courses
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function quickSearch(Request $request) {
+        $query = $request->input('q');
+
+        $courses = Course::search($query, null, true, true)
+            ->limit(7)
+            ->get(['id', 'name', 'relevance']);
+
+        return response()->json($courses, ResponseCode::HTTP_OK);
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Deprecated actions
+    |--------------------------------------------------------------------------
+    |
+    | List of deprecated actions.
+    |
+    */
+
 
     /**
      * Get course review for the user
@@ -198,39 +294,6 @@ class CourseController extends Controller
             'reviews.courseSkills' => function($q) use ($id) {
                 $q->where('courses_rate.course_id', $id);
             }]);
-    }
-
-    /** TODO: rewrite and fix
-     * Attach review to the course with tags and skills
-     *
-     * @param  Request  $request
-     * @param  int  $courseId
-     * @param  int  $semesterId
-     * @return Response
-     */
-    public function review(Request $request, $courseId, $semesterId)
-    {
-        $user = Auth::user();
-
-        try {
-            $course = Course::findOrFail($courseId);
-        } catch (ModelNotFoundException $exception) {
-            return response()->json(['message' => 'Course with this ID does not exist'], ResponseCode::HTTP_BAD_REQUEST);
-        }
-
-        $reviewExists = $course->reviews()->where([
-            'user_id' => $user->id,
-            'semester_id' => $semesterId])
-            ->exists();
-
-        // TODO: do we overwrite reviews?
-        if ($reviewExists) {
-            // $course->reviews()->sync([$user->id => $request->all()], false);
-        } else {
-            $course->reviews()->save($user, $request->all());
-        }
-
-        return $course->load(['avgRating']);
     }
 
     /**
@@ -337,22 +400,5 @@ class CourseController extends Controller
             'reviews.courseSkills' => function($q) use ($id) {
                 $q->where('courses_rate.course_id', $id);
             }, 'reviews.major']);
-    }
-
-
-    /**
-     * Search for courses
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function quickSearch(Request $request) {
-        $query = $request->input('q');
-
-        $courses = Course::search($query, null, true, true)
-            ->limit(7)
-            ->get(['id', 'name', 'relevance']);
-
-        return response()->json($courses, ResponseCode::HTTP_OK);
     }
 }
