@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class University extends Model
 {
+    public $timestamps = true;
+
     /**
      * The table associated with the model.
      *

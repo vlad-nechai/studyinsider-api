@@ -12,6 +12,8 @@ class StudyProgram extends Model
 
     use SearchableTrait;
 
+    public $timestamps = true;
+
     /**
      * The table associated with the model.
      *

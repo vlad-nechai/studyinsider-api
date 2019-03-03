@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Chair extends Model
 {
+    public $timestamps = true;
+
     /**
      * The table associated with the model.
      *

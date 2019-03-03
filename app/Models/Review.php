@@ -8,12 +8,31 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Review extends Model
 {
+    public $timestamps = true;
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'courses_reviews';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'course_id',
+        'user_id',
+        'semester_id',
+        'star_rating',
+        'user_course_grade',
+        'recommend',
+        'difficulty',
+        'attendance_recommended',
+        'comment'
+    ];
 
     /**
      * Skills associated with this review

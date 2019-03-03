@@ -22,6 +22,9 @@ class Professor extends Model
 {
 
     use SearchableTrait;
+
+    public $timestamps = true;
+
     /**
      * The table associated with the model.
      *

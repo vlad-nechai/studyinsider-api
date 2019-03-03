@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Semester extends Model
 {
+    public $timestamps = true;
+
     /**
      * The table associated with the model.
      *

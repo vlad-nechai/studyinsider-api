@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Faculty extends Model
 {
+    public $timestamps = true;
+
     /**
      * The table associated with the model.
      *
