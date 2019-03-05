@@ -17,7 +17,8 @@
         "nicolaslopezj/searchable": "^1.10",
         "santigarcor/laratrust": "5.0.9",
         "spatie/laravel-permission": "2.12.2",
-        "tymon/jwt-auth": "^1.0.0"
+        "tymon/jwt-auth": "^1.0.0",
+        "zircote/swagger-php": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
