@@ -13,9 +13,11 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
 /**
- * User
+ * @OA\Schema(@OA\Xml(name="User"))
  *
- * @property int id
+ * @OA\Property(format="int64")
+ * @var int id
+ *
  * @property int provider_id
  * @property string provider
  * @property string first_name

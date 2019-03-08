@@ -48,6 +48,22 @@ class UserController extends Controller
      *
      * @param Request $request
      * @return Response
+     *
+     * @OA\Post(path="/user",
+     *   tags={"user"},
+     *   summary="Create user",
+     *   description="This can only be done by the logged in user.",
+     *   operationId="createUser",
+     *   @OA\RequestBody(
+     *       required=true,
+     *       description="Created user object",
+     *       @OA\MediaType(
+     *           mediaType="multipart/form-data",
+     *           @OA\Schema(ref="#/components/schemas/User")
+     *       )
+     *   ),
+     *   @OA\Response(response="default", description="successful operation")
+     * )
      */
     public function registerJWT(Request $request) {
         $validator = Validator::make($request->all(), [
