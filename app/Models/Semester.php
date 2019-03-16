@@ -21,4 +21,9 @@ class Semester extends Model
      * @var array
      */
     protected $hidden = ['pivot'];
+
+
+    public static function actual() {
+        return Semester::orderBy('created_at', 'desc')->first();
+    }
 }
