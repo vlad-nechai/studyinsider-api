@@ -2,12 +2,12 @@
 /**
  * @OA\OpenApi(
  *     @OA\Info(
- *         version="1.0.0",
- *         title="Swagger Petstore",
- *         description="This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+ *         version="0.6.1",
+ *         title="Studyinsider API",
+ *         description="Studyinsider api documentation",
  *         termsOfService="http://swagger.io/terms/",
  *         @OA\Contact(
- *             email="apiteam@swagger.io"
+ *             email="info@studyinsider.de"
  *         ),
  *         @OA\License(
  *             name="Apache 2.0",
@@ -15,8 +15,8 @@
  *         )
  *     ),
  *     @OA\Server(
- *         description="OpenApi host",
- *         url="https://petstore.swagger.io/v3"
+ *         description="Development server",
+ *         url="http://studyinsiderdevelopmentserver-env.agjzsbxsnq.eu-central-1.elasticbeanstalk.com"
  *     ),
  *     @OA\ExternalDocumentation(
  *         description="Find out more about Swagger",
