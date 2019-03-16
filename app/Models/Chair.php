@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @OA\Schema(
  *     description="Chair model",
- *     title="Chair model",
+ *     title="Chair",
  *     required={"name", "faculty_id", "location"},
  *     @OA\Xml(name="Chair")
  * )

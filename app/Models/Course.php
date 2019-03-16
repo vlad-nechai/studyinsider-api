@@ -8,19 +8,12 @@ use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 use \Nicolaslopezj\Searchable\SearchableTrait;
 
 /**
- * @property string name
- * @property string short_name
- * @property int chair_id
- * @property string course_type
- * @property string univis_id
- * @property string univis_key
- * @property string univis_hash
- * @property string ects
- * @property int sws
- * @property int max_turnout
- * @property string language
- * @property string summary
- * @property string semester
+ * @OA\Schema(
+ *     description="Course model",
+ *     title="Course",
+ *     required={"name", "chair_id", "course_type"},
+ *     @OA\Xml(name="Course")
+ * )
  */
 class Course extends Model
 {
@@ -78,6 +71,51 @@ class Course extends Model
             'name' => 10
         ],
     ];
+
+    /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     title="short_name",
+     * )
+     *
+     * @var string
+     */
+    private $short_name;
+
+    /**
+     * @OA\Property(
+     *     title="chair_id",
+     * )
+     *
+     * @var integer
+     */
+    private $chair_id;
+
+    /**
+     * @OA\Property(
+     *     title="course_type",
+     * )
+     *
+     * @var string
+     */
+    private $course_type;
 
     /**
      * @return BelongsTo
