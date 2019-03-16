@@ -4,6 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     description="Semester model",
+ *     title="Semester",
+ *     required={"name"},
+ *     @OA\Xml(name="Semester")
+ * )
+ */
 class Semester extends Model
 {
     public $timestamps = true;
@@ -22,6 +30,23 @@ class Semester extends Model
      */
     protected $hidden = ['pivot'];
 
+    /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
 
     public static function actual() {
         return Semester::orderBy('created_at', 'desc')->first();

@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Nicolaslopezj\Searchable\SearchableTrait;
 
+
+/**
+ * @OA\Schema(
+ *     description="Skill model",
+ *     title="Skill",
+ *     required={"name", "language", "origin"},
+ *     @OA\Xml(name="Skill")
+ * )
+ */
 class Skill extends Model
 {
 
@@ -33,6 +42,43 @@ class Skill extends Model
      * @var array
      */
     protected $fillable = ['name', 'language', 'origin'];
+
+
+    /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     title="language",
+     * )
+     *
+     * @var string
+     */
+    private $language;
+
+    /**
+     * @OA\Property(
+     *     title="origin",
+     * )
+     *
+     * @var integer
+     */
+    private $origin;
 
     /**
      * Searchable rules.

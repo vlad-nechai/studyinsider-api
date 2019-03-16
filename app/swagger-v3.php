@@ -10,13 +10,17 @@
  *             email="info@studyinsider.de"
  *         ),
  *         @OA\License(
- *             name="Apache 2.0",
- *             url="http://www.apache.org/licenses/LICENSE-2.0.html"
+ *             name="Proprietary license",
+ *             url="https://studyinsider.de"
  *         )
  *     ),
  *     @OA\Server(
+ *         description="Local server",
+ *         url="http://localhost:8000/api"
+ *     ),
+ *     @OA\Server(
  *         description="Development server",
- *         url="http://studyinsiderdevelopmentserver-env.agjzsbxsnq.eu-central-1.elasticbeanstalk.com"
+ *         url="http://studyinsiderdevelopmentserver-env.agjzsbxsnq.eu-central-1.elasticbeanstalk.com//api"
  *     ),
  *     @OA\ExternalDocumentation(
  *         description="Find out more about Swagger",

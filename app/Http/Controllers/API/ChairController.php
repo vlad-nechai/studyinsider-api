@@ -53,7 +53,37 @@ class ChairController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/chairs/{chairId}",
+     *     tags={"chair"},
+     *     summary="Find chair by ID",
+     *     description="Returns a single chair object",
+     *     operationId="getPetById",
+     *     @OA\Parameter(
+     *         name="chairId",
+     *         in="path",
+     *         description="ID of chair to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Chair"),
+     *         @OA\XmlContent(ref="#/components/schemas/Chair"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Chair not found"
+     *     )
+     * )
      *
      * @param Chair $chair
      * @return Chair

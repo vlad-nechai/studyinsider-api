@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
+/**
+ * @OA\Schema(
+ *     description="Study Program model",
+ *     title="StudyProgram",
+ *     required={"name", "university_id", "type"},
+ *     @OA\Xml(name="StudyProgram")
+ * )
+ */
 class StudyProgram extends Model
 {
 
@@ -31,6 +39,42 @@ class StudyProgram extends Model
             'name' => 100
         ],
     ];
+
+    /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     title="university_id",
+     * )
+     *
+     * @var integer
+     */
+    private $university_id;
+
+    /**
+     * @OA\Property(
+     *     title="type",
+     * )
+     *
+     * @var string
+     */
+    private $type;
 
     /**
      * University that study program is associated with

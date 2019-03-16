@@ -63,6 +63,11 @@ class CourseController extends Controller
             }
         }
 
+        // TODO: filter by semester
+        if ($request->filled('semester_id')) {
+            $semesterId = $request->input('semester_id');
+        }
+
         // TODO: filter by star rating
         if ($request->filled('rating_filter')) {
             $ratingFilter = $request->input('rating_filter');
