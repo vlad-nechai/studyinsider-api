@@ -4,9 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     description="Course Tag model",
+ *     title="CourseTag",
+ *     required={"tag", "tag_type"},
+ *     @OA\Xml(name="CourseTag")
+ * )
+ */
 class CourseTag extends Model
 {
-
     public $timestamps = true;
 
     /**
@@ -29,5 +36,32 @@ class CourseTag extends Model
      * @var array
      */
     protected $fillable = ['tag', 'star_rating', 'tag_type'];
+
+    /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="tag",
+     * )
+     *
+     * @var string
+     */
+    private $tag;
+
+    /**
+     * @OA\Property(
+     *     title="tag_type",
+     * )
+     *
+     * @var string
+     */
+    private $tag_type;
 
 }

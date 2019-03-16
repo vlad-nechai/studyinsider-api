@@ -143,7 +143,7 @@ class Course extends Model
     {
         return $this->belongsToMany(
             Semester::class,
-            'course_professor_semester',
+            'course_semester',
             'course_id',
             'semester_id');
     }
