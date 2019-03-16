@@ -7,16 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int id
- * @property string name
- * @property int faculty_id
- * @property string univis_id
- * @property string univis_orgnr
- * @property string univis_key
- * @property string location
- * @property string image
- * @property int created_at
- * @property int updated_at
+ * @OA\Schema(
+ *     description="Chair model",
+ *     title="Chair model",
+ *     required={"name", "faculty_id", "location"},
+ *     @OA\Xml(name="Chair")
+ * )
  */
 class Chair extends Model
 {
@@ -49,6 +45,51 @@ class Chair extends Model
      * @var array
      */
     protected $hidden = ['univis_id', 'univis_key', 'univis_orgnr', 'faculty_id'];
+
+    /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     title="faculty_id",
+     * )
+     *
+     * @var integer
+     */
+    private $faculty_id;
+
+    /**
+     * @OA\Property(
+     *     title="location",
+     * )
+     *
+     * @var string
+     */
+    private $location;
+
+    /**
+     * @OA\Property(
+     *     title="image",
+     * )
+     *
+     * @var string
+     */
+    private $image;
 
     /**
      * @return HasMany
