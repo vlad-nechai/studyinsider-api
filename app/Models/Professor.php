@@ -8,15 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \Nicolaslopezj\Searchable\SearchableTrait;
 
 /**
- * @property int id
- * @property string name
- * @property string title
- * @property int gender
- * @property string univis_id
- * @property string univis_key
- * @property int chair_id
- * @property int created_at
- * @property int updated_at
+ * @OA\Schema(
+ *     description="Professor model",
+ *     title="Professor",
+ *     required={"name", "gender", "chair_id"},
+ *     @OA\Xml(name="Professor")
+ * )
  */
 class Professor extends Model
 {
@@ -61,6 +58,51 @@ class Professor extends Model
             'name' => 100
         ],
     ];
+
+    /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     title="title",
+     * )
+     *
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @OA\Property(
+     *     title="gender",
+     * )
+     *
+     * @var string
+     */
+    private $gender;
+
+    /**
+     * @OA\Property(
+     *     title="chair_id",
+     * )
+     *
+     * @var integer
+     */
+    private $chair_id;
 
     /**
      * Chair to which Prof belongs to
