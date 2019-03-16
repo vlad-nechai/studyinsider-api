@@ -13,23 +13,12 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
 /**
- * @OA\Schema(@OA\Xml(name="User"))
- *
- * @OA\Property(format="int64")
- * @var int id
- *
- * @property int provider_id
- * @property string provider
- * @property string first_name
- * @property string last_name
- * @property string username
- * @property string email
- * @property string password
- * @property int gender
- * @property int birth_date
- * @property string location
- * @property int study_program_id
- * @property string image
+ * @OA\Schema(
+ *     description="User model",
+ *     title="User",
+ *     required={"first_name", "last_name", "study_program_id", "password", "username", "email"},
+ *     @OA\Xml(name="User")
+ * )
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -67,6 +56,98 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password', 'remember_token'
     ];
+
+
+    /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="first_name",
+     * )
+     *
+     * @var string
+     */
+    private $first_name;
+
+    /**
+     * @OA\Property(
+     *     title="last_name",
+     * )
+     *
+     * @var string
+     */
+    private $last_name;
+
+    /**
+     * @OA\Property(
+     *     title="username",
+     * )
+     *
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @OA\Property(
+     *     title="email",
+     * )
+     *
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @OA\Property(
+     *     title="password",
+     * )
+     *
+     * @var string
+     */
+    private $password;
+
+    /**
+     * @OA\Property(
+     *     title="gender"
+     * )
+     *
+     * @var integer
+     */
+    private $gender;
+
+    /**
+     * @OA\Property(
+     *     format="datetime",
+     *     title="birth_date",
+     * )
+     *
+     * @var \DateTime
+     */
+    private $birth_date;
+
+    /**
+     * @OA\Property(
+     *     title="location",
+     * )
+     *
+     * @var string
+     */
+    private $location;
+
+    /**
+     * @OA\Property(
+     *     title="study_program_id"
+     * )
+     *
+     * @var integer
+     */
+    private $study_program_id;
 
     /**
      * Courses bookmarked by the user

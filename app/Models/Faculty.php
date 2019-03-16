@@ -7,17 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int id
- * @property string name
- * @property string type
- * @property string univis_id
- * @property string univis_orgnr
- * @property string univis_key
- * @property string location
- * @property string image
- * @property int university_id
- * @property int created_at
- * @property int updated_at
+ * @OA\Schema(
+ *     description="Faculty model",
+ *     title="Faculty",
+ *     required={"name", "type", "location", "university_id"},
+ *     @OA\Xml(name="Faculty")
+ * )
  */
 class Faculty extends Model
 {
@@ -50,6 +45,60 @@ class Faculty extends Model
     protected $hidden = ['univis_id', 'univis_orgnr', 'univis_key', 'university_id'];
 
     /**
+     * @OA\Property(
+     *     title="id"
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     title="name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     title="type",
+     * )
+     *
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @OA\Property(
+     *     title="location",
+     * )
+     *
+     * @var string
+     */
+    private $location;
+
+    /**
+     * @OA\Property(
+     *     title="image",
+     * )
+     *
+     * @var string
+     */
+    private $image;
+
+    /**
+     * @OA\Property(
+     *     title="university_id",
+     * )
+     *
+     * @var integer
+     */
+    private $university_id;
+
+    /**
     * @return BelongsTo
     */
     public function university() {
@@ -62,4 +111,5 @@ class Faculty extends Model
     public function chairs() {
         return $this->hasMany(Chair::class);
     }
+
 }
