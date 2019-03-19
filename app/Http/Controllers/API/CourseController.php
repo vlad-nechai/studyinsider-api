@@ -10,6 +10,7 @@ use App\Models\Semester;
 use App\Models\Skill;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
 use Illuminate\Http\Response;
 use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,45 @@ class CourseController extends Controller
         $this->middleware(['jwt.auth', 'role:admin'])->only(['store', 'update', 'destroy']);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/courses/",
+     *     tags={"Courses"},
+     *     summary="List all courses",
+     *     description="Returns paginated course collection.",
+     *     operationId="getCourses",
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="query param to search courses",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="faculty",
+     *         in="query",
+     *         description="Faculty ids to filter courses. Query to look like faculty=[1,2,3], where 1,2,3 = IDs of faculties.",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @return PaginatedResourceResponse
+     *
+     */
     public function index(Request $request)
     {
         //TODO: Validators for filters and sorting
@@ -130,10 +170,41 @@ class CourseController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/courses/{courseId}",
+     *     tags={"Courses"},
+     *     summary="Find course by ID",
+     *     description="Returns a single course object",
+     *     operationId="getCourse",
+     *     @OA\Parameter(
+     *         name="courseId",
+     *         in="path",
+     *         description="ID of course to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Course"),
+     *         @OA\XmlContent(ref="#/components/schemas/Course"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course not found"
+     *     )
+     * )
+     *
      *
      * @param  Course  $course
-     * @return Response
+     * @return Course
      */
     public function show(Course $course)
     {

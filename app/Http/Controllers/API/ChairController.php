@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
 use Illuminate\Http\Response;
 use App\Models\Chair;
 use Illuminate\Support\Facades\Validator;
@@ -18,9 +19,23 @@ class ChairController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/chairs/",
+     *     tags={"Chairs"},
+     *     summary="List all chairs",
+     *     description="Returns paginated chair collection",
+     *     operationId="getPetById",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
-     * @return Response
+     * @return PaginatedResourceResponse
      */
     public function index()
     {
@@ -55,10 +70,9 @@ class ChairController extends Controller
     /**
      * @OA\Get(
      *     path="/chairs/{chairId}",
-     *     tags={"chair"},
+     *     tags={"Chairs"},
      *     summary="Find chair by ID",
      *     description="Returns a single chair object",
-     *     operationId="getPetById",
      *     @OA\Parameter(
      *         name="chairId",
      *         in="path",
