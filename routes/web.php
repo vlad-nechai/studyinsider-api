@@ -12,8 +12,9 @@
 */
 
 Route::get('/', function () {
-    View::addExtension('html', 'php');
-    return View::make('index');
+    return redirect('api/documentation');
+//    View::addExtension('html', 'php');
+//    return View::make('index');
 });
 
 //parser routes
