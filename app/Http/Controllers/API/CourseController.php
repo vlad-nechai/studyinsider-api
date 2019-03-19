@@ -50,6 +50,15 @@ class CourseController extends Controller
      *             type="string"
      *         )
      *     ),
+     *     @OA\Parameter(
+     *         name="professor",
+     *         in="query",
+     *         description="Professor ids to filter courses. Query to look like professor=[1,2,3], where 1,2,3 = IDs of professors.",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="successful operation"
