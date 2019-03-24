@@ -10,7 +10,6 @@ use App\Models\Semester;
 use App\Models\Skill;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
 use Illuminate\Http\Response;
 use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +58,15 @@ class CourseController extends Controller
      *             type="string"
      *         )
      *     ),
+     *     @OA\Parameter(
+     *         name="sort_name",
+     *         in="query",
+     *         description="Sort parameter. It is either 'asc' or 'desc'",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="successful operation"
@@ -70,7 +78,7 @@ class CourseController extends Controller
      * )
      *
      * @param Request $request
-     * @return PaginatedResourceResponse
+     * @return Response
      *
      */
     public function index(Request $request)
@@ -156,7 +164,24 @@ class CourseController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     *
+     * @OA\Post(
+     *     path="/courses",
+     *     tags={"Courses"},
+     *     summary="Store a newly created resource in course.",
+     *     operationId="createCourse",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Course"),
+     *         @OA\XmlContent(ref="#/components/schemas/Course")
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Course to be created",
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/Course")
+     *     )
+     * )
      *
      * @param  Request  $request
      * @return Response
@@ -213,7 +238,7 @@ class CourseController extends Controller
      *
      *
      * @param  Course  $course
-     * @return Course
+     * @return Response
      */
     public function show(Course $course)
     {
@@ -329,10 +354,34 @@ class CourseController extends Controller
     }
 
     /**
-     * Search for courses
+     * @OA\Get(
+     *     path="/courses/quick-search",
+     *     tags={"Quick search"},
+     *     summary="Quick search for courses. To be used for autocomplete",
+     *     description="Returns paginated course collection.",
+     *     operationId="quickSearchCourses",
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="query param to search courses",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
      * @param Request $request
      * @return Response
+     *
      */
     public function quickSearch(Request $request) {
         $query = $request->input('q');

@@ -20,10 +20,27 @@ class UserController extends Controller
 {
 
     /**
-     * User login with JWT
+     * @OA\Post(
+     *     path="/login",
+     *     tags={"Users"},
+     *     summary="Login for users. If you want login as admin use login ´admin@test.com´ and password ´12345678´.",
+     *     operationId="userLogin",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/User"),
+     *         @OA\XmlContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Login credentials",
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/Course")
+     *     )
+     * )
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return Response
+     *
      */
     public function loginJWT(Request $request) {
         $validator = Validator::make($request->all(), [
