@@ -28,8 +28,8 @@ class UserController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/User"),
-     *         @OA\XmlContent(ref="#/components/schemas/User")
+     *         @OA\JsonContent(),
+     *         @OA\XmlContent()
      *     ),
      *     @OA\RequestBody(
      *         description="Login credentials",
