@@ -34,7 +34,10 @@ class UserController extends Controller
      *     @OA\RequestBody(
      *         description="Login credentials",
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/Course")
+     *         @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(ref="#/components/schemas/Credentials")
+     *          )
      *     )
      * )
      *
@@ -67,10 +70,10 @@ class UserController extends Controller
      * @return Response
      *
      * @OA\Post(path="/user",
-     *   tags={"user"},
-     *   summary="Create user",
-     *   description="This can only be done by the logged in user.",
-     *   operationId="createUser",
+     *   tags={"Users"},
+     *   summary="Register as a user.",
+     *   description="Register as a new user.",
+     *   operationId="registerUser",
      *   @OA\RequestBody(
      *       required=true,
      *       description="Created user object",
