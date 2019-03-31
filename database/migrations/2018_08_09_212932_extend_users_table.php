@@ -15,7 +15,7 @@ class ExtendUsersTable extends Migration
     {
         Schema::table('users', function($table)
         {
-            $table->integer('sex')->after('last_name');
+            $table->integer('sex');
             $table->string("email")->after('name')->unique()->change();
             $table->string("birth_date", 50)->after('email')->nullable();
             $table->string("location", 50)->after('birth_place')->nullable();
