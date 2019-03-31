@@ -18,7 +18,21 @@ class StudyProgramController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/study-programs/",
+     *     tags={"Study Programs"},
+     *     summary="List all Study programs",
+     *     description="Returns paginated study program collection",
+     *     operationId="listStudyPrograms",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
      * @return Response
      */
@@ -53,10 +67,40 @@ class StudyProgramController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/study-programs/{studyProgramId}",
+     *     tags={"Study Programs"},
+     *     summary="Find study program by ID",
+     *     description="Returns a single study program object",
+     *     operationId="getStudyProgramById",
+     *     @OA\Parameter(
+     *         name="studyProgramId",
+     *         in="path",
+     *         description="ID of study program to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Professor"),
+     *         @OA\XmlContent(ref="#/components/schemas/Professor"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Study program not found"
+     *     )
+     * )
      *
-     * @param  StudyProgram $studyProgram
-     * @return Response
+     * @param  StudyProgram  $studyProgram
+     * @return StudyProgram $studyProgram
      */
     public function show(StudyProgram $studyProgram)
     {
@@ -94,10 +138,33 @@ class StudyProgramController extends Controller
     }
 
     /**
-     * Quick search majors
+     * @OA\Get(
+     *     path="/study-programs/quick-search",
+     *     tags={"Quick search"},
+     *     summary="Quick search for study programs. To be used for autocomplete",
+     *     description="Returns paginated study programs collection.",
+     *     operationId="quickSearchStudyPrograms",
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="query param to search study programs",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
      * @param Request $request
-     * @return mixed
+     * @return Response
      */
     public function quickSearch(Request $request) {
         $query = $request->input('q');
