@@ -18,7 +18,7 @@ class ExtendUsersTable extends Migration
             $table->integer('sex');
             $table->string("email")->after('name')->unique()->change();
             $table->string("birth_date", 50)->after('email')->nullable();
-            $table->string("location", 50)->after('birth_place')->nullable();
+            $table->string("location", 50)->nullable();
             $table->string("study_program", 50)->after('location');
             $table->string("image", 100)->after('study_program')->default('assets/images/girl2.jpg');
         });
