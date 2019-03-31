@@ -16,7 +16,7 @@ class AddMajorToUserMigration extends Migration
         Schema::table('users', function($table) {
             $table->dropColumn('study_program');
 
-            $table->integer('major_id')->after('location');
+            $table->unsignedInteger('major_id')->after('location');
 
             $table->foreign('major_id')->references('id')->on('majors');
         });
