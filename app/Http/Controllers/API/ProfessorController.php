@@ -18,7 +18,21 @@ class ProfessorController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/professors/",
+     *     tags={"Professors"},
+     *     summary="List all professors",
+     *     description="Returns paginated professor collection",
+     *     operationId="listProfessors",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
      * @return Response
      */
@@ -53,7 +67,37 @@ class ProfessorController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/professors/{professorId}",
+     *     tags={"Professors"},
+     *     summary="Find professor by ID",
+     *     description="Returns a single professor object",
+     *     operationId="getProfessorById",
+     *     @OA\Parameter(
+     *         name="professorId",
+     *         in="path",
+     *         description="ID of professor to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Professor"),
+     *         @OA\XmlContent(ref="#/components/schemas/Professor"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Professor not found"
+     *     )
+     * )
      *
      * @param  Professor  $professor
      * @return Professor $professor
@@ -94,10 +138,33 @@ class ProfessorController extends Controller
     }
 
     /**
-     * Quick search professors for filters
+     * @OA\Get(
+     *     path="/professors/quick-search",
+     *     tags={"Quick search"},
+     *     summary="Quick search for professors. To be used for autocomplete",
+     *     description="Returns paginated professor collection.",
+     *     operationId="quickSearchProfessors",
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="query param to search professors",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
      * @param Request $request
-     * @return mixed
+     * @return Response
      */
     public function quickSearch(Request $request) {
         $query = $request->input('q');

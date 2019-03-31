@@ -24,7 +24,7 @@ class ChairController extends Controller
      *     tags={"Chairs"},
      *     summary="List all chairs",
      *     description="Returns paginated chair collection",
-     *     operationId="getPetById",
+     *     operationId="listChairs",
      *     @OA\Response(
      *         response=200,
      *         description="successful operation"
@@ -73,6 +73,7 @@ class ChairController extends Controller
      *     tags={"Chairs"},
      *     summary="Find chair by ID",
      *     description="Returns a single chair object",
+     *     operationId="getChairById",
      *     @OA\Parameter(
      *         name="chairId",
      *         in="path",
