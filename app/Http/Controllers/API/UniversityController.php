@@ -18,7 +18,21 @@ class UniversityController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/universities/",
+     *     tags={"Universities"},
+     *     summary="List all universities",
+     *     description="Returns paginated university collection",
+     *     operationId="listUniversities",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
      * @return Response
      */
@@ -53,10 +67,40 @@ class UniversityController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/universities/{universityId}",
+     *     tags={"Universities"},
+     *     summary="Find university by ID",
+     *     operationId="getUniversityById",
+     *     description="Returns a single university object",
+     *     @OA\Parameter(
+     *         name="universityId",
+     *         in="path",
+     *         description="ID of university to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/University"),
+     *         @OA\XmlContent(ref="#/components/schemas/University"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="University not found"
+     *     )
+     * )
      *
      * @param  University  $university
-     * @return Response
+     * @return University
      */
     public function show(University $university)
     {
