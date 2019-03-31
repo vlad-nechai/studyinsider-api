@@ -17,7 +17,21 @@ class FacultyController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/faculties/",
+     *     tags={"Faculties"},
+     *     summary="List all Faculties",
+     *     description="Returns paginated faculty collection",
+     *     operationId="listFaculties",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      *
      * @return Response
      */
@@ -53,7 +67,37 @@ class FacultyController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/faculties/{facultyId}",
+     *     tags={"Faculties"},
+     *     summary="Find faculty by ID",
+     *     operationId="getFacultyById",
+     *     description="Returns a single faculty object",
+     *     @OA\Parameter(
+     *         name="facultyId",
+     *         in="path",
+     *         description="ID of faculty to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Faculty"),
+     *         @OA\XmlContent(ref="#/components/schemas/Faculty"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Faculty not found"
+     *     )
+     * )
      *
      * @param Faculty $faculty
      * @return Faculty
