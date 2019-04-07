@@ -28,8 +28,9 @@ class UserController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
-     *         @OA\JsonContent(),
-     *         @OA\XmlContent()
+     *         @OA\JsonContent(
+     *            @OA\Property(property="token", type="string"),
+     *         )
      *     ),
      *     @OA\RequestBody(
      *         description="Login credentials",
@@ -41,14 +42,15 @@ class UserController extends Controller
      *     )
      * )
      *
-     * @param  Request  $request
+     * @param  Request $request
      * @return Response
      *
      */
-    public function loginJWT(Request $request) {
+    public function loginJWT(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255',
-            'password'=> 'required'
+            'password' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -56,7 +58,7 @@ class UserController extends Controller
         }
 
         $credentials = $request->only('email', 'password');
-        if (! $token = JWTAuth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['error' => 'invalid credentials'], ResponseCode::HTTP_UNAUTHORIZED);
         }
 
@@ -64,12 +66,10 @@ class UserController extends Controller
     }
 
     /**
-     * Register User with JWT
-     *
      * @param Request $request
      * @return Response
      *
-     * @OA\Post(path="/user",
+     * @OA\Post(path="/register",
      *   tags={"Users"},
      *   summary="Register as a user.",
      *   description="Register as a new user.",
@@ -79,13 +79,32 @@ class UserController extends Controller
      *       description="Created user object",
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
-     *           @OA\Schema(ref="#/components/schemas/User")
+     *           @OA\Schema(
+     *              description="Credentials for register",
+     *              title="Credentials for register",
+     *              type="object",
+     *              allOf={
+     *                  @OA\Schema(ref="#/components/schemas/User"),
+     *                  @OA\Schema(
+     *                      required={"password_confirmation"},
+     *                      @OA\Property(property="password_confirmation", type="string"),
+     *                  )
+     *              }
+     *           )
      *       )
      *   ),
-     *   @OA\Response(response="default", description="successful operation")
+     *   @OA\Response(
+     *      response=200,
+     *      description="successful operation",
+     *         @OA\JsonContent(
+     *              @OA\Property(property="token", type="string"),
+     *
+     *     ),
+     *   )
      * )
      */
-    public function registerJWT(Request $request) {
+    public function registerJWT(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255|unique:users',
             'first_name' => 'required',
@@ -93,7 +112,7 @@ class UserController extends Controller
             'username' => 'required|unique:users',
             'gender' => 'required',
             'study_program_id' => 'required',
-            'password'=> 'required|confirmed',
+            'password' => 'required|confirmed',
             'password_confirmation' => 'required|same:password',
         ]);
 
@@ -216,7 +235,8 @@ class UserController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadImage(Request $request) {
+    public function uploadImage(Request $request)
+    {
         $user = Auth::user();
 
         $validator = Validator::make($request->all(), [
@@ -229,9 +249,9 @@ class UserController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $name = str_slug($user->name, '_').'.'.$image->getClientOriginalExtension();
+            $name = str_slug($user->name, '_') . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('/assets/images/profile-pictures');
-            $imagePath = $destinationPath. "/".  $name;
+            $imagePath = $destinationPath . "/" . $name;
             $image->move($destinationPath, $name);
 
             $user->image = 'https://studyinsider.de/assets/images/profile-pictures/' . $name;
@@ -315,7 +335,8 @@ class UserController extends Controller
      * @param integer $semesterId
      * @return Response
      */
-    public function semesterBookmarks($semesterId) {
+    public function semesterBookmarks($semesterId)
+    {
         $user = Auth::user();
 
         try {

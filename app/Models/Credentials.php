@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  *     description="Credentials for login",
  *     title="Credentials",
  *     required={"login", "password"},
- *     @OA\Xml(name="Skill")
+ *     @OA\Xml(name="Credentials")
  * )
  */
 class Credentials extends Model
