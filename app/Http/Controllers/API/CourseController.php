@@ -170,6 +170,7 @@ class CourseController extends Controller
      *     tags={"Courses"},
      *     summary="Store a newly created resource in course.",
      *     operationId="createCourse",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",

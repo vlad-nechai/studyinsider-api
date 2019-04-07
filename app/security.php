@@ -1,9 +1,8 @@
 <?php
 /**
  * @OA\SecurityScheme(
- *     type="apiKey",
- *     in="header",
- *     securityScheme="api_key",
- *     name="api_key"
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer"
  * )
  */
