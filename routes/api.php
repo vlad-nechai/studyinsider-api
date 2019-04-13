@@ -36,6 +36,9 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 Route::post('login', 'API\UserController@loginJWT');
 Route::post('register', 'API\UserController@registerJWT');
 
+// Companies
+Route::get('companies/{company}', 'API\CompanyController@show');
+
 // Search
 Route::get('/courses/search', 'API\CourseController@search');
 

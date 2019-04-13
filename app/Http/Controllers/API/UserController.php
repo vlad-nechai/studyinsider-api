@@ -147,10 +147,10 @@ class UserController extends Controller
             $user = Auth::user();
             $user->load([
                 'studyProgram',
-                'bookmarks.topSkills',
-                'bookmarks.topTags',
-                'reviews.skills',
-                'reviews.tags'
+//                'bookmarks.topSkills',
+//                'bookmarks.topTags',
+//                'reviews.skills',
+//                'reviews.tags'
             ]);
 
             return response()->json($user, ResponseCode::HTTP_OK);
