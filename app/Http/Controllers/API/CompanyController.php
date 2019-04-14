@@ -73,7 +73,9 @@ class CompanyController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Job")
+     *         @OA\JsonContent(type="array",
+     *           @OA\Items(ref="#/components/schemas/Job")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=400,
