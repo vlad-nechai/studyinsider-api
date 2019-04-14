@@ -286,7 +286,43 @@ class CourseController extends Controller
     }
 
     /** TODO: rewrite and fix
-     * Attach review to the course with tags and skills
+     * @OA\Post(path="/courses/{courseId}/review/semester/{semesterId}",
+     *   tags={"Courses"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Review a course for a given semester.",
+     *   description="Review a course for a given semester.",
+     *   operationId="reviewCourseForSemester",
+     *   @OA\Parameter(
+     *      name="courseId",
+     *      in="path",
+     *      description="ID of course for review",
+     *      required=true,
+     *      @OA\Schema(
+     *          type="integer",
+     *          format="int64"
+     *      )
+     *   ),
+     *   @OA\Parameter(
+     *      name="semesterId",
+     *      in="path",
+     *      description="ID of semester for review",
+     *      required=true,
+     *      @OA\Schema(
+     *          type="integer",
+     *          format="int64"
+     *      )
+     *   ),
+     *   @OA\RequestBody(
+     *       required=true,
+     *       description="Review course object",
+     *   ),
+     *   @OA\Response(
+     *       response=201,
+     *       description="successful creation",
+     *       @OA\JsonContent(ref="#/components/schemas/Review")
+     *   ),
+     * )
+     *
      *
      * @param  Request  $request
      * @param  int  $courseId
