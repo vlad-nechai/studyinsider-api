@@ -150,6 +150,16 @@ class Company extends Model
     private $businessAreas;
 
 
+    /**
+     * @OA\Property(
+     *     title="jobs",
+     * )
+     *
+     * @var Job[]
+     */
+    private $jobs;
+
+
     public function images()
     {
         return $this->hasMany(CompanyImage::class);
@@ -158,6 +168,10 @@ class Company extends Model
     public function businessAreas()
     {
         return $this->belongsToMany(BusinessArea::class, 'companies_business_areas');
+    }
+
+    public function jobs() {
+        return $this->hasMany(Job::class);
     }
 
 }
