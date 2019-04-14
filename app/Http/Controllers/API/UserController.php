@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\Review;
 use App\Models\Semester;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpFoundation\Response as ResponseCode;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -137,7 +138,20 @@ class UserController extends Controller
     }
 
     /**
-     * User profile data
+     * @OA\Post(path="/profile",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Get user information.",
+     *   description="Get user profile information.",
+     *   operationId="getUser",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(type="array",
+     *           @OA\Items(ref="#/components/schemas/Review")
+     *         )
+     *     ),
+     * )
      *
      * @return Response
      */
@@ -159,6 +173,53 @@ class UserController extends Controller
 
             return response()->json(['error' => 'user not found'], ResponseCode::HTTP_UNAUTHORIZED);
 
+        }
+    }
+
+    public function getAllUserBookmarks() {
+        try {
+            $user = Auth::user();
+            $bookmarks = Review::where('user_id', $user->id)->get();
+
+            return response()->json($bookmarks, ResponseCode::HTTP_OK);
+
+        } catch (UnauthorizedHttpException $exception) {
+
+            return response()->json(['error' => 'user not found'], ResponseCode::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * @OA\Get(path="/profile/reviews",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Get all user reviews.",
+     *   description="Get all user reviews.",
+     *   operationId="getAllUserReviews",
+     *   @OA\RequestBody(
+     *       required=false,
+     *   ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(type="array",
+     *           @OA\Items(ref="#/components/schemas/Review")
+     *         )
+     *     ),
+     * )
+     *
+     * @return Response
+     */
+    public function getAllUserReviews() {
+        try {
+            $user = Auth::user();
+            $reviews = Review::where('user_id', $user->id)->get();
+
+            return response()->json($reviews, ResponseCode::HTTP_OK);
+
+        } catch (UnauthorizedHttpException $exception) {
+
+            return response()->json(['error' => 'user not found'], ResponseCode::HTTP_UNAUTHORIZED);
         }
     }
 

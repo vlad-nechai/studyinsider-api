@@ -175,7 +175,6 @@ class CourseController extends Controller
      *         response=200,
      *         description="successful operation",
      *         @OA\JsonContent(ref="#/components/schemas/Course"),
-     *         @OA\XmlContent(ref="#/components/schemas/Course")
      *     ),
      *     @OA\RequestBody(
      *         description="Course to be created",

@@ -21,14 +21,26 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 //    Route::post('profile/image', 'API\UserController@uploadImage');
     Route::delete('profile', 'API\UserController@delete');
 
+
+    // -------------------------------------------------------------
+    //  Bookmarks
+    // -------------------------------------------------------------
+
+    // Get all bookmarks
+    Route::get('profile/bookmarks', 'API\UserController@getAllUserBookmarks');
     // User bookmarked courses for a semester
     Route::get('profile/bookmarks/{semesterId}', 'API\UserController@semesterBookmarks');
-
     // Bookmark a course for a semester
-    Route::post('bookmark/{course}/semester/{semester}', 'API\UserController@addBookmark');
+    Route::post('bookmarks/{course}/semester/{semester}', 'API\UserController@addBookmark');
     // Remove bookmarked course for a semester
-    Route::delete('bookmark/{course}/semester/{semester}', 'API\UserController@deleteBookmark');
+    Route::delete('bookmarks/{course}/semester/{semester}', 'API\UserController@deleteBookmark');
 
+    // -------------------------------------------------------------
+    //  Reviews
+    // -------------------------------------------------------------
+
+    // Get all user reviews
+    Route::get('profile/reviews', 'API\UserController@getAllUserReviews');
     // Review a course with tags and skills
     Route::post('courses/{id}/review/semester/{semester}', 'API\CourseController@review');
 });

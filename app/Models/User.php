@@ -54,7 +54,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token'
+        'password', 'remember_token', 'study_program_id'
     ];
 
 
@@ -142,12 +142,12 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * @OA\Property(
-     *     title="study_program_id"
+     *     title="study_program"
      * )
      *
-     * @var integer
+     * @var StudyProgram
      */
-    private $study_program_id;
+    private $study_program;
 
     /**
      * Courses bookmarked by the user

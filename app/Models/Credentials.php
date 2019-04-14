@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     description="Credentials for login",
  *     title="Credentials",
- *     required={"login", "password"},
+ *     required={"email", "password"},
  *     @OA\Xml(name="Credentials")
  * )
  */
