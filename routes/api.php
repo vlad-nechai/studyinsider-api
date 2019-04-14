@@ -36,9 +36,6 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 Route::post('login', 'API\UserController@loginJWT');
 Route::post('register', 'API\UserController@registerJWT');
 
-// Companies
-Route::get('companies/{company}', 'API\CompanyController@show');
-
 // Search
 Route::get('/courses/search', 'API\CourseController@search');
 
@@ -56,6 +53,11 @@ Route::resources([
     'chairs' => 'API\ChairController',
     'study-programs' => 'API\StudyProgramController',
 ]);
+
+
+// Companies
+Route::get('companies/{company}', 'API\CompanyController@show');
+Route::get('companies/{company}/jobs', 'API\CompanyController@listJobs');
 
 
 //Route::group(['middleware' => ['auth:api', 'role:super-admin']], function () {
