@@ -213,8 +213,9 @@ class UserController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="successful operation",
-     *         @OA\JsonContent(type="array",
-     *           @OA\Items(ref="#/components/schemas/Review")
+     *         @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(ref="#/components/schemas/Review")
      *         )
      *     ),
      * )
@@ -224,7 +225,9 @@ class UserController extends Controller
     public function getAllUserReviews() {
         try {
             $user = Auth::user();
-            $reviews = Review::where('user_id', $user->id)->get();
+            $reviews = Review::where('user_id', $user->id)
+                ->with(['skills', 'tags'])
+                ->get();
 
             return response()->json($reviews, ResponseCode::HTTP_OK);
 

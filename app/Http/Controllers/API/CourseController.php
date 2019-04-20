@@ -353,7 +353,7 @@ class CourseController extends Controller
             if (!empty($skills)) {
                 foreach ($skills as $skill) {
                     $courseSkill = Skill::firstOrNew([
-                        'name' => $skill->name
+                        'name' => $skill['name']
                     ]);
                     $review->skills()->save($courseSkill, ['course_id' => $courseId]);
                 }
@@ -364,7 +364,7 @@ class CourseController extends Controller
             if (!empty($tags)) {
                 foreach ($tags as $tag) {
                     $courseTag = CourseTag::firstOrNew([
-                        'tag' => $tag
+                        'tag' => $tag['tag']
                     ]);
                     $review->tags()->save($courseTag, ['course_id' => $courseId]);
                 }

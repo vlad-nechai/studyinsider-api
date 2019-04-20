@@ -144,6 +144,15 @@ class Review extends Model
     private $skills;
 
     /**
+     * @OA\Property(
+     *     title="tags",
+     * )
+     *
+     * @var CourseTag[]
+     */
+    private $tags;
+
+    /**
      * Skills associated with this review
      *
      * @return BelongsToMany

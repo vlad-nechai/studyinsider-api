@@ -35,7 +35,7 @@ class CourseTag extends Model
      *
      * @var array
      */
-    protected $fillable = ['tag', 'star_rating', 'tag_type'];
+    protected $fillable = ['tag', 'tag_type'];
 
     /**
      * @OA\Property(
@@ -58,6 +58,7 @@ class CourseTag extends Model
     /**
      * @OA\Property(
      *     title="tag_type",
+     *     default="predefined"
      * )
      *
      * @var string
