@@ -159,6 +159,14 @@ class UserController extends Controller
         return response()->json(compact('token'), ResponseCode::HTTP_OK);
     }
 
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | User profile and User edit
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * @OA\Post(path="/profile",
      *   tags={"Users"},
@@ -177,14 +185,6 @@ class UserController extends Controller
      *
      * @return Response
      */
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | User profile and User edit
-    |--------------------------------------------------------------------------
-    */
-
     public function profile()
     {
         try {
@@ -203,19 +203,6 @@ class UserController extends Controller
 
             return response()->json(['error' => 'user not found'], ResponseCode::HTTP_UNAUTHORIZED);
 
-        }
-    }
-
-    public function getAllUserBookmarks() {
-        try {
-            $user = Auth::user();
-            $bookmarks = Review::where('user_id', $user->id)->get();
-
-            return response()->json($bookmarks, ResponseCode::HTTP_OK);
-
-        } catch (UnauthorizedHttpException $exception) {
-
-            return response()->json(['error' => 'user not found'], ResponseCode::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -449,6 +436,38 @@ class UserController extends Controller
     /**
      * Adding bookmark for a specific semester
      *
+     * @OA\Post(path="/bookmarks/{courseId}/semester/{semesterId}",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Bookmark a course for a semester.",
+     *   description="Bookmark a course for a semester.",
+     *   operationId="bookmarkCourseForSemester",
+     *   @OA\Parameter(
+     *      name="courseId",
+     *      in="path",
+     *      description="ID of course for bookmark",
+     *      required=true,
+     *      @OA\Schema(
+     *          type="integer",
+     *          format="int64"
+     *      )
+     *   ),
+     *   @OA\Parameter(
+     *      name="semesterId",
+     *      in="path",
+     *      description="ID of semester for bookmark",
+     *      required=true,
+     *      @OA\Schema(
+     *          type="integer",
+     *          format="int64"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=201,
+     *      description="successful operation"
+     *   ),
+     * )
+     *
      * @param integer $courseId
      * @param integer $semesterId
      * @return Response
@@ -465,8 +484,8 @@ class UserController extends Controller
 
         $bookmarkExists = $user->bookmarks()->where([
             'course_id' => $course->id,
-            'semester_id' => $semesterId])
-            ->exists();
+            'semester_id' => $semesterId
+        ])->exists();
 
         if ($bookmarkExists) {
             return response()->json(['message' => 'Course is saved already'], ResponseCode::HTTP_ALREADY_REPORTED);
@@ -478,6 +497,38 @@ class UserController extends Controller
 
     /**
      * Deletes bookmark for a given semester
+     *
+     * @OA\Delete(path="/bookmarks/{courseId}/semester/{semesterId}",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Delete bookmark for a semester.",
+     *   description="Delete bookmark for a semester.",
+     *   operationId="deleteBookmarkCourseForSemester",
+     *   @OA\Parameter(
+     *      name="courseId",
+     *      in="path",
+     *      description="ID of the course",
+     *      required=true,
+     *      @OA\Schema(
+     *          type="integer",
+     *          format="int64"
+     *      )
+     *   ),
+     *   @OA\Parameter(
+     *      name="semesterId",
+     *      in="path",
+     *      description="ID of the semester",
+     *      required=true,
+     *      @OA\Schema(
+     *          type="integer",
+     *          format="int64"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=204,
+     *      description="successful deletion operation"
+     *   ),
+     * )
      *
      * @param integer $courseId
      * @param integer $semesterId
@@ -503,6 +554,36 @@ class UserController extends Controller
     /**
      * Lists bookmarks for a given semester for the user
      *
+     *
+     * @OA\Get(path="/profile/bookmarks/{semesterId}",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Get user bookmarks for a semester.",
+     *   description="Get user bookmarks for a semester.",
+     *   operationId="getSemesterUserBookmarks",
+     *   @OA\RequestBody(
+     *       required=false,
+     *   ),
+     *   @OA\Parameter(
+     *      name="semesterId",
+     *      in="path",
+     *      description="ID of the semester",
+     *      required=true,
+     *      @OA\Schema(
+     *          type="integer",
+     *          format="int64"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *       response=200,
+     *       description="successful operation",
+     *       @OA\JsonContent(
+     *          type="array",
+     *          @OA\Items(ref="#/components/schemas/Course")
+     *       )
+     *   ),
+     * )
+     *
      * @param integer $semesterId
      * @return Response
      */
@@ -511,7 +592,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         try {
-            $semester = Semester::findOrFail($semesterId);
+            Semester::findOrFail($semesterId);
         } catch (ModelNotFoundException $exception) {
             return response()->json(['message' => 'Semester with this ID does not exist'], ResponseCode::HTTP_BAD_REQUEST);
         }
@@ -519,5 +600,37 @@ class UserController extends Controller
         $bookmarks = $user->bookmarks()->wherePivot('semester_id', $semesterId)->get();
 
         return response()->json($bookmarks->load(['topSkills', 'topTags']), ResponseCode::HTTP_OK);
+    }
+
+    /**
+     * @OA\Get(path="/profile/bookmarks",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Get all user bookmarks.",
+     *   description="Get all user bookmarks.",
+     *   operationId="getAllUserBookmarks",
+     *   @OA\RequestBody(
+     *       required=false,
+     *   ),
+     *   @OA\Response(
+     *       response=200,
+     *       description="successful operation",
+     *       @OA\JsonContent(
+     *          type="array",
+     *          @OA\Items(ref="#/components/schemas/Course")
+     *       )
+     *   ),
+     * )
+     *
+     * @return Response
+     */
+    public function getAllUserBookmarks() {
+
+        $user = Auth::user();
+
+        $bookmarks = $user->bookmarks()->get();
+
+        return response()->json($bookmarks->load(['topSkills', 'topTags']), ResponseCode::HTTP_OK);
+
     }
 }
