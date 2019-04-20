@@ -159,7 +159,7 @@ class UserController extends Controller
      *         response=200,
      *         description="successful operation",
      *         @OA\JsonContent(type="array",
-     *           @OA\Items(ref="#/components/schemas/Review")
+     *           @OA\Items(ref="#/components/schemas/User")
      *         )
      *     ),
      * )
