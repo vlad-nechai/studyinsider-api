@@ -302,7 +302,33 @@ class UserController extends Controller
     /**
      * Edit User password
      *
-     * @param Request $request user data to be edited
+     * @OA\Put(path="/profile/edit-password",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Edit user password.",
+     *   description="Edit user password.",
+     *   operationId="editUserPassword",
+     *   @OA\RequestBody(
+     *      required=false,
+     *      description="successful operation",
+     *      @OA\MediaType(
+     *          mediaType="application/json",
+     *          @OA\Schema(
+     *              required={"password", "password_confirmation"},
+     *              @OA\Property(property="password", type="string"),
+     *              @OA\Property(property="password_confirmation", type="string")
+     *          )
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=202,
+     *      description="successful operation",
+     *      @OA\JsonContent(ref="#/components/schemas/User")
+     *   ),
+     * )
+     *
+     *
+     * @param Request $request user password to be changed
      * @return Response
      */
     public function editPassword(Request $request)
@@ -323,7 +349,11 @@ class UserController extends Controller
         $user->password = $password;
         $user->save();
 
-        return response()->json(['message' => 'password has been successfully changed'], ResponseCode::HTTP_ACCEPTED);
+        $user->load([
+            'studyProgram'
+        ]);
+
+        return response()->json($user, ResponseCode::HTTP_ACCEPTED);
 
     }
 
