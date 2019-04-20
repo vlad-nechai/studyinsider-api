@@ -20,6 +20,12 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class UserController extends Controller
 {
 
+    /*
+    |--------------------------------------------------------------------------
+    | User authentication
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * @OA\Post(
      *     path="/login",
@@ -95,10 +101,10 @@ class UserController extends Controller
      *              description="Credentials for register",
      *              title="Credentials for register",
      *              type="object",
+     *              required={"password_confirmation", "study_program", "gender"},
      *              allOf={
      *                  @OA\Schema(ref="#/components/schemas/User"),
      *                  @OA\Schema(
-     *                      required={"password_confirmation"},
      *                      @OA\Property(property="password_confirmation", type="string"),
      *                  )
      *              }
@@ -117,13 +123,14 @@ class UserController extends Controller
      */
     public function registerJWT(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255|unique:users',
             'first_name' => 'required',
             'last_name' => 'required',
             'username' => 'required|unique:users',
             'gender' => 'required',
-            'study_program_id' => 'required',
+            'study_program' => 'required',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required|same:password',
         ]);
@@ -134,6 +141,10 @@ class UserController extends Controller
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
+
+        // get study program
+        $studyProgram = json_decode($request->get('study_program'));
+        $input['study_program_id'] = $studyProgram->id;
 
         // default image
         if ($input['gender'] == 0) {
@@ -166,6 +177,14 @@ class UserController extends Controller
      *
      * @return Response
      */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | User profile and User edit
+    |--------------------------------------------------------------------------
+    */
+
     public function profile()
     {
         try {
@@ -193,43 +212,6 @@ class UserController extends Controller
             $bookmarks = Review::where('user_id', $user->id)->get();
 
             return response()->json($bookmarks, ResponseCode::HTTP_OK);
-
-        } catch (UnauthorizedHttpException $exception) {
-
-            return response()->json(['error' => 'user not found'], ResponseCode::HTTP_UNAUTHORIZED);
-        }
-    }
-
-    /**
-     * @OA\Get(path="/profile/reviews",
-     *   tags={"Users"},
-     *   security={{"bearerAuth":{}}},
-     *   summary="Get all user reviews.",
-     *   description="Get all user reviews.",
-     *   operationId="getAllUserReviews",
-     *   @OA\RequestBody(
-     *       required=false,
-     *   ),
-     *   @OA\Response(
-     *       response=200,
-     *       description="successful operation",
-     *       @OA\JsonContent(
-     *          type="array",
-     *          @OA\Items(ref="#/components/schemas/Review")
-     *       )
-     *   ),
-     * )
-     *
-     * @return Response
-     */
-    public function getAllUserReviews() {
-        try {
-            $user = Auth::user();
-            $reviews = Review::where('user_id', $user->id)
-                ->with(['skills', 'tags'])
-                ->get();
-
-            return response()->json($reviews, ResponseCode::HTTP_OK);
 
         } catch (UnauthorizedHttpException $exception) {
 
@@ -393,6 +375,17 @@ class UserController extends Controller
     /**
      * Delete User profile
      *
+     * @OA\Delete(path="/profile",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Delete user.",
+     *   description="Delete user .",
+     *   operationId="deleteUser",
+     *   @OA\Response(
+     *      response=204,
+     *      description="successful deletion operation",
+     *   ),
+     * )
      * @return Response
      */
     public function delete()
@@ -403,6 +396,55 @@ class UserController extends Controller
 
         return response()->json(['message' => 'user was successfully deleted'], ResponseCode::HTTP_NO_CONTENT);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | User reviews
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * @OA\Get(path="/profile/reviews",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Get all user reviews.",
+     *   description="Get all user reviews.",
+     *   operationId="getAllUserReviews",
+     *   @OA\RequestBody(
+     *       required=false,
+     *   ),
+     *   @OA\Response(
+     *       response=200,
+     *       description="successful operation",
+     *       @OA\JsonContent(
+     *          type="array",
+     *          @OA\Items(ref="#/components/schemas/Review")
+     *       )
+     *   ),
+     * )
+     *
+     * @return Response
+     */
+    public function getAllUserReviews() {
+        try {
+            $user = Auth::user();
+            $reviews = Review::where('user_id', $user->id)
+                ->with(['skills', 'tags'])
+                ->get();
+
+            return response()->json($reviews, ResponseCode::HTTP_OK);
+
+        } catch (UnauthorizedHttpException $exception) {
+
+            return response()->json(['error' => 'user not found'], ResponseCode::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | User bookmarks
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * Adding bookmark for a specific semester
