@@ -65,6 +65,7 @@ class Skill extends Model
     /**
      * @OA\Property(
      *     title="language",
+     *     default="de"
      * )
      *
      * @var string
@@ -74,6 +75,7 @@ class Skill extends Model
     /**
      * @OA\Property(
      *     title="origin",
+     *     default="user_defined"
      * )
      *
      * @var integer

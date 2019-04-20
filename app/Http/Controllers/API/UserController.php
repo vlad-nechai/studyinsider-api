@@ -24,7 +24,7 @@ class UserController extends Controller
      * @OA\Post(
      *     path="/login",
      *     tags={"Users"},
-     *     summary="Login for users. If you want login as admin use login ´admin@test.com´ and password ´12345678´.",
+     *     summary="Login for users. Test login credentials are: login ´admin@studyinsider.de´ and password ´12345678´.",
      *     operationId="userLogin",
      *     @OA\Response(
      *         response=200,
@@ -38,7 +38,18 @@ class UserController extends Controller
      *         required=true,
      *         @OA\MediaType(
      *              mediaType="multipart/form-data",
-     *              @OA\Schema(ref="#/components/schemas/Credentials")
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="email",
+     *                      type="string",
+     *                      default="admin@studyinsider.de"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password",
+     *                      type="string",
+     *                      default="12345678"
+     *                  )
+     *              )
      *          )
      *     )
      * )

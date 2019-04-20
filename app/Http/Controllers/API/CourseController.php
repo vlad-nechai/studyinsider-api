@@ -164,24 +164,7 @@ class CourseController extends Controller
     }
 
     /**
-     *
-     * @OA\Post(
-     *     path="/courses",
-     *     tags={"Courses"},
-     *     summary="Store a newly created resource in course.",
-     *     operationId="createCourse",
-     *     security={{"bearerAuth":{}}},
-     *     @OA\Response(
-     *         response=200,
-     *         description="successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Course"),
-     *     ),
-     *     @OA\RequestBody(
-     *         description="Course to be created",
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/Course")
-     *     )
-     * )
+     * The endpoint is not exposed to Swagger API
      *
      * @param  Request  $request
      * @return Response
@@ -315,6 +298,8 @@ class CourseController extends Controller
      *   @OA\RequestBody(
      *       required=true,
      *       description="Review course object",
+     *       @OA\JsonContent(ref="#/components/schemas/Review")
+     *
      *   ),
      *   @OA\Response(
      *       response=201,
@@ -368,7 +353,7 @@ class CourseController extends Controller
             if (!empty($skills)) {
                 foreach ($skills as $skill) {
                     $courseSkill = Skill::firstOrNew([
-                        'name' => $skill
+                        'name' => $skill->name
                     ]);
                     $review->skills()->save($courseSkill, ['course_id' => $courseId]);
                 }

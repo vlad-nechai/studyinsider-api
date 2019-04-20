@@ -135,6 +135,15 @@ class Review extends Model
     private $comment;
 
     /**
+     * @OA\Property(
+     *     title="skills",
+     * )
+     *
+     * @var Skill[]
+     */
+    private $skills;
+
+    /**
      * Skills associated with this review
      *
      * @return BelongsToMany
