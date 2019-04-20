@@ -296,15 +296,15 @@ class CourseController extends Controller
      *      )
      *   ),
      *   @OA\RequestBody(
-     *       required=true,
-     *       description="Review course object",
-     *       @OA\JsonContent(ref="#/components/schemas/Review")
+     *      required=true,
+     *      description="Review course object",
+     *      @OA\JsonContent(ref="#/components/schemas/Review")
      *
      *   ),
      *   @OA\Response(
-     *       response=201,
-     *       description="successful creation",
-     *       @OA\JsonContent(ref="#/components/schemas/Review")
+     *      response=201,
+     *      description="successful creation",
+     *      @OA\JsonContent(ref="#/components/schemas/Review")
      *   ),
      * )
      *

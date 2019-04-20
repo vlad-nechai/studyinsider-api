@@ -210,14 +210,14 @@ class UserController extends Controller
      *   @OA\RequestBody(
      *       required=false,
      *   ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="successful operation",
-     *         @OA\JsonContent(
-     *              type="array",
-     *              @OA\Items(ref="#/components/schemas/Review")
-     *         )
-     *     ),
+     *   @OA\Response(
+     *       response=200,
+     *       description="successful operation",
+     *       @OA\JsonContent(
+     *          type="array",
+     *          @OA\Items(ref="#/components/schemas/Review")
+     *       )
+     *   ),
      * )
      *
      * @return Response
@@ -240,6 +240,34 @@ class UserController extends Controller
     /**
      * Edit User profile data
      *
+     * @OA\Put(path="/profile",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Edit user profile.",
+     *   description="Edit user profile information.",
+     *   operationId="editUser",
+     *   @OA\RequestBody(
+     *      required=false,
+     *      description="successful operation",
+     *      @OA\MediaType(
+     *          mediaType="application/json",
+     *          @OA\Schema(
+     *              required={"first_name", "last_name", "username", "gender"},
+     *              @OA\Property(property="first_name", type="string"),
+     *              @OA\Property(property="last_name", type="string"),
+     *              @OA\Property(property="username", type="string"),
+     *              @OA\Property(property="gender", type="string"),
+     *          )
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=202,
+     *      description="successful operation",
+     *      @OA\JsonContent(ref="#/components/schemas/User")
+     *   ),
+     * )
+     *
+     *
      * @param Request $request user data to be edited
      * @return Response
      */
@@ -247,12 +275,12 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
+
         $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
             'username' => 'required|unique:users',
-            'gender' => 'required',
-            'study_program_id' => 'required'
+            'gender' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -260,16 +288,12 @@ class UserController extends Controller
         }
 
         // email and password shall not be edited here
-        $input = $request->except(['email', 'password']);
+        $input = $request->except(['email', 'password', 'study_program_id']);
 
         $user->update($input);
 
         $user->load([
-            'studyProgram',
-            'bookmarks.topSkills',
-            'bookmarks.topTags',
-            'reviews.skills',
-            'reviews.tags'
+            'studyProgram'
         ]);
         return response()->json($user, ResponseCode::HTTP_ACCEPTED);
     }

@@ -14,18 +14,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'jwt.auth'], function() {
-    // User
+
+    // -------------------------------------------------------------
+    //  User profile
+    // -------------------------------------------------------------
     Route::post('profile', 'API\UserController@profile');
     Route::put('profile', 'API\UserController@edit');
     Route::put('profile/edit-password', 'API\UserController@editPassword');
-//    Route::post('profile/image', 'API\UserController@uploadImage');
+//    Route::post('profile/image', 'API\UserController@uploadImage'); TODO: fix endpoint
     Route::delete('profile', 'API\UserController@delete');
 
 
     // -------------------------------------------------------------
     //  Bookmarks
     // -------------------------------------------------------------
-
     // Get all bookmarks
     Route::get('profile/bookmarks', 'API\UserController@getAllUserBookmarks');
     // User bookmarked courses for a semester
@@ -35,10 +37,10 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     // Remove bookmarked course for a semester
     Route::delete('bookmarks/{course}/semester/{semester}', 'API\UserController@deleteBookmark');
 
+
     // -------------------------------------------------------------
     //  Reviews
     // -------------------------------------------------------------
-
     // Get all user reviews
     Route::get('profile/reviews', 'API\UserController@getAllUserReviews');
     // Review a course with tags and skills
