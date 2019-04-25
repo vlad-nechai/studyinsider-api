@@ -416,7 +416,7 @@ class UserController extends Controller
         try {
             $user = Auth::user();
             $reviews = Review::where('user_id', $user->id)
-                ->with(['skills', 'tags'])
+                ->with(['skills', 'tags', 'user.studyProgram'])
                 ->get();
 
             return response()->json($reviews, ResponseCode::HTTP_OK);
