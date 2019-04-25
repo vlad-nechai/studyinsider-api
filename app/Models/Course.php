@@ -50,7 +50,9 @@ class Course extends Model
         'average_rating',
         'average_difficulty',
         'percentage_attendance_recommended',
-        'percentage_recommend'
+        'percentage_recommend',
+        'description',
+        'image'
     ];
 
     /**
@@ -116,6 +118,24 @@ class Course extends Model
      * @var string
      */
     private $course_type;
+
+    /**
+     * @OA\Property(
+     *     title="image",
+     * )
+     *
+     * @var string
+     */
+    private $image;
+
+    /**
+     * @OA\Property(
+     *     title="description",
+     * )
+     *
+     * @var string
+     */
+    private $description;
 
     /**
      * @return BelongsTo
@@ -269,6 +289,17 @@ class Course extends Model
             ->limit(5);
     }
 
+    /**
+     * TODO: to be implemented with hasOneThrough when Laravel updated to 5.8
+     *
+     */
+    public function faculty()
+    {
+        return null;
+//        return $this->hasManyThrough(Faculty::class, Chair::class);
+    }
+
+
     /* =================
      * Model attributes
      * =================
@@ -297,6 +328,16 @@ class Course extends Model
     public function getPercentageAttendanceRecommendedAttribute()
     {
         return $this->percentageAttendanceRecommended()->first()['percentage'];
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return 'demo description';
+    }
+
+    public function getImageAttribute()
+    {
+        return $this->chair->faculty->image;
     }
 
     /* =================
