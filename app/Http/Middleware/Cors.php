@@ -27,6 +27,6 @@ class Cors
             ->header('Access-Control-Allow-Credentials', 'true')
             ->header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS, POST, PUT')
             ->header('Access-Control-Max-Age', '3600')
-            ->header('Access-Control-Allow-Headers', 'Origin, Accept, Content-Type, X-Requested-With');
+            ->header('Access-Control-Allow-Headers', 'Origin, Accept, Authorization, Content-Type, X-Requested-With');
     }
 }
