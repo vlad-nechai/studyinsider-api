@@ -244,11 +244,10 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-
         $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
-            'username' => 'required|unique:users',
+            'username' => 'required|unique:users,username,'.$user->id,
             'gender' => 'required'
         ]);
 
