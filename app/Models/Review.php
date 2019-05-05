@@ -43,6 +43,27 @@ class Review extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'user',
+        'semester'
+    ];
+
+    /**
+     * The attributes that are hidden.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'course_id',
+        'user_id',
+        'semester_id'
+    ];
+
+    /**
      * @OA\Property(
      *     title="id"
      * )
@@ -50,33 +71,6 @@ class Review extends Model
      * @var integer
      */
     private $id;
-
-    /**
-     * @OA\Property(
-     *     title="user_id"
-     * )
-     *
-     * @var integer
-     */
-    private $user_id;
-
-    /**
-     * @OA\Property(
-     *     title="course_id"
-     * )
-     *
-     * @var integer
-     */
-    private $course_id;
-
-    /**
-     * @OA\Property(
-     *     title="semester_id"
-     * )
-     *
-     * @var integer
-     */
-    private $semester_id;
 
     /**
      * @OA\Property(
@@ -108,7 +102,7 @@ class Review extends Model
 
     /**
      * @OA\Property(
-     *     description="How difficult the course was from 1 to 5",
+     *     description="How difficult the course was from 0 to 4",
      *     title="difficulty",
      * )
      *
@@ -163,6 +157,16 @@ class Review extends Model
     private $user;
 
     /**
+     * @OA\Property(
+     *     title="semester",
+     * )
+     *
+     * @var Semester
+     */
+    private $semester;
+
+
+    /**
      * User that left review
      *
      * @return BelongsTo
@@ -170,6 +174,26 @@ class Review extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Course that was reviewed
+     *
+     * @return BelongsTo
+     */
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    /**
+     * Course that was reviewed
+     *
+     * @return BelongsTo
+     */
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
     }
 
     /**
@@ -196,5 +220,18 @@ class Review extends Model
             'tag_course',
             'course_review_id',
             'tag_id');
+    }
+
+
+    /* ===================================
+     *  Model attributes
+     * ===================================
+     */
+    public function getUserAttribute(){
+        return $this->user()->get();
+    }
+
+    public function getSemesterAttribute() {
+        return $this->semester()->get();
     }
 }

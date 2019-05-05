@@ -268,7 +268,7 @@ class CourseController extends Controller
         return response()->json('', ResponseCode::HTTP_NO_CONTENT);
     }
 
-    /** TODO: rewrite and fix
+    /**
      * @OA\Post(path="/courses/{courseId}/review/semester/{semesterId}",
      *   tags={"Courses"},
      *   security={{"bearerAuth":{}}},
@@ -406,6 +406,14 @@ class CourseController extends Controller
      */
     public function quickSearch(Request $request) {
         $query = $request->input('q');
+
+        $validator = Validator::make($request->all(), [
+            'q' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], ResponseCode::HTTP_BAD_REQUEST);
+        }
 
         $courses = Course::search($query, null, true, true)
             ->limit(7)

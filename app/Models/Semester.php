@@ -28,7 +28,7 @@ class Semester extends Model
      *
      * @var array
      */
-    protected $hidden = ['pivot'];
+    protected $hidden = ['pivot', 'created_at', 'updated_at'];
 
     /**
      * @OA\Property(
