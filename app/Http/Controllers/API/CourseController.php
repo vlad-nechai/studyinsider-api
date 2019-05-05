@@ -229,6 +229,7 @@ class CourseController extends Controller
             'chair',
             'professors',
             'semesters',
+            'reviews.user.studyProgram',
             'reviews.skills',
             'reviews.tags',
             'topSkills',

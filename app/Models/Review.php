@@ -48,7 +48,7 @@ class Review extends Model
      * @var array
      */
     protected $appends = [
-        'user',
+//        'user',
         'semester'
     ];
 
@@ -227,11 +227,11 @@ class Review extends Model
      *  Model attributes
      * ===================================
      */
-    public function getUserAttribute(){
-        return $this->user()->get();
-    }
+//    public function getUserAttribute(){
+//        return $this->user()->first()->load('studyProgram');
+//    }
 
     public function getSemesterAttribute() {
-        return $this->semester()->get();
+        return $this->semester()->first();
     }
 }
