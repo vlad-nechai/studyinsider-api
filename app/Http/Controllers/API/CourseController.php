@@ -385,7 +385,7 @@ class CourseController extends Controller
      *         name="q",
      *         in="query",
      *         description="query param to search courses",
-     *         required=false,
+     *         required=true,
      *         @OA\Schema(
      *             type="string"
      *         )

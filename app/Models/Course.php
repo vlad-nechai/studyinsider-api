@@ -337,7 +337,13 @@ class Course extends Model
 
     public function getImageAttribute()
     {
-        return $this->chair->faculty->image;
+        try {
+            $image = $this->chair->faculty->image;
+        } catch (\Exception $e) {
+            $image = null;
+        }
+
+        return $image;
     }
 
     /* =================
