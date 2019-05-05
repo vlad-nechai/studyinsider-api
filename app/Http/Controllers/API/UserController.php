@@ -326,11 +326,37 @@ class UserController extends Controller
     }
 
     /**
-     * TODO: fix, it does not work
-     * user image upload
+     * Upload User image
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(path="/profile/image",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Upload user image.",
+     *   description="Upload user image.",
+     *   operationId="uploadUserImage",
+     *   @OA\RequestBody(
+     *      description="user image",
+     *      required=true,
+     *      @OA\MediaType(
+     *          mediaType="multipart/form-data",
+     *          @OA\Schema(
+     *              @OA\Property(
+     *                  property="image",
+     *                  type="file"
+     *              )
+     *          )
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=202,
+     *      description="successful operation",
+     *      @OA\JsonContent(ref="#/components/schemas/User")
+     *   ),
+     * )
+     *
+     *
+     * @param Request $request user password to be changed
+     * @return Response
      */
     public function uploadImage(Request $request)
     {
@@ -345,8 +371,9 @@ class UserController extends Controller
         }
 
         if ($request->hasFile('image')) {
+
             $image = $request->file('image');
-            $name = str_slug($user->name, '_') . '.' . $image->getClientOriginalExtension();
+            $name = str_slug($user->username, '_') . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('/assets/images/profile-pictures');
             $imagePath = $destinationPath . "/" . $name;
             $image->move($destinationPath, $name);
@@ -354,7 +381,7 @@ class UserController extends Controller
             $user->image = 'https://studyinsider.de/assets/images/profile-pictures/' . $name;
             $user->save();
 
-            return response()->json(['message' => 'user image was successfully saved'], $this->successStatus);
+            return response()->json($user, ResponseCode::HTTP_ACCEPTED);
         }
     }
 

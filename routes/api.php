@@ -21,7 +21,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('profile', 'API\UserController@profile');
     Route::put('profile', 'API\UserController@edit');
     Route::put('profile/edit-password', 'API\UserController@editPassword');
-//    Route::post('profile/image', 'API\UserController@uploadImage'); TODO: fix endpoint
+    Route::post('profile/image', 'API\UserController@uploadImage');
     Route::delete('profile', 'API\UserController@delete');
 
 
