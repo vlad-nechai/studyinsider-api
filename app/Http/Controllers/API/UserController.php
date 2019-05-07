@@ -266,6 +266,58 @@ class UserController extends Controller
         return response()->json($user, ResponseCode::HTTP_ACCEPTED);
     }
 
+    /**
+     * Edit User profile data
+     *
+     * @OA\Put(path="/profile/edit-image",
+     *   tags={"Users"},
+     *   security={{"bearerAuth":{}}},
+     *   summary="Edit user profile.",
+     *   description="Edit user image.",
+     *   operationId="editUserImage",
+     *   @OA\RequestBody(
+     *      required=false,
+     *      description="successful operation",
+     *      @OA\MediaType(
+     *          mediaType="application/json",
+     *          @OA\Schema(
+     *              required={"image"},
+     *              @OA\Property(property="image", type="string")
+     *          )
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=202,
+     *      description="successful operation",
+     *      @OA\JsonContent(ref="#/components/schemas/User")
+     *   ),
+     * )
+     *
+     *
+     * @param Request $request user data to be edited
+     * @return Response
+     */
+    public function editImage(Request $request) {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'image' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), ResponseCode::HTTP_BAD_REQUEST);
+        }
+
+        $image = $request->get('image');
+        $user->image = $image;
+        $user->save();
+
+        $user->load([
+            'studyProgram'
+        ]);
+        return response()->json($user, ResponseCode::HTTP_ACCEPTED);
+    }
+
 
     /**
      * Edit User password
