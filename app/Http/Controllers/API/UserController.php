@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response as ResponseCode;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -155,6 +156,20 @@ class UserController extends Controller
 
         $user = User::create($input);
         $token = JWTAuth::fromUser($user);
+
+        return response()->json(compact('token'), ResponseCode::HTTP_OK);
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refreshJWT() {
+        try {
+            $oldToken = JWTAuth::getToken();
+            $token = JWTAuth::refresh();
+        } catch (TokenInvalidException $e) {
+            return response()->json(['error' => $e->getMessage()], ResponseCode::HTTP_UNAUTHORIZED);
+        }
 
         return response()->json(compact('token'), ResponseCode::HTTP_OK);
     }
@@ -312,9 +327,7 @@ class UserController extends Controller
         $user->image = $image;
         $user->save();
 
-        $user->load([
-            'studyProgram'
-        ]);
+        $user->load(['studyProgram']);
         return response()->json($user, ResponseCode::HTTP_ACCEPTED);
     }
 

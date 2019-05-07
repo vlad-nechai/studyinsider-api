@@ -50,6 +50,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
 Route::post('login', 'API\UserController@loginJWT');
 Route::post('register', 'API\UserController@registerJWT');
+Route::put('profile/token', 'API\UserController@refreshJWT');
 
 // Search
 Route::get('/courses/search', 'API\CourseController@search');
