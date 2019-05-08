@@ -2,15 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Chair;
-use App\Course;
-use App\CourseTerm;
-use App\Department;
-use App\Faculty;
-use App\Professor;
+use App\Models\Chair;
+use App\Models\Faculty;
+use Exception;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception;
 
 class ImportFau extends Command
 {
@@ -50,7 +46,7 @@ class ImportFau extends Command
         parent::__construct();
 
         $this->client = new Client(['headers' => ['Content-Type' => 'application/xml']]);
-        $this->semesters = ["2016w", "2017s", "2017w", "2018s", "2018w"];
+        $this->semesters = ["2016w", "2017s", "2017w", "2018s", "2018w", "2019s"];
     }
 
     /**
@@ -116,7 +112,7 @@ class ImportFau extends Command
                         $faculty->univis_id = $org->id;
                         $faculty->univis_orgnr = $org->attributes()['orgnr'];
                         $faculty->univis_key = $org->attributes()['key'];
-                        $faculty->univis_hash = hash('sha256', $org->asXML());
+//                        $faculty->univis_hash = hash('sha256', $org->asXML());
                         $faculty->location = $org->ort;
                         $faculty->save();
 
@@ -135,6 +131,7 @@ class ImportFau extends Command
     }
 
     /**
+     * @deprecated
      * @return void
      */
     private function importDepartments()
@@ -204,24 +201,24 @@ class ImportFau extends Command
                     try {
                         $key = $org->attributes()['key'];
                         if (substr_count($key, '.') == 3) {
-                            $departmentKey = substr($key, 0, strpos($key, '.', strpos($key, '.', strpos($key, '.')+1)+1));
-                            $department = Department::where('univis_key', $departmentKey)->first();
+                            $facultyKey = substr($key, 0, strpos($key, '.', strpos($key, '.')+1));
+                            $faculty = Faculty::where('univis_key', $facultyKey)->first();
 
                             $chair = new Chair;
                             $chair->name = $org->name;
-                            $chair->department_id = $department->id;
+                            $chair->faculty_id = $faculty->id;
                             $chair->univis_id = $org->id;
                             $chair->univis_orgnr = $org->attributes()['orgnr'];
                             $chair->univis_key = $org->attributes()['key'];
-                            $chair->univis_hash = hash('sha256', $org->asXML());
+//                            $chair->univis_hash = hash('sha256', $org->asXML());
                             $chair->location = $org->ort;
                             $chair->save();
 
 
-                            echo $department->univis_key . ": " . $key . " has been imported \n";
+                            echo $chair->univis_key . ": " . $key . " has been imported \n";
                         }
 
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         echo ($e->getMessage() . "\n");
                     }
                 }
