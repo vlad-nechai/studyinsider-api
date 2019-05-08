@@ -1,6 +1,6 @@
-## About Evalooni
+## About StudyInsider
 
-Evalooni is a project aimed to empower students and help them to choose the right courses based on peer review
+StudyInsider is a project aimed to empower students and help them to choose the right courses based on peer review
 
 ## License
 
