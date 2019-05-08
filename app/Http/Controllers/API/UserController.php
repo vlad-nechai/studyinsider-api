@@ -161,17 +161,31 @@ class UserController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/profile/token",
+     *     tags={"Users"},
+     *     security={{"bearerAuth":{}}},
+     *     summary="Refresh access token when expired.",
+     *     operationId="refreshAccessToken",
+     *     @OA\Response(
+     *         response=202,
+     *         description="successful token refresh",
+     *         @OA\JsonContent(
+     *            @OA\Property(property="token", type="string"),
+     *         )
+     *     )
+     * )
      * @return \Illuminate\Http\JsonResponse
      */
     public function refreshJWT() {
         try {
             $oldToken = JWTAuth::getToken();
-            $token = JWTAuth::refresh();
+            $token = JWTAuth::refresh($oldToken);
         } catch (TokenInvalidException $e) {
             return response()->json(['error' => $e->getMessage()], ResponseCode::HTTP_UNAUTHORIZED);
         }
 
-        return response()->json(compact('token'), ResponseCode::HTTP_OK);
+        return response()->json(compact('token'), ResponseCode::HTTP_ACCEPTED);
     }
 
 
