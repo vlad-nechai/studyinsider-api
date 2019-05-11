@@ -15,7 +15,7 @@ class CreateCoursesTable extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->comment = "Course name in univis";
+            $table->string('name')->unique()->comment = "Course name in univis";
             $table->string('short_name')->nullable()->comment = "Short course name in univis";
             $table->unsignedInteger('chair_id')->index();
             $table->string('course_type')->index()->comment = "Lecture, seminar or tutorial";

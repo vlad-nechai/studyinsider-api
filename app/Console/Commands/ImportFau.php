@@ -3,10 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\Chair;
+use App\Models\Course;
 use App\Models\Faculty;
 use Exception;
-use Illuminate\Console\Command;
 use GuzzleHttp\Client;
+use Illuminate\Console\Command;
 
 class ImportFau extends Command
 {
@@ -89,8 +90,9 @@ class ImportFau extends Command
     /**
      * @return void
      */
-    private function importFaculties() {
-        foreach(range('A','Z') as $v) {
+    private function importFaculties()
+    {
+        foreach (range('A', 'Z') as $v) {
             try {
                 $res = $this->client->get($this->endPoint, [
                     'query' => [
@@ -119,11 +121,11 @@ class ImportFau extends Command
                         echo $org->attributes()['key'] . " has been imported \n";
 
                     } catch (\Exception $e) {
-                        echo ($e->getMessage()."\n");
+                        echo($e->getMessage() . "\n");
                     }
                 }
             } catch (Exception $e) {
-                echo ($e->getMessage()."\n");
+                echo($e->getMessage() . "\n");
             }
         }
 
@@ -167,11 +169,11 @@ class ImportFau extends Command
                             echo $org->attributes()['key'] . " has been imported \n";
 
                         } catch (\Exception $e) {
-                            echo($e->getMessage(). "\n");
+                            echo($e->getMessage() . "\n");
                         }
                     }
                 } catch (Exception $e) {
-                    echo($e->getMessage()."\n");
+                    echo($e->getMessage() . "\n");
                 }
             }
         }
@@ -184,7 +186,7 @@ class ImportFau extends Command
      */
     private function importChairs()
     {
-        foreach(range('A','Z') as $v) {
+        foreach (range('A', 'Z') as $v) {
             try {
                 $res = $this->client->get($this->endPoint, [
                     'query' => [
@@ -201,7 +203,7 @@ class ImportFau extends Command
                     try {
                         $key = $org->attributes()['key'];
                         if (substr_count($key, '.') == 3) {
-                            $facultyKey = substr($key, 0, strpos($key, '.', strpos($key, '.')+1));
+                            $facultyKey = substr($key, 0, strpos($key, '.', strpos($key, '.') + 1));
                             $faculty = Faculty::where('univis_key', $facultyKey)->first();
 
                             $chair = new Chair;
@@ -219,11 +221,11 @@ class ImportFau extends Command
                         }
 
                     } catch (Exception $e) {
-                        echo ($e->getMessage() . "\n");
+                        echo($e->getMessage() . "\n");
                     }
                 }
             } catch (Exception $e) {
-                echo ($e->getMessage() . "\n");
+                echo($e->getMessage() . "\n");
             }
         }
 
@@ -235,7 +237,8 @@ class ImportFau extends Command
      */
     private function importCourses()
     {
-        $chairs = Chair::all();
+//        $chairs = Chair::all();
+        $chairs = Chair::find(178)->first();
         foreach ($this->semesters as $semester) {
             foreach ($chairs as $chair) {
                 try {
@@ -253,53 +256,27 @@ class ImportFau extends Command
 
                     foreach ($list as $lecture) {
                         try {
-                            // check if record already exists
-                            $oldCourse = Course::where('univis_id', $lecture->id)->first();
 
-                            if (is_null($oldCourse)) {
-                                if (empty($lecture->import_parent_id)) {
-                                    $course = new Course;
-                                    $course->name = $lecture->name;
-                                    $course->short_name = $lecture->short;
-                                    $course->chair_id = $chair->id;
-                                    $course->course_type = $lecture->type;
-                                    $course->univis_id = $lecture->id;
-                                    $course->univis_key = $lecture->attributes()['key'];
-                                    $course->univis_hash = hash('sha256', $lecture->asXML());
-                                    $course->ects = $lecture->ects_cred;
-                                    $course->sws = $lecture->sws;
-                                    $course->max_turnout = $lecture->maxturnout;
-                                    $course->language = $lecture->leclanguage;
-                                    $course->summary = $lecture->summary;
-                                    $course->semester = $semester;
+                            // should not have parent-lv node and does not have coursename node
+                            if (empty($lecture->import_parent_id) && empty($lecture->parent-lv) && empty($lecture->coursename)) {
+                                $course = new Course;
+                                $course->name = $lecture->name;
+                                $course->short_name = $lecture->short;
+                                $course->chair_id = $chair->id;
+                                $course->course_type = $lecture->type;
+                                $course->univis_id = $lecture->id;
+                                $course->univis_key = $lecture->attributes()['key'];
+//                              $course->univis_hash = hash('sha256', $lecture->asXML());
+                                $course->ects = $lecture->ects_cred;
+                                $course->sws = $lecture->sws;
+                                $course->max_turnout = $lecture->maxturnout;
+                                $course->language = $lecture->leclanguage;
+                                $course->summary = $lecture->summary;
+                                $course->semester = $semester;
 
-                                    $course->save();
+                                $course->save();
 
-                                    echo $lecture->attributes()['key'] . " created" . "\n";
-                                }
-                            } else {
-                                // calculating new hash value
-                                $newHash = hash('sha256', $lecture->asXML());
-
-                                // if there are updates, save them
-                                if ($newHash != $oldCourse->univis_hash) {
-                                    $oldCourse->name = $lecture->name;
-                                    $oldCourse->short_name = $lecture->short;
-                                    $oldCourse->chair_id = $chair->id;
-                                    $oldCourse->course_type = $lecture->type;
-                                    $oldCourse->univis_id = $lecture->id;
-                                    $oldCourse->univis_key = $lecture->attributes()['key'];
-                                    $oldCourse->univis_hash = hash('sha256', $lecture->asXML());
-                                    $oldCourse->ects = $lecture->ects_cred;
-                                    $oldCourse->sws = $lecture->sws;
-                                    $oldCourse->max_turnout = $lecture->maxturnout;
-                                    $oldCourse->language = $lecture->leclanguage;
-                                    $oldCourse->summary = $lecture->summary;
-
-                                    $oldCourse->save();
-
-                                    echo $lecture->attributes()['key'] . " updated \n";
-                                }
+                                echo $lecture->attributes()['key'] . " created" . "\n";
                             }
 
                         } catch (\Exception $e) {
@@ -377,12 +354,12 @@ class ImportFau extends Command
                         } catch (\Exception $e) {
                             echo($e->getMessage() . "\n");
                         }
-    }
+                    }
 
                 } catch (\Exception $e) {
                     echo($e->getMessage() . "\n");
                 }
-        }
+            }
         }
 
         echo "import Professors finished" . "\n";
