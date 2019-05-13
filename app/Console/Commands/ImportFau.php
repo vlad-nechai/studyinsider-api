@@ -239,8 +239,7 @@ class ImportFau extends Command
      */
     private function importCourses()
     {
-//        $chairs = Chair::all();
-        $chairs = Chair::find([110, 112, 111]);
+        $chairs = Chair::all();
         foreach ($this->semesters as $semester) {
             foreach ($chairs as $chair) {
                 try {
