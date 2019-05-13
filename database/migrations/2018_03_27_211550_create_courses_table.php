@@ -17,6 +17,8 @@ class CreateCoursesTable extends Migration
             $table->increments('id');
             $table->string('name')->unique()->comment = "Course name in univis";
             $table->string('short_name')->nullable()->comment = "Short course name in univis";
+            $table->string('univis_id')->nullable()->comment = "univis id dor course";
+            $table->string('univis_key')->nullable()->comment = "univis key dor course";
             $table->unsignedInteger('chair_id')->index();
             $table->string('course_type')->index()->comment = "Lecture, seminar or tutorial";
             $table->timestamps();

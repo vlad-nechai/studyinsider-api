@@ -18,9 +18,17 @@ class UniversitiesTableSeeder extends Seeder
 //        $university->type = "university";
 //        $university->save();
 
+        // FAU
         $university = new University;
         $university->name = "Friedrich-Alexander-Universität Erlangen-Nürnberg";
         $university->location = "Schloßplatz 4, 91054 Erlangen";
+        $university->type = "university";
+        $university->save();
+
+        // Bamberg
+        $university = new University;
+        $university->name = "Universität Bamberg";
+        $university->location = "Otto-Friedrich-Universität Bamberg, Zentrale Universitätsverwaltung, Kapuzinerstraße 16, 96047 Bamberg";
         $university->type = "university";
         $university->save();
     }

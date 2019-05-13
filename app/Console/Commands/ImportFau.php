@@ -5,9 +5,11 @@ namespace App\Console\Commands;
 use App\Models\Chair;
 use App\Models\Course;
 use App\Models\Faculty;
+use App\Models\Semester;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ImportFau extends Command
 {
@@ -238,14 +240,14 @@ class ImportFau extends Command
     private function importCourses()
     {
 //        $chairs = Chair::all();
-        $chairs = Chair::find(178)->first();
+        $chairs = Chair::find([110, 112, 111]);
         foreach ($this->semesters as $semester) {
             foreach ($chairs as $chair) {
                 try {
                     $res = $this->client->get($this->endPoint, [
                         'query' => [
                             'search' => 'lectures',
-                            'department' => $chair->univis_id,
+                            'department' => $chair->univis_orgnr,
                             'show' => 'xml',
                             'sem' => $semester
                         ],
@@ -258,23 +260,53 @@ class ImportFau extends Command
                         try {
 
                             // should not have parent-lv node and does not have coursename node
-                            if (empty($lecture->import_parent_id) && empty($lecture->parent-lv) && empty($lecture->coursename)) {
-                                $course = new Course;
-                                $course->name = $lecture->name;
-                                $course->short_name = $lecture->short;
-                                $course->chair_id = $chair->id;
-                                $course->course_type = $lecture->type;
-                                $course->univis_id = $lecture->id;
-                                $course->univis_key = $lecture->attributes()['key'];
-//                              $course->univis_hash = hash('sha256', $lecture->asXML());
-                                $course->ects = $lecture->ects_cred;
-                                $course->sws = $lecture->sws;
-                                $course->max_turnout = $lecture->maxturnout;
-                                $course->language = $lecture->leclanguage;
-                                $course->summary = $lecture->summary;
-                                $course->semester = $semester;
+                            if (empty($lecture->import_parent_id) && empty($lecture->coursename)) {
 
-                                $course->save();
+                                // get semester model
+                                $semesterModel =  Semester::where('name', $semester)->first();
+
+                                // if course exists
+                                if (Course::where('univis_id', $lecture->id)->exists()) {
+
+                                    $courseModel =  Course::where('univis_id', $lecture->id)->first();
+
+                                    // if relationship does not exist attach a new one
+                                    if (!$courseModel->semesters()->where('semester_id', $semesterModel->id)->exists()) {
+
+                                        // attach relationship
+                                        $courseModel->semesters()->attach($semesterModel, [
+                                            'ects' => $lecture->ects_cred,
+                                            'sws' => $lecture->sws,
+                                            'language' => $lecture->leclanguage,
+                                            'summary' => $lecture->summary
+                                        ]);
+                                    }
+
+                                } else {
+                                    $course = new Course;
+                                    $course->name = $lecture->name;
+                                    $course->short_name = $lecture->short;
+                                    $course->chair_id = $chair->id;
+                                    $course->course_type = $lecture->type;
+                                    $course->univis_id = $lecture->id;
+                                    $course->univis_key = $lecture->attributes()['key'];
+
+                                    // use transactions to make sure both are saved
+                                    DB::transaction(function() use ($course, $semesterModel, $lecture) {
+                                        // save course first
+                                        $course->save();
+
+                                        $course = Course::where('name', $lecture->name)->first();
+
+                                        // record relationship for a semester
+                                        Course::find($course->id)->semesters()->save($semesterModel, [
+                                            'ects' => $lecture->ects_cred,
+                                            'sws' => $lecture->sws,
+                                            'language' => $lecture->leclanguage,
+                                            'summary' => $lecture->summary
+                                        ]);
+                                    });
+                                }
 
                                 echo $lecture->attributes()['key'] . " created" . "\n";
                             }
@@ -293,6 +325,7 @@ class ImportFau extends Command
     }
 
     /**
+     * @deprecated
      * @return void
      */
     private function importProfessors()
@@ -366,6 +399,7 @@ class ImportFau extends Command
     }
 
     /**
+     * @deprecated
      * @return void
      */
     private function mapCoursesToProfessors()
